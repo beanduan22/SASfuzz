@@ -26,22 +26,16 @@ export ANTHROPIC_API_KEY=your_key    # for --llm-backend claude35
 
 ## Run
 
-### PyTorch (1000 models, 60 s mutation budget each)
+### PyTorch
 
 ```bash
 python main.py --mode full --output-dir results/pytorch
 ```
 
-### TensorFlow (1000 models)
+### TensorFlow
 
 ```bash
 python run_tf.py --out results/tensorflow
-```
-
-### Both frameworks in parallel
-
-```bash
-python run_both.py
 ```
 
 Stops automatically after 10 consecutive models introduce no new APIs.
@@ -65,8 +59,6 @@ python -m rq1.report      # print Tables 1 & 2
 
 ### RQ2 — API coverage and code coverage (Table 3)
 
-Run SASFuzz for 1000 models on each framework and collect coverage metrics.
-
 **PyTorch:**
 ```bash
 python scripts/rq2_coverage.py --framework pytorch --models 1000 --budget 60 \
@@ -83,8 +75,6 @@ Coverage numbers are written to `results/rq2/<framework>/coverage.json`. Baselin
 
 ### RQ3 — Bug detection (Table 4)
 
-After running RQ2, aggregate all detected bugs:
-
 **PyTorch:**
 ```bash
 python scripts/rq3_bugs.py --results results/rq2/pytorch
@@ -93,11 +83,6 @@ python scripts/rq3_bugs.py --results results/rq2/pytorch
 **TensorFlow:**
 ```bash
 python scripts/rq3_bugs.py --results results/rq2/tensorflow
-```
-
-**Both:**
-```bash
-python scripts/rq3_bugs.py --results results/rq2
 ```
 
 ### RQ4 — Ablation study and LLM sensitivity (Tables 5 & 6)
