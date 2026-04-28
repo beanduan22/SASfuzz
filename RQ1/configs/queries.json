@@ -1,0 +1,52 @@
+[
+  {
+    "name": "pytorch_autograd",
+    "repo": "pytorch/pytorch",
+    "labels": ["triaged", "module: autograd"]
+  },
+  {
+    "name": "pytorch_functorch",
+    "repo": "pytorch/pytorch",
+    "labels": ["triaged", "module: functorch"]
+  },
+  {
+    "name": "pytorch_dynamo",
+    "repo": "pytorch/pytorch",
+    "labels": ["triaged", "module: dynamo"]
+  },
+  {
+    "name": "pytorch_ddp",
+    "repo": "pytorch/pytorch",
+    "labels": ["triaged", "module: ddp"]
+  },
+  {
+    "name": "pytorch_fsdp",
+    "repo": "pytorch/pytorch",
+    "labels": ["triaged", "module: fsdp"]
+  },
+  {
+    "name": "tensorflow_keras",
+    "repo": "tensorflow/tensorflow",
+    "labels": ["type:bug", "comp:keras"]
+  },
+  {
+    "name": "tensorflow_xla",
+    "repo": "tensorflow/tensorflow",
+    "labels": ["type:bug", "comp:xla"]
+  },
+  {
+    "name": "tensorflow_function",
+    "repo": "tensorflow/tensorflow",
+    "labels": ["type:bug", "comp:tf.function"]
+  },
+  {
+    "name": "tensorflow_dist_strat",
+    "repo": "tensorflow/tensorflow",
+    "labels": ["type:bug", "comp:dist-strat"]
+  },
+  {
+    "name": "tensorflow_ops",
+    "repo": "tensorflow/tensorflow",
+    "labels": ["type:bug", "comp:ops"]
+  }
+]

@@ -1,0 +1,167 @@
+[
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/50617",
+    "repo": "pytorch/pytorch",
+    "number": 50617,
+    "title": "Finish deprecation cycle for inplace view error checks",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 1,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/50837",
+    "repo": "pytorch/pytorch",
+    "number": 50837,
+    "title": "Add op.input_func to OpInfo-based testing",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 1,
+      "B": 1,
+      "C": 0,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/51141",
+    "repo": "pytorch/pytorch",
+    "number": 51141,
+    "title": "autograd.detect_anomaly docs incorrectly formatted",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 1,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/51430",
+    "repo": "pytorch/pytorch",
+    "number": 51430,
+    "title": "Convolution weight gradient computation in nn.grad is wrong with groups > 1",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 1,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/51438",
+    "repo": "pytorch/pytorch",
+    "number": 51438,
+    "title": "There is a problem with the calculation result of hardsigmoid_backward",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 4,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/52278",
+    "repo": "pytorch/pytorch",
+    "number": 52278,
+    "title": "Tests fail on A100 GPUs due to inaccurate/differing float values",
+    "primary": "C",
+    "category_name": "distribution_strategy",
+    "evidence": {
+      "A": 0,
+      "B": 0,
+      "C": 4,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/53989",
+    "repo": "pytorch/pytorch",
+    "number": 53989,
+    "title": "grad of sinc explodes at 0",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 2,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/55587",
+    "repo": "pytorch/pytorch",
+    "number": 55587,
+    "title": "`Softplus` forward and backward discrepancy",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 2,
+      "B": 0,
+      "C": 0,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/56683",
+    "repo": "pytorch/pytorch",
+    "number": 56683,
+    "title": "binary_cross_entropy misses derivative for target even if the variable is unused for backward ",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 2,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/56760",
+    "repo": "pytorch/pytorch",
+    "number": 56760,
+    "title": "Derivative of sinc(x) at x=0 returns NaN, should be 0",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 3,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/57006",
+    "repo": "pytorch/pytorch",
+    "number": 57006,
+    "title": "[grad] index_fill : Incorrect gradient when index has duplicates",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 2,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  }
+]

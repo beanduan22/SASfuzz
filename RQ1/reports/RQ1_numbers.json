@@ -1,0 +1,215 @@
+{
+  "collect": {
+    "date_range": {
+      "start": "2021-01-01",
+      "end": "2026-04-30"
+    },
+    "keywords": [
+      "incorrect",
+      "wrong",
+      "nan",
+      "unexpected",
+      "inconsistent"
+    ],
+    "raw_hits": 6011,
+    "unique_hits": 5897,
+    "filtered_hits": 1122,
+    "per_query": [
+      {
+        "name": "pytorch_autograd",
+        "repo": "pytorch/pytorch",
+        "labels": [
+          "triaged",
+          "module: autograd"
+        ],
+        "extra_terms": [],
+        "query": "repo:pytorch/pytorch is:issue is:closed created:2021-01-01..2026-04-30 label:\"triaged\" label:\"module: autograd\"",
+        "count": 595
+      },
+      {
+        "name": "pytorch_functorch",
+        "repo": "pytorch/pytorch",
+        "labels": [
+          "triaged",
+          "module: functorch"
+        ],
+        "extra_terms": [],
+        "query": "repo:pytorch/pytorch is:issue is:closed created:2021-01-01..2026-04-30 label:\"triaged\" label:\"module: functorch\"",
+        "count": 667
+      },
+      {
+        "name": "pytorch_dynamo",
+        "repo": "pytorch/pytorch",
+        "labels": [
+          "triaged",
+          "module: dynamo"
+        ],
+        "extra_terms": [],
+        "query": "repo:pytorch/pytorch is:issue is:closed created:2021-01-01..2026-04-30 label:\"triaged\" label:\"module: dynamo\"",
+        "count": 1819
+      },
+      {
+        "name": "pytorch_ddp",
+        "repo": "pytorch/pytorch",
+        "labels": [
+          "triaged",
+          "module: ddp"
+        ],
+        "extra_terms": [],
+        "query": "repo:pytorch/pytorch is:issue is:closed created:2021-01-01..2026-04-30 label:\"triaged\" label:\"module: ddp\"",
+        "count": 88
+      },
+      {
+        "name": "pytorch_fsdp",
+        "repo": "pytorch/pytorch",
+        "labels": [
+          "triaged",
+          "module: fsdp"
+        ],
+        "extra_terms": [],
+        "query": "repo:pytorch/pytorch is:issue is:closed created:2021-01-01..2026-04-30 label:\"triaged\" label:\"module: fsdp\"",
+        "count": 382
+      },
+      {
+        "name": "tensorflow_keras",
+        "repo": "tensorflow/tensorflow",
+        "labels": [
+          "type:bug",
+          "comp:keras"
+        ],
+        "extra_terms": [],
+        "query": "repo:tensorflow/tensorflow is:issue is:closed created:2021-01-01..2026-04-30 label:\"type:bug\" label:\"comp:keras\"",
+        "count": 857
+      },
+      {
+        "name": "tensorflow_xla",
+        "repo": "tensorflow/tensorflow",
+        "labels": [
+          "type:bug",
+          "comp:xla"
+        ],
+        "extra_terms": [],
+        "query": "repo:tensorflow/tensorflow is:issue is:closed created:2021-01-01..2026-04-30 label:\"type:bug\" label:\"comp:xla\"",
+        "count": 182
+      },
+      {
+        "name": "tensorflow_function",
+        "repo": "tensorflow/tensorflow",
+        "labels": [
+          "type:bug",
+          "comp:tf.function"
+        ],
+        "extra_terms": [],
+        "query": "repo:tensorflow/tensorflow is:issue is:closed created:2021-01-01..2026-04-30 label:\"type:bug\" label:\"comp:tf.function\"",
+        "count": 69
+      },
+      {
+        "name": "tensorflow_dist_strat",
+        "repo": "tensorflow/tensorflow",
+        "labels": [
+          "type:bug",
+          "comp:dist-strat"
+        ],
+        "extra_terms": [],
+        "query": "repo:tensorflow/tensorflow is:issue is:closed created:2021-01-01..2026-04-30 label:\"type:bug\" label:\"comp:dist-strat\"",
+        "count": 108
+      },
+      {
+        "name": "tensorflow_ops",
+        "repo": "tensorflow/tensorflow",
+        "labels": [
+          "type:bug",
+          "comp:ops"
+        ],
+        "extra_terms": [],
+        "query": "repo:tensorflow/tensorflow is:issue is:closed created:2021-01-01..2026-04-30 label:\"type:bug\" label:\"comp:ops\"",
+        "count": 1244
+      }
+    ],
+    "by_repo": {
+      "pytorch/pytorch": 622,
+      "tensorflow/tensorflow": 500
+    }
+  },
+  "verify": {
+    "total": 1122,
+    "counts": {
+      "fix_verified": 229,
+      "unverified": 893,
+      "excluded_pull_request": 0
+    },
+    "by_repo": {
+      "pytorch/pytorch": {
+        "fix_verified": 194,
+        "unverified": 428,
+        "excluded_pull_request": 0
+      },
+      "tensorflow/tensorflow": {
+        "fix_verified": 35,
+        "unverified": 465,
+        "excluded_pull_request": 0
+      }
+    },
+    "mode": "fast_search_linked_pr"
+  },
+  "classify": {
+    "backend": "heuristic",
+    "total_fix_verified": 229,
+    "classified": 11,
+    "skipped_unhydrated": 218,
+    "counts": {
+      "A": 10,
+      "B": 0,
+      "C": 1,
+      "D": 0,
+      "E": 0
+    },
+    "state_related": 11,
+    "non_state": 0,
+    "per_repo": {
+      "pytorch/pytorch": {
+        "A": 10,
+        "B": 0,
+        "C": 1,
+        "D": 0,
+        "E": 0
+      }
+    }
+  },
+  "paper_targets": {
+    "raw_hits": 6011,
+    "unique_hits": 5879,
+    "filtered_hits": 1122,
+    "fix_verified_total": 329,
+    "unverified_total": 793,
+    "fix_verified_pytorch": 194,
+    "fix_verified_tensorflow": 135,
+    "state_related_total": 206,
+    "state_related_pytorch": 125,
+    "state_related_tensorflow": 81,
+    "non_state_total": 105,
+    "udup_total": 18,
+    "categories": {
+      "A": {
+        "total": 55,
+        "pytorch": 41,
+        "tensorflow": 14
+      },
+      "B": {
+        "total": 74,
+        "pytorch": 31,
+        "tensorflow": 43
+      },
+      "C": {
+        "total": 62,
+        "pytorch": 43,
+        "tensorflow": 19
+      },
+      "D": {
+        "total": 15,
+        "pytorch": 10,
+        "tensorflow": 5
+      }
+    }
+  }
+}

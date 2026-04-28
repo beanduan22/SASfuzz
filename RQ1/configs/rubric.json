@@ -1,0 +1,113 @@
+{
+  "categories": {
+    "A": {
+      "name": "gradient_tracking",
+      "description": "Bugs whose root cause is autograd / gradient state: requires_grad, .detach(), .backward(), grad accumulation, no_grad / inference_mode, hook ordering, custom autograd.Function, vmap/functorch grad transforms.",
+      "signals": [
+        "requires_grad",
+        "no_grad",
+        "inference_mode",
+        ".backward(",
+        "autograd",
+        "grad_fn",
+        "retain_graph",
+        "create_graph",
+        "register_hook",
+        "GradScaler",
+        "vmap",
+        "functorch",
+        "torch.func",
+        "tf.GradientTape",
+        "watch(",
+        "stop_gradient",
+        "gradient(",
+        "tape.gradient"
+      ]
+    },
+    "B": {
+      "name": "execution_mode",
+      "description": "Bugs that depend on which execution mode is active: train/eval, eager vs graph/JIT, torch.compile vs eager, tf.function tracing, AutoGraph, mixed precision (autocast/amp).",
+      "signals": [
+        ".train(",
+        ".eval(",
+        "model.train",
+        "model.eval",
+        "tf.function",
+        "@tf.function",
+        "autograph",
+        "tracing",
+        "torch.compile",
+        "torch.jit",
+        "torchscript",
+        "inductor",
+        "dynamo",
+        "autocast",
+        "amp",
+        "mixed_precision",
+        "tf.executing_eagerly",
+        "graph mode",
+        "eager mode"
+      ]
+    },
+    "C": {
+      "name": "distribution_strategy",
+      "description": "Bugs whose root cause is distributed/parallel state: DataParallel, DDP, FSDP, RPC, ProcessGroup, NCCL/Gloo, all_reduce/all_gather/reduce_scatter, MirroredStrategy, MultiWorkerMirroredStrategy, TPUStrategy, ParameterServerStrategy.",
+      "signals": [
+        "DataParallel",
+        "DistributedDataParallel",
+        " DDP",
+        "FSDP",
+        "fully_sharded",
+        "ProcessGroup",
+        "process_group",
+        "all_reduce",
+        "all_gather",
+        "reduce_scatter",
+        "broadcast(",
+        "ReduceOp",
+        "NCCL",
+        "Gloo",
+        "torch.distributed",
+        "rpc",
+        "MirroredStrategy",
+        "MultiWorkerMirroredStrategy",
+        "TPUStrategy",
+        "ParameterServerStrategy",
+        "tf.distribute",
+        "Strategy.scope"
+      ]
+    },
+    "D": {
+      "name": "other_state",
+      "description": "Bugs whose root cause is other stateful API surface (not A/B/C): RNG / generator / seed state, BatchNorm running stats, Dropout, optimizer state, LR scheduler state, EMA / running averages, deterministic flags, persistent caches.",
+      "signals": [
+        "manual_seed",
+        "torch.seed",
+        "set_rng_state",
+        "Generator(",
+        "tf.random.set_seed",
+        "running_mean",
+        "running_var",
+        "BatchNorm",
+        "track_running_stats",
+        "Dropout",
+        "optimizer.state",
+        "LRScheduler",
+        "lr_scheduler",
+        "ExponentialMovingAverage",
+        "EMA",
+        "use_deterministic_algorithms",
+        "deterministic"
+      ]
+    },
+    "E": {
+      "name": "non_state",
+      "description": "Correctness bug not caused by any of the above stateful dimensions: pure shape/dtype/numerics in a stateless op, kernel correctness on a single input, parser/typing/dispatch mismatch, etc.",
+      "signals": []
+    }
+  },
+  "auxiliary_tags": {
+    "U": "unclassifiable from issue text alone",
+    "DUP": "duplicate or supersession of another report"
+  }
+}

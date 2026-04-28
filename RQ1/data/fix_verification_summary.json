@@ -1,0 +1,21 @@
+{
+  "total": 1122,
+  "counts": {
+    "fix_verified": 229,
+    "unverified": 893,
+    "excluded_pull_request": 0
+  },
+  "by_repo": {
+    "pytorch/pytorch": {
+      "fix_verified": 194,
+      "unverified": 428,
+      "excluded_pull_request": 0
+    },
+    "tensorflow/tensorflow": {
+      "fix_verified": 35,
+      "unverified": 465,
+      "excluded_pull_request": 0
+    }
+  },
+  "mode": "fast_search_linked_pr"
+}

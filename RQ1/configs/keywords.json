@@ -1,0 +1,16 @@
+{
+  "correctness_keywords": [
+    "incorrect",
+    "wrong",
+    "nan",
+    "unexpected",
+    "inconsistent"
+  ],
+  "exclude_keywords": [
+    "feature request",
+    "documentation",
+    "build error",
+    "install error",
+    "duplicate"
+  ]
+}

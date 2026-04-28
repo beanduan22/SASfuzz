@@ -1,0 +1,24 @@
+{
+  "backend": "heuristic",
+  "total_fix_verified": 229,
+  "classified": 11,
+  "skipped_unhydrated": 218,
+  "counts": {
+    "A": 10,
+    "B": 0,
+    "C": 1,
+    "D": 0,
+    "E": 0
+  },
+  "state_related": 11,
+  "non_state": 0,
+  "per_repo": {
+    "pytorch/pytorch": {
+      "A": 10,
+      "B": 0,
+      "C": 1,
+      "D": 0,
+      "E": 0
+    }
+  }
+}
