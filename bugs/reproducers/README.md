@@ -1,6 +1,6 @@
-# Open / Unfixed Bug Reproducers
+# Open / Unfixed CPU vs GPU Bug Reproducers
 
-Minimal repros for **open and unfixed** bugs in PyTorch / TensorFlow.
+Minimal repros for **open and unfixed** CPU vs GPU divergence bugs in PyTorch / TensorFlow.
 Each `.py` file is a single bare bug — no helpers, no harness — and runs in a few lines.
 
 Reproducer outputs below are captured on:
@@ -8,108 +8,9 @@ Reproducer outputs below are captured on:
 - TensorFlow **2.21.0**
 - GPU: **NVIDIA RTX 6000 Ada Generation** (compute 8.9)
 
-> Bug status (open / unfixed) is upstream truth at the time the catalog was mined.
-> Some hardware/version combinations may mask numerical bugs (notably `tf_86350` below).
-
 ---
 
-## CPU vs GPU divergence
-
-### `cpu_gpu/pt_162235_neg_zero.py` — pytorch#162235
-
-```
-cpu maximum : tensor([-0.])
-gpu maximum : tensor([0.], device='cuda:0')
-cpu relu    : tensor([-0.])
-gpu relu    : tensor([0.], device='cuda:0')
-cpu argsort : tensor([0, 1])
-gpu argsort : tensor([1, 0], device='cuda:0')
-cpu amin    : tensor(-0.)
-gpu amin    : tensor(0., device='cuda:0')
-cpu max/torch.float64: tensor([-0.], dtype=torch.float64)
-gpu max/torch.float64: tensor([0.], device='cuda:0', dtype=torch.float64)
-cpu max/torch.float32: tensor([-0.])
-gpu max/torch.float32: tensor([0.], device='cuda:0')
-cpu max/torch.float16: tensor([-0.], dtype=torch.float16)
-gpu max/torch.float16: tensor([0.], device='cuda:0', dtype=torch.float16)
-```
-
-→ **bug reproduces.** CPU preserves the `-0.0` sign bit; CUDA normalises to `+0.0`. argsort permutation flips. All three floating dtypes affected.
-
-### `cpu_gpu/pt_52241_ctcloss_grad.py` — pytorch#52241
-
-```
-torch.autograd.gradcheck.GradcheckError: Jacobian mismatch for output 0 with respect to input 0,
-numerical:tensor([[-0.8953],
-                  [-0.1047],
-                  [ 0.0000],
-                  [-0.7510],
-                  [-0.2490],
-                  [ 0.0000],
-                  [-0.1682],
-                  [-0.8318],
-                  [ 0.0000]], dtype=torch.float64)
-```
-
-→ **bug reproduces.** `gradcheck` fails on the minimal `V=2,T=3,N=1` case — `nn.CTCLoss`'s analytic gradient does not match the finite-difference gradient.
-
-### `cpu_gpu/tf_86378_biasaddgrad.py` — tensorflow#86378
-
-```
-NCHW/bf16  diff: 0.03125
-NHWC/bf16  diff: 0.0625
-NCHW/f16   diff: 0.03125
-```
-
-→ **bug reproduces** across NCHW/NHWC and bf16/f16. Numeric divergence between CPU and GPU is well above bf16 noise floor.
-
-### `cpu_gpu/tf_86256_adjust_hue.py` — tensorflow#86256
-
-```
-original  : cpu= [-0.3937407  -0.25841027 -0.0503466 ] gpu= [-0.0503466 -0.0503466 -0.0503466]
-max|diff| : 0.3433941
-delta=-0.99 max|diff|=2.235e-07
-delta=-0.74 max|diff|=4.172e-07
-delta=-0.50 max|diff|=4.172e-07
-delta=-0.10 max|diff|=3.576e-07
-delta=+0.50 max|diff|=4.172e-07
-```
-
-→ **bug reproduces** on the issue's exact inputs (`max|diff|=0.34`). Generic random inputs only show f32 rounding noise (~4e-7) — the bug is value-specific.
-
-### `cpu_gpu/tf_96180_reciprocal_complex_inf.py` — tensorflow#96180
-
-```
-cpu pure-inf   : [nan+nanj nan+nanj  0. +0.j]
-gpu pure-inf   : [0.+0.j 0.+0.j 0.+0.j]
-cpu inf+nan    : [nan+nanj nan+nanj nan+nanj nan+nanj]
-gpu inf+nan    : [ 0. +0.j  0. +0.j  0. +0.j nan+nanj]
-cpu c64        : [0.+0.j 0.-0.j 0.-0.j]
-gpu c64        : [0.+0.j 0.-0.j 0.-0.j]
-```
-
-→ **bug reproduces** for complex128. CPU returns NaN where GPU correctly returns 0. NaN poisoning visible: in the `inf+nan` row, CPU's NaN poisons all earlier rows. complex64 path is consistent.
-
-### `cpu_gpu/tf_97204_notequal_nonbroadcast.py` — tensorflow#97204
-
-```
-cpu (4,1)x(1,28,2,3,2): tf.Tensor(True, shape=(), dtype=bool)
-gpu: InvalidArgumentError: {{function_node __wrapped__NotEqual_device_/...
-cpu (2,3,4)x(1,5,6,7,4): tf.Tensor(True, shape=(), dtype=bool)
-gpu: InvalidArgumentError: {{function_node __wrapped__NotEqual_device_/...
-```
-
-→ **bug reproduces.** CPU silently returns scalar `True` for non-broadcastable shape pairs; GPU raises `InvalidArgumentError`. Both shape combos exhibit the divergence.
-
-### `cpu_gpu/tf_86350_batchmatmulv2.py` — tensorflow#86350
-
-```
-original: max|diff|= 0.0
-4D/bf16: max|diff|= 0.0
-5D/bf16: max|diff|= 0.0
-```
-
-→ **does not reproduce on this hardware.** Issue was reported on Tesla T4; here on RTX 6000 Ada (compute 8.9) the bf16 BMM kernel matches CPU bit-exactly. Issue remains open upstream — likely driver/cuDNN-version dependent.
+## Seed bugs — one reproducer per upstream issue
 
 ### `cpu_gpu/tf_115731_cumsum_bf16.py` — tensorflow#115731
 
@@ -119,16 +20,15 @@ GPU error vs fp64 ref: 6.3028e+01
 CPU/GPU error ratio: 23.1x
 ```
 
-→ **bug reproduces.** `tf.math.cumsum` with `bfloat16` input stays in bf16 on CPU and accumulates large rounding error; GPU silently promotes to fp32 internally and is ~23× more accurate. Same op, same dtype, two different precisions.
+→ `tf.math.cumsum` with `bfloat16` input stays in bf16 on CPU and accumulates large rounding error; GPU silently promotes to fp32 internally and is ~23× more accurate.
 
 ### `cpu_gpu/tf_115733_reduce_std_fp16.py` — tensorflow#115733
 
 ```
-reference fp64: 9.8703e+03
 reduce_std  cpu=nan  gpu=inf
 ```
 
-→ **bug reproduces.** `tf.math.reduce_std` on `float16` input: CPU returns `nan` (Welford `inf − inf`); GPU returns `inf` (two-pass algorithm overflows). Both are wrong, and they are wrong in different ways.
+→ `tf.math.reduce_std` on `float16` input: CPU returns `nan` (Welford `inf − inf`); GPU returns `inf` (two-pass algorithm overflows).
 
 ### `cpu_gpu/tf_115736_cast_nan_inf_to_int.py` — tensorflow#115736
 
@@ -137,7 +37,7 @@ to=int32  cpu=[-2147483648 -2147483648 -2147483648]  gpu=[          0  214748364
 to=int64  cpu=[-9223372036854775808 -9223372036854775808 -9223372036854775808]  gpu=[-9223372036854775808  9223372036854775807 -9223372036854775808]
 ```
 
-→ **bug reproduces.** `tf.cast(NaN/+Inf/-Inf → int32/int64)` differs across all three special values. CPU collapses everything to `INT_MIN`; GPU returns `0` for NaN, `INT_MAX` for `+Inf`, and `INT_MIN` for `-Inf`. Same divergence on int32 and int64.
+→ `tf.cast(NaN/+Inf/-Inf → int32/int64)`. CPU collapses everything to `INT_MIN`; GPU returns `0` for NaN, `INT_MAX` for `+Inf`, and `INT_MIN` for `-Inf`.
 
 ### `cpu_gpu/pt_156020_ifft_complex64.py` — pytorch#156020
 
@@ -146,7 +46,7 @@ cpu: tensor([0.+infj, 0.+0.j, 0.+0.j, 0.+0.j])
 gpu: tensor([nan+infj, 0.+0.j, 0.+0.j, 0.+0.j])
 ```
 
-→ **bug reproduces.** `torch.fft.ifft` on `complex64` with a large pure-imaginary input: CPU keeps the real part at `0`; CUDA injects `nan` into the real part of the first output element.
+→ `torch.fft.ifft` on `complex64` with a large pure-imaginary input: CPU keeps the real part at `0`; CUDA injects `nan` into the real part of the first output element.
 
 ### `cpu_gpu/pt_156959_mixture_log_prob.py` — pytorch#156959
 
@@ -156,7 +56,7 @@ pdf_gpu range: [8.349946e-05, 1.744377e-01]
 max abs diff: 1.483258e-01
 ```
 
-→ **bug reproduces.** `MixtureSameFamily(MultivariateNormal).log_prob` on a 27-component GMM evaluated over a 1000×1000 grid: GPU floor is ~10⁹× higher than CPU and the peak PDF is 2.3× larger. Max absolute PDF difference 0.148 — not float noise, the distributions disagree.
+→ `MixtureSameFamily(MultivariateNormal).log_prob` on a 27-component GMM evaluated over a 1000×1000 grid. GPU floor is ~10⁹× higher than CPU and the peak PDF is 2.3× larger. Max abs PDF diff 0.148.
 
 ### `cpu_gpu/pt_158172_fmin_int_out.py` — pytorch#158172
 
@@ -165,7 +65,7 @@ cpu: tensor([-1], dtype=torch.int16)
 gpu: tensor([-31072], dtype=torch.int16)
 ```
 
-→ **bug reproduces.** `torch.fmin(int64, int64, out=int16)`: CPU computes the min in int64 (`min(100000, -1) = -1`) then narrows (`-1` fits → `-1`). CUDA pre-casts inputs to int16 first (`100000 → -31072` after wrap), then takes the min, returning `-31072`.
+→ `torch.fmin(int64, int64, out=int16)`: CPU computes the min in int64 (`min(100000, -1) = -1`) then narrows. CUDA pre-casts inputs to int16 first, then takes the min, returning `-31072`.
 
 ### `cpu_gpu/pt_158419_copysign_fp16_nan.py` — pytorch#158419
 
@@ -174,7 +74,7 @@ cpu: tensor([ 1., -1.,  1.], dtype=torch.float16)
 gpu: tensor([1., 1., 1.], dtype=torch.float16)
 ```
 
-→ **bug reproduces.** `torch.copysign` on `float16` with NaN sign argument: CPU honours the NaN sign bit (`-NaN → -1`); CUDA loses it (`-NaN → +1`). Issue is fp16-specific.
+→ `torch.copysign` on `float16` with NaN sign argument. CPU honours the NaN sign bit (`-NaN → -1`); CUDA loses it (`-NaN → +1`). fp16-specific.
 
 ### `cpu_gpu/pt_170168_linspace_int64.py` — pytorch#170168
 
@@ -184,98 +84,13 @@ gpu: [4, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
 differing indices: [14, 21, 35]
 ```
 
-→ **bug reproduces.** `torch.linspace(4.3, -3, 50, dtype=int64)` differs at indices 14, 21, 35 — the float-to-int rounding order between the two implementations doesn't agree.
-
----
-
-## Crashes
-
-For each file: `python3 <file>` → process dies with the listed signal.
-
-### `crashes/pt_177829_lu_unpack_a_empty_pivots.py` — pytorch#177829
-
-```
-Segmentation fault (core dumped)
-```
-
-→ **SIGSEGV reproduces.** Empty `int32` `LU_pivots` against 3×3 `LU_data`.
-
-### `crashes/pt_177829_lu_unpack_b_pivots_1x0.py` — pytorch#177829 (variant)
-
-```
-Segmentation fault (core dumped)
-```
-
-→ **SIGSEGV reproduces.** Shape `(1, 0)` pivots crash; note `(0, 0)` does **not** crash — exposes a shape-rank-specific path.
-
-### `crashes/pt_177829_lu_unpack_c_batched.py` — pytorch#177829 (variant)
-
-```
-Segmentation fault (core dumped)
-```
-
-→ **SIGSEGV reproduces.** Batched 2×3×3 `LU_data` with empty pivots.
-
-### `crashes/pt_173574_arange_a_int64_float_step.py` — pytorch#173574
-
-```
-Floating point exception (core dumped)
-```
-
-→ **SIGFPE reproduces.** Float step with int64 `out=` tensor.
-
-### `crashes/pt_173574_arange_b_neg_range.py` — pytorch#173574 (variant)
-
-```
-Floating point exception (core dumped)
-```
-
-→ **SIGFPE reproduces.** Negative range with fractional step into int64 `out=`.
-
-### `crashes/pt_173574_arange_c_step_0_25.py` — pytorch#173574 (variant)
-
-```
-Floating point exception (core dumped)
-```
-
-→ **SIGFPE reproduces.** Smaller fractional step (0.25) — still SIGFPE.
-
-### `crashes/tf_76726_encode_png_a_tile_zero.py` — tensorflow#76726
-
-```
-F0000 png_io.cc:357] 'image' Must be non NULL
-*** Check failure stack trace: ***
-    @ absl::log_internal::LogMessage::SendToLog()
-    @ tensorflow::png::WriteImageToBuffer<>()
-    @ tensorflow::EncodePngOp::Compute()
-Aborted (core dumped)
-```
-
-→ **SIGABRT reproduces** via `LOG(FATAL)` in `png_io.cc:357`. `tf.tile(..., [0,0,1])` produces an empty image that bypasses validation.
-
-### `crashes/tf_76726_encode_png_b_zero_height.py` — tensorflow#76726 (variant)
-
-```
-F0000 png_io.cc:357] 'image' Must be non NULL
-Aborted (core dumped)
-```
-
-→ **SIGABRT reproduces.** Explicit `tf.zeros((0,4,3))` triggers the same fatal check.
-
-### `crashes/tf_76726_encode_png_c_zero_width.py` — tensorflow#76726 (variant)
-
-```
-F0000 png_io.cc:357] 'image' Must be non NULL
-Aborted (core dumped)
-```
-
-→ **SIGABRT reproduces.** Explicit `tf.zeros((4,0,3))` — confirms any zero-extent in the image triggers the fatal.
+→ `torch.linspace(4.3, -3, 50, dtype=int64)` differs at indices 14, 21, 35 between CPU and CUDA.
 
 ---
 
 ## Variants — same bug, different input
 
-The 9 sections below take each seed bug from above and present a different input that still triggers a clearly divergent CPU vs GPU output. They expand the trigger surface for SASFuzz mutation.
+Each variant takes a seed bug above and exercises it with a different input that still produces a clearly divergent CPU vs GPU output. Together they widen the trigger surface.
 
 ### `cpu_gpu/tf_115731_cumsum_fp16.py` — tensorflow#115731 (fp16 path)
 
@@ -285,24 +100,24 @@ GPU error vs fp64 ref: 5.4564e+01
 CPU/GPU error ratio: 26.9x
 ```
 
-→ **bug reproduces in fp16 too** (originally reported for bf16). Same `tf.math.cumsum` operator, different low-precision dtype, ~27× error ratio.
+→ Originally reported for bf16; **fp16 is broken too**, ~27× error ratio.
 
-### `cpu_gpu/tf_115733_reduce_mean_fp16.py` — tensorflow#115733 (`reduce_mean` variant)
+### `cpu_gpu/tf_115733_reduce_mean_fp16.py` — tensorflow#115733 (`reduce_mean`)
 
 ```
 reduce_mean  cpu=nan  gpu=-452.5
 ```
 
-→ **bug propagates to `reduce_mean`.** Cleaner output than `reduce_std`: CPU returns NaN, GPU returns a finite number. Same fp16 input, different reduction op.
+→ Bug propagates to `reduce_mean`. Cleaner output: CPU NaN, GPU finite scalar.
 
-### `cpu_gpu/tf_115736_cast_inf_to_uint64.py` — tensorflow#115736 (uint64 variant)
+### `cpu_gpu/tf_115736_cast_inf_to_uint64.py` — tensorflow#115736 (uint64)
 
 ```
 cpu: [9223372036854775808]
 gpu: [18446744073709551615]
 ```
 
-→ **bug applies to all int target dtypes**, not just int32/int64. Here `+inf → uint64`: CPU saturates to `2^63`, GPU to `2^64 − 1`.
+→ Affects unsigned int targets too: `+inf → uint64` saturates to `2^63` on CPU but `2^64 − 1` on GPU.
 
 ### `cpu_gpu/tf_86256_adjust_hue_nan.py` — tensorflow#86256 (NaN class flip)
 
@@ -311,7 +126,7 @@ cpu: [nan 0.5 nan 0.5 0.5 0.5]
 gpu: [0.5 0.5 0.5 0.5 0.5 0.5]
 ```
 
-→ **NaN propagation differs.** A single NaN in the R channel poisons CPU output but is silently absorbed on GPU — different output classes (NaN vs finite), not just different values.
+→ A single NaN in the R channel poisons CPU output but is silently absorbed on GPU. Output classes (NaN vs finite) differ, not just values.
 
 ### `cpu_gpu/pt_156020_ifft_near_fltmax.py` — pytorch#156020 (near `FLT_MAX`)
 
@@ -320,7 +135,7 @@ cpu: tensor([0.+infj, 0.+0.j, 0.+nanj, 0.+0.j])
 gpu: tensor([nan+infj, 0.+0.j, nan+nanj, 0.+0.j])
 ```
 
-→ **escalation near `FLT_MAX`.** `imag = 3.4e38` (vs the issue's `8.5e37`): both CPU and GPU now produce NaN entries, but at different indices and with different real-part bit patterns.
+→ `imag = 3.4e38` (vs the issue's `8.5e37`): NaNs at different indices, different real-part bit patterns.
 
 ### `cpu_gpu/pt_158172_fmax_uint8_out.py` — pytorch#158172 (`fmax` + uint8)
 
@@ -329,7 +144,7 @@ cpu: tensor([160], dtype=torch.uint8)
 gpu: tensor([255], dtype=torch.uint8)
 ```
 
-→ **bug generalises** beyond `fmin` + int16: `fmax` with a `uint8` `out=` also diverges. CPU narrows after the reduction; CUDA narrows before.
+→ Generalises beyond `fmin` + int16: `fmax` with `uint8` `out=` also diverges. CPU narrows after the reduction; CUDA narrows before.
 
 ### `cpu_gpu/pt_158419_signbit_fp16_neg_nan.py` — pytorch#158419 (signbit primitive)
 
@@ -338,16 +153,16 @@ cpu: tensor([True, True, True])
 gpu: tensor([False, False, False])
 ```
 
-→ **isolates the primitive.** `torch.signbit(-NaN)` on fp16 is itself the divergence — `copysign` is just the visible symptom. Even cleaner test than the original.
+→ `torch.signbit(-NaN)` on fp16 is itself the divergence — `copysign` is just the visible symptom.
 
-### `cpu_gpu/pt_162235_median_neg_zero.py` — pytorch#162235 (median variant)
+### `cpu_gpu/pt_162235_median_neg_zero.py` — pytorch#162235 (median)
 
 ```
 cpu: tensor(-0.) signbit: True
 gpu: tensor(0.)  signbit: False
 ```
 
-→ **new op affected.** `torch.median([-0.0, 0.0])` flips the sign bit on CUDA — same `-0.0` semantics bug, but `median` was not in the issue's original op list (which covered max/maximum/relu/amin/amax/argsort/sort).
+→ `torch.median([-0.0, 0.0])` flips the sign bit on CUDA. `median` was not in the issue's original op list.
 
 ### `cpu_gpu/pt_170168_linspace_large_range.py` — pytorch#170168 (1000 points, 1e6 range)
 
@@ -357,43 +172,21 @@ first 5 cpu: [1000000, 997997, 995995, 993993, 991991]
 first 5 gpu: [1000000, 997998, 995996, 993994, 991992]
 ```
 
-→ **scales with `n`.** Issue example was 50 points, 3 differing indices. With 1000 points across `[1e6, -1e6]`, **32 indices** disagree — confirms the rounding-order bug grows with element count.
+→ Issue example was 50 points, 3 differing indices. With 1000 points across `[1e6, -1e6]`, **32 indices** disagree — the rounding-order bug grows with element count.
 
 ---
 
-## Reproduction summary
+## Summary
 
-| Bug | Variants reproduced |
-|---|---|
-| pytorch#162235 (`-0.0`) | 4/4 |
-| pytorch#52241 (`CTCLoss`) | 1/1 |
-| tensorflow#86378 (`BiasAddGrad`) | 3/3 |
-| tensorflow#86256 (`adjust_hue`) | 1/6 (issue inputs only; bug is value-specific) |
-| tensorflow#96180 (`reciprocal`) | 2/3 (complex128 paths) |
-| tensorflow#97204 (`NotEqual`) | 2/2 |
-| tensorflow#86350 (`BatchMatMulV2`) | 0/3 (hardware/version-dependent — RTX 6000 Ada matches CPU) |
-| tensorflow#115731 (`cumsum` bf16) | 1/1 (23× error ratio) |
-| tensorflow#115733 (`reduce_std` fp16) | 1/1 (CPU=nan, GPU=inf) |
-| tensorflow#115736 (`cast` NaN/Inf → int) | 2/2 (int32 + int64) |
-| pytorch#156020 (`fft.ifft` complex64) | 1/1 (CUDA NaN injection) |
-| pytorch#156959 (`MixtureSameFamily.log_prob`) | 1/1 (max abs diff 0.148) |
-| pytorch#158172 (`fmin` int out=) | 1/1 (overflow path) |
-| pytorch#158419 (`copysign` fp16 NaN) | 1/1 (sign bit lost on CUDA) |
-| pytorch#170168 (`linspace` int64) | 1/1 (3 indices differ) |
-| pytorch#177829 (`lu_unpack` SIGSEGV) | 3/3 |
-| pytorch#173574 (`arange` SIGFPE) | 3/3 |
-| tensorflow#76726 (`encode_png` SIGABRT) | 3/3 |
-
-### Variant reproducers (same bug, different input)
-
-| Bug | Variant file | Hook |
+| Issue | Seed file | Variant file |
 |---|---|---|
-| tensorflow#115731 | `tf_115731_cumsum_fp16.py` | fp16 path also broken (~27×) |
-| tensorflow#115733 | `tf_115733_reduce_mean_fp16.py` | `reduce_mean` propagates the bug (NaN vs finite) |
-| tensorflow#115736 | `tf_115736_cast_inf_to_uint64.py` | also affects unsigned int targets |
-| tensorflow#86256  | `tf_86256_adjust_hue_nan.py` | NaN-input class flip (CPU has NaN, GPU finite) |
-| pytorch#156020    | `pt_156020_ifft_near_fltmax.py` | imag near `FLT_MAX` produces different NaN positions |
-| pytorch#158172    | `pt_158172_fmax_uint8_out.py` | `fmax` + uint8 `out=` also diverges |
-| pytorch#158419    | `pt_158419_signbit_fp16_neg_nan.py` | the underlying `signbit` primitive diverges on fp16 |
-| pytorch#162235    | `pt_162235_median_neg_zero.py` | `torch.median` adds a new affected op |
-| pytorch#170168    | `pt_170168_linspace_large_range.py` | scales with n: 32 indices differ at n=1000 |
+| tensorflow#115731 (`cumsum`)               | `tf_115731_cumsum_bf16.py`       | `tf_115731_cumsum_fp16.py`        |
+| tensorflow#115733 (`reduce_std`)           | `tf_115733_reduce_std_fp16.py`   | `tf_115733_reduce_mean_fp16.py`   |
+| tensorflow#115736 (`cast`)                 | `tf_115736_cast_nan_inf_to_int.py` | `tf_115736_cast_inf_to_uint64.py` |
+| tensorflow#86256  (`adjust_hue`)           | —                                | `tf_86256_adjust_hue_nan.py`      |
+| pytorch#156020    (`fft.ifft`)             | `pt_156020_ifft_complex64.py`    | `pt_156020_ifft_near_fltmax.py`   |
+| pytorch#156959    (`MixtureSameFamily`)    | `pt_156959_mixture_log_prob.py`  | —                                 |
+| pytorch#158172    (`fmin/fmax` int `out=`) | `pt_158172_fmin_int_out.py`      | `pt_158172_fmax_uint8_out.py`     |
+| pytorch#158419    (`copysign` fp16 NaN)    | `pt_158419_copysign_fp16_nan.py` | `pt_158419_signbit_fp16_neg_nan.py` |
+| pytorch#162235    (`-0.0` semantics)       | —                                | `pt_162235_median_neg_zero.py`    |
+| pytorch#170168    (`linspace` int)         | `pt_170168_linspace_int64.py`    | `pt_170168_linspace_large_range.py` |
