@@ -13,17 +13,17 @@ export DEEPSEEK_API_KEY=your_key_here   # free at platform.deepseek.com
 
 **PyTorch** (1000 models, 60 s mutation budget each):
 ```bash
-python -m smolfuzz.main --mode full --output-dir results/pytorch
+python -m sasfuzz.main --mode full --output-dir results/pytorch
 ```
 
 **TensorFlow**:
 ```bash
-python smolfuzz/run_tf.py --out results/tensorflow
+python sasfuzz/run_tf.py --out results/tensorflow
 ```
 
 **Both in parallel**:
 ```bash
-python smolfuzz/run_both.py
+python sasfuzz/run_both.py
 ```
 
 Stops automatically after 10 consecutive models introduce no new APIs.
@@ -39,7 +39,7 @@ Stops automatically after 10 consecutive models introduce no new APIs.
 | `ollama` | qwen2.5-coder:32b | Ollama running locally |
 
 ```bash
-python -m smolfuzz.main --mode full --llm-backend claude35 --output-dir results/claude35
+python -m sasfuzz.main --mode full --llm-backend claude35 --output-dir results/claude35
 ```
 
 ## RQ scripts

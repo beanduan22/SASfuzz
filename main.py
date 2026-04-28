@@ -9,7 +9,7 @@ from pathlib import Path
 
 if __name__ == "__main__" and __package__ is None:
     sys.path.insert(0, str(Path(__file__).parent.parent))
-    __package__ = "smolfuzz"
+    __package__ = Path(__file__).parent.name
 
 from .core.api_loader import group_summary, load_and_classify
 from .core.executor import ModelExecutor, has_randomness, has_nondet_gpu_op
@@ -75,11 +75,11 @@ def run(
     skeletons   = get_skeletons("pytorch")
 
     if n_models > 0:
-        logger.info("Starting SMOLFuzz | models=%d api_set=%d budget=%ds",
+        logger.info("Starting SASFuzz | models=%d api_set=%d budget=%ds",
                     n_models, api_set_size, fuzzing_budget_s)
     else:
         logger.info(
-            "Starting SMOLFuzz | models=until_termination api_set=%d budget=%ds",
+            "Starting SASFuzz | models=until_termination api_set=%d budget=%ds",
             api_set_size, fuzzing_budget_s,
         )
     logger.info("LLM models: %s", client._models)
@@ -168,7 +168,7 @@ def run(
 
         model_path = models_dir / f"model_{synth.model_id:04d}.py"
         model_path.write_text(
-            f"# SMOLFuzz model {synth.model_id} | llm={synth.llm_model}"
+            f"# SASFuzz model {synth.model_id} | llm={synth.llm_model}"
             f" | skeleton={synth.skeleton_id}"
             f" | attempts={synth.attempts} | apis={len(synth.used_apis)}"
             f" | error={'yes' if synth.error else 'no'}\n"
@@ -399,7 +399,7 @@ def run(
     logger.info("Bug reports → %s", output_dir / "bugs")
 
 def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(description="SMOLFuzz: LLM-based DL library fuzzer")
+    p = argparse.ArgumentParser(description="SASFuzz: LLM-based DL library fuzzer")
     p.add_argument("--mode", choices=["subset", "full"], default="subset",
                    help="subset = 5 models for validation; full = n_models")
     p.add_argument("--models", type=int, default=1000,

@@ -26,7 +26,7 @@ def _tail_summary(summary_file: Path, max_lines: int = 40) -> str:
 
 def main() -> None:
     ap = argparse.ArgumentParser(
-        description="SMOLFuzz: run PyTorch + TF campaigns in parallel"
+        description="SASFuzz: run PyTorch + TF campaigns in parallel"
     )
     ap.add_argument("--models", type=int, default=500,
                     help="Number of models per framework")
@@ -45,14 +45,14 @@ def main() -> None:
     tf_outdir = out_base / f"run_{args.models}_tf"
 
     log.info("=" * 70)
-    log.info("SMOLFuzz: PyTorch + TensorFlow | models=%d budget=%ds",
+    log.info("SASFuzz: PyTorch + TensorFlow | models=%d budget=%ds",
              args.models, args.budget)
     log.info("PyTorch output → %s", pt_outdir)
     log.info("TF      output → %s", tf_outdir)
     log.info("=" * 70)
 
     pt_cmd = [
-        sys.executable, "-m", "smolfuzz.main",
+        sys.executable, str(HERE / "main.py"),
         "--mode",         "full",
         "--models",       str(args.models),
         "--budget",       str(args.budget),
@@ -61,7 +61,7 @@ def main() -> None:
     ]
 
     tf_cmd = [
-        sys.executable, "-m", "smolfuzz.run_tf",
+        sys.executable, str(HERE / "run_tf.py"),
         "--models",       str(args.models),
         "--budget",       str(args.budget),
         "--api-set-size", str(args.tf_api_set_size),
@@ -129,7 +129,7 @@ def main() -> None:
 
     combined_path = out_base / f"run_{args.models}_combined_summary.txt"
     combined_lines = [
-        "SMOLFuzz Combined Run — COMPLETED",
+        "SASFuzz Combined Run — COMPLETED",
         f"Finished:        {datetime.now()}",
         f"Total wall time: {total_time / 3600:.2f} h",
         f"Models per fw:   {args.models}",

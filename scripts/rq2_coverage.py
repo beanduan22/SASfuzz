@@ -31,7 +31,7 @@ def main():
         pt_out = out / "pytorch"
         pt_out.mkdir(exist_ok=True)
         cmd = [
-            sys.executable, "-m", "smolfuzz.main",
+            sys.executable, str(HERE / "main.py"),
             "--mode", "full", "--models", str(args.models),
             "--budget", str(args.budget),
             "--api-set-size", str(args.api_set_size),

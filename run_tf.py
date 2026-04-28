@@ -19,13 +19,13 @@ os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "3")
 os.environ.setdefault("TF_ENABLE_ONEDNN_OPTS", "0")
 
 HERE = Path(__file__).parent
-sys.path.insert(0, str(HERE.parent))
+sys.path.insert(0, str(HERE))
 
-from smolfuzz.core.api_loader import group_summary, load_and_classify
-from smolfuzz.backends.llm_client import OllamaClient, create_client
-from smolfuzz.core.prompts import build_tf_repair_prompt, build_tf_synthesis_prompt
-from smolfuzz.core.selector import MultiRouletteSelector
-from smolfuzz.core.skeletons import get_skeletons, Skeleton
+from core.api_loader import group_summary, load_and_classify
+from backends.llm_client import OllamaClient, create_client
+from core.prompts import build_tf_repair_prompt, build_tf_synthesis_prompt
+from core.selector import MultiRouletteSelector
+from core.skeletons import get_skeletons, Skeleton
 
 logging.basicConfig(
     level=logging.INFO,
@@ -434,7 +434,7 @@ _MUTATIONS = {
 _MUT_NAMES = list(_MUTATIONS.keys())
 
 def main() -> None:
-    ap = argparse.ArgumentParser(description="SMOLFuzz TF (CPU vs GPU)")
+    ap = argparse.ArgumentParser(description="SASFuzz TF (CPU vs GPU)")
     ap.add_argument("--models", type=int, default=1000,
                     help="Number of models to synthesise")
     ap.add_argument("--budget", type=int, default=60,
@@ -473,7 +473,7 @@ def main() -> None:
     log.info("API classification:\n%s", group_summary(groups))
 
     selectable = {k: v for k, v in groups.items() if k != "_excluded"}
-    from smolfuzz.core.state_signals import StateSignals
+    from core.state_signals import StateSignals
     if args.ablation == "no_selection":
         signals = StateSignals(sigma={}, bug_prior={})
     else:
@@ -540,7 +540,7 @@ def main() -> None:
             return True
         return False
 
-    log.info("SMOLFuzz TF (CPU vs GPU) | models=%d budget=%ds → %s",
+    log.info("SASFuzz TF (CPU vs GPU) | models=%d budget=%ds → %s",
              args.models, args.budget, out_dir)
 
     for mid in range(1, args.models + 1):
@@ -577,7 +577,7 @@ def main() -> None:
 
         model_file = model_dir / f"model_{mid:04d}.py"
         model_file.write_text(
-            f"# SMOLFuzz TF model {mid} | skeleton={skeleton.skeleton_id} | attempts={attempts}\n"
+            f"# SASFuzz TF model {mid} | skeleton={skeleton.skeleton_id} | attempts={attempts}\n"
             f"# APIS_SELECTED = {apis}\n"
             f"# USED_APIS = {used_apis}\n\n{src}\n"
         )
@@ -759,7 +759,7 @@ def main() -> None:
     (out_dir / "coverage.json").write_text(json.dumps(coverage_data, indent=2))
 
     summary_lines = [
-        "SMOLFuzz TF (CPU vs GPU) — COMPLETED",
+        "SASFuzz TF (CPU vs GPU) — COMPLETED",
         f"Finished: {datetime.now()}",
         "",
         "=== STATS ===",

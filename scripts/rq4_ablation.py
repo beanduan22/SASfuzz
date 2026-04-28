@@ -34,7 +34,7 @@ def run_variant(out_dir, framework, ablation, llm_backend, models, budget, api_s
     log_path = out_dir / "run.log"
     if framework == "pytorch":
         cmd = [
-            sys.executable, "-m", "smolfuzz.main",
+            sys.executable, str(HERE / "main.py"),
             "--mode", "full", "--models", str(models),
             "--budget", str(budget),
             "--api-set-size", str(api_set_size),

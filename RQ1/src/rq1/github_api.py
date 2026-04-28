@@ -20,7 +20,7 @@ def _token() -> str | None:
 def _headers(extra: dict | None = None) -> dict:
     h = {
         "Accept": "application/vnd.github+json",
-        "User-Agent": "smolfuzz-rq1",
+        "User-Agent": "sasfuzz-rq1",
     }
     tok = _token()
     if tok:

@@ -563,7 +563,7 @@ class DifferentialOracle:
         lines += [
             '#!/usr/bin/env python3',
             '"""',
-            f'SMOLFuzz bug reproducer — {bug_type.upper()}',
+            f'SASFuzz bug reproducer — {bug_type.upper()}',
             f'Model : {report.model_id}',
             f'Mutation: {report.mutation_name}',
             f'Detail  : {report.detail[:120]}',
