@@ -273,6 +273,94 @@ Aborted (core dumped)
 
 ---
 
+## Variants — same bug, different input
+
+The 9 sections below take each seed bug from above and present a different input that still triggers a clearly divergent CPU vs GPU output. They expand the trigger surface for SASFuzz mutation.
+
+### `cpu_gpu/tf_115731_cumsum_fp16.py` — tensorflow#115731 (fp16 path)
+
+```
+CPU error vs fp64 ref: 1.4662e+03
+GPU error vs fp64 ref: 5.4564e+01
+CPU/GPU error ratio: 26.9x
+```
+
+→ **bug reproduces in fp16 too** (originally reported for bf16). Same `tf.math.cumsum` operator, different low-precision dtype, ~27× error ratio.
+
+### `cpu_gpu/tf_115733_reduce_mean_fp16.py` — tensorflow#115733 (`reduce_mean` variant)
+
+```
+reduce_mean  cpu=nan  gpu=-452.5
+```
+
+→ **bug propagates to `reduce_mean`.** Cleaner output than `reduce_std`: CPU returns NaN, GPU returns a finite number. Same fp16 input, different reduction op.
+
+### `cpu_gpu/tf_115736_cast_inf_to_uint64.py` — tensorflow#115736 (uint64 variant)
+
+```
+cpu: [9223372036854775808]
+gpu: [18446744073709551615]
+```
+
+→ **bug applies to all int target dtypes**, not just int32/int64. Here `+inf → uint64`: CPU saturates to `2^63`, GPU to `2^64 − 1`.
+
+### `cpu_gpu/tf_86256_adjust_hue_nan.py` — tensorflow#86256 (NaN class flip)
+
+```
+cpu: [nan 0.5 nan 0.5 0.5 0.5]
+gpu: [0.5 0.5 0.5 0.5 0.5 0.5]
+```
+
+→ **NaN propagation differs.** A single NaN in the R channel poisons CPU output but is silently absorbed on GPU — different output classes (NaN vs finite), not just different values.
+
+### `cpu_gpu/pt_156020_ifft_near_fltmax.py` — pytorch#156020 (near `FLT_MAX`)
+
+```
+cpu: tensor([0.+infj, 0.+0.j, 0.+nanj, 0.+0.j])
+gpu: tensor([nan+infj, 0.+0.j, nan+nanj, 0.+0.j])
+```
+
+→ **escalation near `FLT_MAX`.** `imag = 3.4e38` (vs the issue's `8.5e37`): both CPU and GPU now produce NaN entries, but at different indices and with different real-part bit patterns.
+
+### `cpu_gpu/pt_158172_fmax_uint8_out.py` — pytorch#158172 (`fmax` + uint8)
+
+```
+cpu: tensor([160], dtype=torch.uint8)
+gpu: tensor([255], dtype=torch.uint8)
+```
+
+→ **bug generalises** beyond `fmin` + int16: `fmax` with a `uint8` `out=` also diverges. CPU narrows after the reduction; CUDA narrows before.
+
+### `cpu_gpu/pt_158419_signbit_fp16_neg_nan.py` — pytorch#158419 (signbit primitive)
+
+```
+cpu: tensor([True, True, True])
+gpu: tensor([False, False, False])
+```
+
+→ **isolates the primitive.** `torch.signbit(-NaN)` on fp16 is itself the divergence — `copysign` is just the visible symptom. Even cleaner test than the original.
+
+### `cpu_gpu/pt_162235_median_neg_zero.py` — pytorch#162235 (median variant)
+
+```
+cpu: tensor(-0.) signbit: True
+gpu: tensor(0.)  signbit: False
+```
+
+→ **new op affected.** `torch.median([-0.0, 0.0])` flips the sign bit on CUDA — same `-0.0` semantics bug, but `median` was not in the issue's original op list (which covered max/maximum/relu/amin/amax/argsort/sort).
+
+### `cpu_gpu/pt_170168_linspace_large_range.py` — pytorch#170168 (1000 points, 1e6 range)
+
+```
+# differing indices: 32
+first 5 cpu: [1000000, 997997, 995995, 993993, 991991]
+first 5 gpu: [1000000, 997998, 995996, 993994, 991992]
+```
+
+→ **scales with `n`.** Issue example was 50 points, 3 differing indices. With 1000 points across `[1e6, -1e6]`, **32 indices** disagree — confirms the rounding-order bug grows with element count.
+
+---
+
 ## Reproduction summary
 
 | Bug | Variants reproduced |
@@ -295,3 +383,17 @@ Aborted (core dumped)
 | pytorch#177829 (`lu_unpack` SIGSEGV) | 3/3 |
 | pytorch#173574 (`arange` SIGFPE) | 3/3 |
 | tensorflow#76726 (`encode_png` SIGABRT) | 3/3 |
+
+### Variant reproducers (same bug, different input)
+
+| Bug | Variant file | Hook |
+|---|---|---|
+| tensorflow#115731 | `tf_115731_cumsum_fp16.py` | fp16 path also broken (~27×) |
+| tensorflow#115733 | `tf_115733_reduce_mean_fp16.py` | `reduce_mean` propagates the bug (NaN vs finite) |
+| tensorflow#115736 | `tf_115736_cast_inf_to_uint64.py` | also affects unsigned int targets |
+| tensorflow#86256  | `tf_86256_adjust_hue_nan.py` | NaN-input class flip (CPU has NaN, GPU finite) |
+| pytorch#156020    | `pt_156020_ifft_near_fltmax.py` | imag near `FLT_MAX` produces different NaN positions |
+| pytorch#158172    | `pt_158172_fmax_uint8_out.py` | `fmax` + uint8 `out=` also diverges |
+| pytorch#158419    | `pt_158419_signbit_fp16_neg_nan.py` | the underlying `signbit` primitive diverges on fp16 |
+| pytorch#162235    | `pt_162235_median_neg_zero.py` | `torch.median` adds a new affected op |
+| pytorch#170168    | `pt_170168_linspace_large_range.py` | scales with n: 32 indices differ at n=1000 |
