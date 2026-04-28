@@ -21,7 +21,7 @@ export ANTHROPIC_API_KEY=your_key    # for --llm-backend claude35
 | `--llm-backend` | Model | Key |
 |---|---|---|
 | `deepseek-v2` *(default)* | deepseek-chat | `DEEPSEEK_API_KEY` |
-| `gpt5` | gpt-4o | `OPENAI_API_KEY` |
+| `gpt5` | gpt-5 | `OPENAI_API_KEY` |
 | `claude35` | claude-3-5-sonnet-20241022 | `ANTHROPIC_API_KEY` |
 
 ## Run

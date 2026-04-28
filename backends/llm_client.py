@@ -237,7 +237,7 @@ class DeepSeekClient:
 
 _BACKEND_MAP = {
     "deepseek-v2": (DeepSeekClient,  "deepseek-chat"),
-    "gpt5":        (OpenAIClient,    "gpt-4o"),
+    "gpt5":        (OpenAIClient,    "gpt-5"),
     "claude35":    (AnthropicClient, "claude-3-5-sonnet-20241022"),
 }
 
