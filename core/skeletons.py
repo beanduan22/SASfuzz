@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-
 @dataclass(frozen=True)
 class Skeleton:
     skeleton_id: str
@@ -10,7 +9,6 @@ class Skeleton:
     dimension: str
     description: str
     template: str
-
 
 PYTORCH_SKELETONS: list[Skeleton] = [
     Skeleton(
@@ -20,7 +18,6 @@ PYTORCH_SKELETONS: list[Skeleton] = [
         description="requires_grad + backward",
         template="""import torch
 import torch.nn as nn
-
 
 class Model(nn.Module):
     def __init__(self):
@@ -32,14 +29,12 @@ class Model(nn.Module):
         # BODY_SLOT
         return h
 
-
 model = Model()
 x = None
 # INPUT_SLOT
 x.requires_grad_(True)
 out = model(x)
 out.sum().backward()
-
 
 def make_inputs():
     return [x]
@@ -53,7 +48,6 @@ def make_inputs():
         template="""import torch
 import torch.nn as nn
 
-
 class Model(nn.Module):
     def __init__(self):
         super().__init__()
@@ -64,13 +58,11 @@ class Model(nn.Module):
         # BODY_SLOT
         return h
 
-
 model = Model()
 x = None
 # INPUT_SLOT
 with torch.no_grad():
     out = model(x)
-
 
 def make_inputs():
     return [x]
@@ -84,7 +76,6 @@ def make_inputs():
         template="""import torch
 import torch.nn as nn
 
-
 class Model(nn.Module):
     def __init__(self):
         super().__init__()
@@ -97,7 +88,6 @@ class Model(nn.Module):
         # BODY_SLOT
         return h
 
-
 model = Model()
 x = None
 # INPUT_SLOT
@@ -105,7 +95,6 @@ model.train()
 y_train = model(x)
 model.eval()
 y_eval = model(x)
-
 
 def make_inputs():
     return [x]
@@ -119,7 +108,6 @@ def make_inputs():
         template="""import torch
 import torch.nn as nn
 
-
 class Model(nn.Module):
     def __init__(self):
         super().__init__()
@@ -130,14 +118,12 @@ class Model(nn.Module):
         # BODY_SLOT
         return h
 
-
 model = Model()
 x = None
 # INPUT_SLOT
 y_eager = model(x)
 traced = torch.jit.trace(model, x)
 y_traced = traced(x)
-
 
 def make_inputs():
     return [x]
@@ -156,7 +142,6 @@ import torch.nn as nn
 import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel as DDP
 
-
 class Model(nn.Module):
     def __init__(self):
         super().__init__()
@@ -166,7 +151,6 @@ class Model(nn.Module):
         h = x
         # BODY_SLOT
         return h
-
 
 _tmpdir = tempfile.TemporaryDirectory()
 _init_file = os.path.join(_tmpdir.name, "dist_init")
@@ -184,7 +168,6 @@ x = None
 out = ddp(x)
 out.sum().backward()
 
-
 def make_inputs():
     return [x]
 """,
@@ -201,7 +184,6 @@ import torch
 import torch.nn as nn
 import torch.distributed as dist
 
-
 class Model(nn.Module):
     def __init__(self):
         super().__init__()
@@ -212,7 +194,6 @@ class Model(nn.Module):
         # BODY_SLOT
         dist.all_reduce(h, op=REDUCE_OP_SLOT)
         return h
-
 
 _tmpdir = tempfile.TemporaryDirectory()
 _init_file = os.path.join(_tmpdir.name, "dist_init")
@@ -227,13 +208,11 @@ x = None
 # INPUT_SLOT
 out = model(x)
 
-
 def make_inputs():
     return [x]
 """,
     ),
 ]
-
 
 TENSORFLOW_SKELETONS: list[Skeleton] = [
     Skeleton(
@@ -242,7 +221,6 @@ TENSORFLOW_SKELETONS: list[Skeleton] = [
         dimension="gradient_tracking",
         description="GradientTape + jacobian",
         template="""import tensorflow as tf
-
 
 class Model(tf.keras.Model):
     def __init__(self):
@@ -253,7 +231,6 @@ class Model(tf.keras.Model):
         h = x
         # BODY_SLOT
         return h
-
 
 model = Model()
 x = None
@@ -271,7 +248,6 @@ grad = tape.jacobian(out, x)
         description="stop_gradient inside tape",
         template="""import tensorflow as tf
 
-
 class Model(tf.keras.Model):
     def __init__(self):
         super().__init__()
@@ -283,7 +259,6 @@ class Model(tf.keras.Model):
         h = tf.stop_gradient(h)
         # BODY_B_SLOT
         return h
-
 
 model = Model()
 x = None
@@ -301,7 +276,6 @@ grad = tape.gradient(out, x)
         description="tf.function tracing",
         template="""import tensorflow as tf
 
-
 class Model(tf.keras.Model):
     def __init__(self):
         super().__init__()
@@ -311,7 +285,6 @@ class Model(tf.keras.Model):
         h = x
         # BODY_SLOT
         return h
-
 
 model = Model()
 x = None
@@ -328,7 +301,6 @@ y_graph = graph_fn(x)
         description="tf.function(jit_compile=True)",
         template="""import tensorflow as tf
 
-
 class Model(tf.keras.Model):
     def __init__(self):
         super().__init__()
@@ -339,17 +311,14 @@ class Model(tf.keras.Model):
         # BODY_SLOT
         return h
 
-
 model = Model()
 x = None
 # INPUT_SLOT
 y_eager = model(x)
 
-
 @tf.function(jit_compile=True)
 def xla_fn(x):
     return model(x)
-
 
 y_xla = xla_fn(x)
 """,
@@ -361,7 +330,6 @@ y_xla = xla_fn(x)
         description="MirroredStrategy scope",
         template="""import tensorflow as tf
 
-
 class Model(tf.keras.Model):
     def __init__(self):
         super().__init__()
@@ -371,7 +339,6 @@ class Model(tf.keras.Model):
         h = x
         # BODY_SLOT
         return h
-
 
 strategy = tf.distribute.MirroredStrategy()
 with strategy.scope():
@@ -391,7 +358,6 @@ out = strategy.run(
         description="tf.distribute collective",
         template="""import tensorflow as tf
 
-
 class Model(tf.keras.Model):
     def __init__(self):
         super().__init__()
@@ -403,7 +369,6 @@ class Model(tf.keras.Model):
         ctx = tf.distribute.get_replica_context()
         h = ctx.all_reduce(REDUCE_OP_SLOT, h)
         return h
-
 
 strategy = tf.distribute.MirroredStrategy()
 with strategy.scope():
@@ -417,7 +382,6 @@ out = strategy.run(
 """,
     ),
 ]
-
 
 def get_skeletons(framework: str) -> list[Skeleton]:
     if framework == "pytorch":

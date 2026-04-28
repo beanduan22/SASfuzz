@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 RQ2: API coverage and code coverage comparison runner.
 

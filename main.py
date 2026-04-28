@@ -36,7 +36,6 @@ _MUTATION_NAMES = {1: "add_noise", 2: "scale_small", 3: "mask",
 
 NEAR_MISS_REL_ERR = 1e-2
 
-
 def run(
     api_file: Path,
     output_dir: Path,
@@ -65,7 +64,6 @@ def run(
 
     selector    = MultiRouletteSelector(selectable_groups, state_signals=signals)
 
-    # Use create_client factory; fall back to llm_models list for legacy Ollama usage
     if llm_models:
         client = OllamaClient(models=llm_models)
     else:
@@ -234,8 +232,6 @@ def run(
         apis_executed.update(synth.used_apis)
         coverage_history.append((i + 1, len(apis_executed)))
 
-        # Gradcheck oracle (Section 3.5): for gradient-tracking skeletons,
-        # flag analytical–numerical gradient mismatches.
         if skeleton.skeleton_id == "PT-G1":
             gc_err = run_gradcheck(synth.code, synth.model_id,
                                    workspace_dir=executor._output_dir)
@@ -255,7 +251,7 @@ def run(
                     fuzzing_budget_s)
 
         found_bug = False
-        saw_anomaly = found_bug_gc  # gradcheck bug also counts as anomaly for selector
+        saw_anomaly = found_bug_gc
         mutation_count = 0
         budget_start = time.time()
         tried_in_sweep: set[int] = set()
@@ -402,13 +398,12 @@ def run(
     logger.info("Selector stats: %s", selector_stats)
     logger.info("Bug reports → %s", output_dir / "bugs")
 
-
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="SMOLFuzz: LLM-based DL library fuzzer")
     p.add_argument("--mode", choices=["subset", "full"], default="subset",
                    help="subset = 5 models for validation; full = n_models")
-    p.add_argument("--models", type=int, default=0,
-                   help="Number of models to synthesise in full mode; 0 means stop only on the no-new-API condition")
+    p.add_argument("--models", type=int, default=1000,
+                   help="Number of models to synthesise (default 1000)")
     p.add_argument("--api-set-size", type=int, default=12,
                    help="APIs per synthesised model")
     p.add_argument("--budget", type=int, default=60,
@@ -417,8 +412,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT)
     p.add_argument("--llm-models", type=str, default=None,
                    help="Comma-separated Ollama model names (overrides defaults)")
-    p.add_argument("--llm-backend", default="ollama",
-                   choices=["gpt5","claude35","qwen25-32b","deepseek-v2","deepseek-api","ollama"],
+    p.add_argument("--llm-backend", default="deepseek-v2",
+                   choices=["deepseek-v2","gpt5","claude35","qwen25-32b","ollama"],
                    help="LLM backend (paper Table 5)")
     p.add_argument("--llm-model", default=None,
                    help="Override specific model name within the chosen backend")
@@ -426,7 +421,6 @@ def parse_args() -> argparse.Namespace:
                    choices=["none","no_skeleton","no_scaffold","no_selection","no_feedback"],
                    help="RQ4 ablation variant")
     return p.parse_args()
-
 
 if __name__ == "__main__":
     args = parse_args()

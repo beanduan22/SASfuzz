@@ -120,7 +120,6 @@ except Exception:
     print('FAIL:' + traceback.format_exc()[-500:])
 """
 
-
 _RANDOMNESS_RX = re.compile(
     r"\b("
     r"tf\.random\."
@@ -131,7 +130,6 @@ _RANDOMNESS_RX = re.compile(
     r")"
 )
 
-
 def _extract_program(text: str) -> str | None:
     text = re.sub(r"```[a-z]*\n?", "", text).strip()
     text = re.sub(r"```\s*$", "", text).strip()
@@ -140,7 +138,6 @@ def _extract_program(text: str) -> str | None:
     if "def call(" not in text:
         return None
     return text
-
 
 def _extract_attr_paths(src: str) -> set[str]:
     import ast as _ast
@@ -165,7 +162,6 @@ def _extract_attr_paths(src: str) -> set[str]:
     V().visit(tree)
     return used
 
-
 def _extract_used_apis(src: str, candidate_pool: list[str] | None = None) -> list[str]:
     attrs = _extract_attr_paths(src)
     if candidate_pool is None:
@@ -173,13 +169,10 @@ def _extract_used_apis(src: str, candidate_pool: list[str] | None = None) -> lis
     pool = set(candidate_pool)
     return sorted(api for api in pool if api in attrs)
 
-
 def _has_random_in_model(src: str) -> bool:
     return bool(_RANDOMNESS_RX.search(src))
 
-
 MAX_REPAIR_ATTEMPTS = 3
-
 
 def synthesize_tf_model(
     llm,
@@ -227,7 +220,6 @@ def synthesize_tf_model(
 
     return None, [], attempts
 
-
 def _cpu_validate(
     src: str, x_np: np.ndarray, ws_dir: Path, mid: int, timeout: int,
 ) -> str | None:
@@ -256,7 +248,6 @@ def _cpu_validate(
                 p.unlink(missing_ok=True)
             except Exception:
                 pass
-
 
 def run_comparison(
     src: str, x_np: np.ndarray, ws_dir: Path, mid: int, timeout: int = 90,
@@ -299,7 +290,6 @@ def run_comparison(
                 pass
     return result
 
-
 _TOL = {
     "float64": (1e-5, 1e-8),
     "float32": (1e-4, 1e-5),
@@ -320,10 +310,8 @@ _INFRA_ERROR_RX = re.compile(
     re.IGNORECASE,
 )
 
-
 def _is_infra_error(err: str | None) -> bool:
     return bool(err) and bool(_INFRA_ERROR_RX.search(err))
-
 
 _PERMUTATION_INVARIANT_TF_APIS = {
     "tf.linalg.eig", "tf.linalg.eigh", "tf.linalg.svd",
@@ -336,10 +324,8 @@ _PERMUTATION_INVARIANT_TF_APIS = {
     "tf.math.top_k",
 }
 
-
 def _uses_permutation_invariant_tf(apis: list[str]) -> bool:
     return any(a in _PERMUTATION_INVARIANT_TF_APIS for a in apis)
-
 
 def _relative_error(c: np.ndarray, g: np.ndarray, rtol: float, atol: float) -> float:
     finite = np.isfinite(c) & np.isfinite(g)
@@ -350,12 +336,10 @@ def _relative_error(c: np.ndarray, g: np.ndarray, rtol: float, atol: float) -> f
     denom = np.where(denom > 0, denom, atol + 1e-12)
     return float(np.max(np.abs(cf - gf) / denom))
 
-
 def _significant_asymmetry(count: int, total: int) -> bool:
     if total == 0 or count == 0:
         return False
     return count >= _NAN_ASYM_MIN and (count / total) >= _NAN_ASYM_FRAC
-
 
 def compare_outputs(
     cpu_out, gpu_out, gpu_repeat=None, cpu_dtype: str | None = None,
@@ -423,28 +407,22 @@ def compare_outputs(
         f"nondet_floor={nd_floor:.3e} dtype={cpu_dtype} n={total}"
     )
 
-
 def _mut_add_noise(x: np.ndarray) -> np.ndarray:
     return x + np.random.randn(*x.shape).astype(np.float32) * 0.1
 
-
 def _mut_scale_small(x: np.ndarray) -> np.ndarray:
     return x * np.float32(np.random.uniform(0.01, 0.1))
-
 
 def _mut_mask(x: np.ndarray) -> np.ndarray:
     m = (np.random.rand(*x.shape) < 0.3).astype(np.float32)
     return (x * (1.0 - m)).astype(np.float32)
 
-
 def _mut_uniform(x: np.ndarray) -> np.ndarray:
     val = np.float32(np.random.randn())
     return np.full_like(x, val, dtype=np.float32)
 
-
 def _mut_scale_large(x: np.ndarray) -> np.ndarray:
     return x * np.float32(np.random.uniform(1e3, 1e6))
-
 
 _MUTATIONS = {
     "add_noise":   _mut_add_noise,
@@ -455,10 +433,9 @@ _MUTATIONS = {
 }
 _MUT_NAMES = list(_MUTATIONS.keys())
 
-
 def main() -> None:
     ap = argparse.ArgumentParser(description="SMOLFuzz TF (CPU vs GPU)")
-    ap.add_argument("--models", type=int, default=300,
+    ap.add_argument("--models", type=int, default=1000,
                     help="Number of models to synthesise")
     ap.add_argument("--budget", type=int, default=60,
                     help="Mutation fuzzing budget in seconds per model")
@@ -470,8 +447,8 @@ def main() -> None:
                     help="Path to the TF API list")
     ap.add_argument("--seed", type=int, default=2026,
                     help="RNG seed for reproducibility")
-    ap.add_argument("--llm-backend", default="ollama",
-                    choices=["gpt5","claude35","qwen25-32b","deepseek-v2","deepseek-api","ollama"],
+    ap.add_argument("--llm-backend", default="deepseek-v2",
+                    choices=["deepseek-v2","gpt5","claude35","qwen25-32b","ollama"],
                     help="LLM backend (paper Table 5)")
     ap.add_argument("--llm-model", default=None,
                     help="Override specific model name within the chosen backend")
@@ -806,7 +783,6 @@ def main() -> None:
     ]
     (out_dir / "summary.txt").write_text("\n".join(summary_lines))
     log.info("Summary → %s", out_dir / "summary.txt")
-
 
 if __name__ == "__main__":
     try:

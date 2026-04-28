@@ -18,7 +18,6 @@ from .executor import ExecutionPair, RunResult
 
 logger = logging.getLogger(__name__)
 
-
 _TOL: dict = {
     torch.float64: (1e-5, 1e-8),
     torch.float32: (1e-4, 1e-5),
@@ -42,10 +41,8 @@ _INFRA_ERROR_RX = re.compile(
     re.IGNORECASE,
 )
 
-
 def _is_infra_error(err: str) -> bool:
     return bool(err) and bool(_INFRA_ERROR_RX.search(err))
-
 
 class BugType(str, Enum):
     CRASH = "crash"
@@ -54,7 +51,6 @@ class BugType(str, Enum):
     GENERATION_FAILURE = "generation_failure"
     NONDET = "nondet"
     CLEAN = "clean"
-
 
 @dataclass
 class OracleReport:
@@ -77,7 +73,6 @@ class OracleReport:
     def is_nondet(self) -> bool:
         return self.bug_type == BugType.NONDET
 
-
 _DEVICE_PREFIX_RX = re.compile(
     r"CUDA[a-zA-Z_ ]*:?\s*"
     r"|cuda:\d+\s*"
@@ -85,7 +80,6 @@ _DEVICE_PREFIX_RX = re.compile(
     r"|GPU\s*\d*:?\s*"
     r"|CPU:?\s*"
 )
-
 
 def _normalize_error(err: str) -> Tuple[str, str]:
     if not err:
@@ -98,7 +92,6 @@ def _normalize_error(err: str) -> Tuple[str, str]:
     exc_msg = _DEVICE_PREFIX_RX.sub("", exc_msg)
     exc_msg = re.sub(r"\s+", " ", exc_msg).lower()
     return exc_type, exc_msg
-
 
 def _errors_are_similar(err1: str, err2: str) -> bool:
     if not err1 or not err2:
@@ -115,10 +108,8 @@ def _errors_are_similar(err1: str, err2: str) -> bool:
     common = sum(a == b for a, b in zip(m1[:n], m2[:n]))
     return common / n > 0.55
 
-
 def _dtype_tol(t: torch.Tensor) -> Tuple[float, float]:
     return _TOL.get(t.dtype, (1e-4, 1e-5))
-
 
 def _align_dtype(cpu: torch.Tensor, gpu: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor, Tuple[float, float]]:
     ranking = {
@@ -133,7 +124,6 @@ def _align_dtype(cpu: torch.Tensor, gpu: torch.Tensor) -> Tuple[torch.Tensor, to
     tol = _TOL.get(target, (1e-4, 1e-5))
     return cpu.to(target).float(), gpu.to(target).float(), tol
 
-
 def _relative_error(c: torch.Tensor, g: torch.Tensor, rtol: float, atol: float) -> float:
     both_finite = torch.isfinite(c) & torch.isfinite(g)
     if not both_finite.any():
@@ -143,7 +133,6 @@ def _relative_error(c: torch.Tensor, g: torch.Tensor, rtol: float, atol: float) 
     denom = atol + rtol * c_f.abs()
     denom = torch.where(denom > 0, denom, torch.full_like(denom, atol + 1e-12))
     return (c_f - g_f).abs().div(denom).max().item()
-
 
 def _sorted_magnitude_error(
     c: torch.Tensor, g: torch.Tensor, rtol: float, atol: float,
@@ -161,7 +150,6 @@ def _sorted_magnitude_error(
     denom = torch.where(denom > 0, denom, torch.full_like(denom, atol + 1e-12))
     return (c_sorted - g_sorted).abs().div(denom).max().item()
 
-
 _PERMUTATION_INVARIANT_APIS = {
     "torch.linalg.eig", "torch.linalg.eigh", "torch.linalg.eigvals",
     "torch.linalg.eigvalsh", "torch.linalg.svd", "torch.linalg.svdvals",
@@ -178,10 +166,8 @@ _PERMUTATION_INVARIANT_APIS = {
     "torch.nn.functional.kthvalue", "torch.kthvalue", "torch.Tensor.kthvalue",
 }
 
-
 def _uses_permutation_invariant_api(apis: List[str]) -> bool:
     return any(a in _PERMUTATION_INVARIANT_APIS for a in apis)
-
 
 def _nan_inf_asymmetry(c: torch.Tensor, g: torch.Tensor) -> Tuple[int, int, int]:
     cpu_nan = torch.isnan(c); gpu_nan = torch.isnan(g)
@@ -191,13 +177,11 @@ def _nan_inf_asymmetry(c: torch.Tensor, g: torch.Tensor) -> Tuple[int, int, int]
     nan_vs_inf = ((cpu_nan & gpu_inf) | (cpu_inf & gpu_nan)).sum().item()
     return int(asym_nan), int(asym_inf), int(nan_vs_inf)
 
-
 def _significant_asymmetry(count: int, total: int) -> bool:
     if total == 0 or count == 0:
         return False
     frac = count / total
     return count >= _NAN_ASYM_MIN and frac >= _NAN_ASYM_FRAC
-
 
 _MUTATION_NAMES = {
     0: "baseline",
@@ -207,7 +191,6 @@ _MUTATION_NAMES = {
     4: "uniform",
     5: "scale_large",
 }
-
 
 _GRADCHECK_RUNNER = """
 import sys, traceback
@@ -267,7 +250,6 @@ except Exception:
 
 _GRADCHECK_TIMEOUT = 120
 
-
 def run_gradcheck(
     model_code: str,
     model_id: int,
@@ -303,11 +285,10 @@ def run_gradcheck(
     if stdout.startswith("FAIL"):
         return stdout
     if stdout.startswith("EXEC_ERROR") or stdout.startswith("ERROR"):
-        return None  # synthesis artefact, not a library bug
+        return None
     if proc.returncode != 0:
         return f"gradcheck crashed: {(proc.stderr or proc.stdout or '')[:300]}"
     return None
-
 
 class DifferentialOracle:
     def __init__(self, output_dir: str | Path) -> None:

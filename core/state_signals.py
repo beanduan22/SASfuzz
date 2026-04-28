@@ -5,8 +5,6 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, Set
 
-# Heuristic σ_i(d): APIs whose behaviour changes under the target state dimension.
-# Used as fallback when no offline-probe JSON is present.
 _SIGMA_HEURISTIC: Dict[str, list[str]] = {
     "gradient_tracking": [
         "torch.nn.BCELoss", "torch.nn.BCEWithLogitsLoss",
@@ -33,7 +31,6 @@ _SIGMA_HEURISTIC: Dict[str, list[str]] = {
         "torch.Tensor.reciprocal", "torch.Tensor.log", "torch.Tensor.sqrt",
         "torch.gather", "torch.scatter", "torch.index_select",
         "torch.nn.functional.embedding",
-        # TF
         "tf.GradientTape", "tf.gradients", "tf.stop_gradient",
         "tf.math.reciprocal", "tf.math.log", "tf.math.sqrt",
         "tf.keras.losses.", "tf.losses.",
@@ -54,7 +51,6 @@ _SIGMA_HEURISTIC: Dict[str, list[str]] = {
         "torch.nn.functional.batch_norm", "torch.nn.functional.dropout",
         "torch.nn.functional.layer_norm", "torch.nn.functional.instance_norm",
         "torch.nn.functional.group_norm", "torch.nn.functional.alpha_dropout",
-        # TF
         "tf.function", "tf.autograph.",
         "tf.keras.layers.BatchNormalization", "tf.keras.layers.Dropout",
         "tf.keras.layers.LayerNormalization",
@@ -63,13 +59,10 @@ _SIGMA_HEURISTIC: Dict[str, list[str]] = {
     "distribution_strategy": [
         "torch.nn.SyncBatchNorm",
         "torch.nn.parallel.", "torch.distributed.",
-        # TF
         "tf.distribute.", "tf.keras.callbacks.BackupAndRestore",
     ],
 }
 
-# Bug prior b_i(d): APIs observed in state-related bug reproducers from the
-# empirical study (206 fix-verified issues) and known confirmed bugs.
 _BUG_PRIOR: Dict[str, list[str]] = {
     "gradient_tracking": [
         "torch.nn.CTCLoss", "torch.nn.functional.ctc_loss",
@@ -83,7 +76,6 @@ _BUG_PRIOR: Dict[str, list[str]] = {
         "torch.nn.functional.softmax", "torch.nn.functional.log_softmax",
         "torch.nn.functional.nll_loss",
         "torch.nn.Embedding",
-        # TF
         "tf.math.reciprocal", "tf.GradientTape",
         "tf.math.log", "tf.gradients",
         "tf.nn.sigmoid_cross_entropy_with_logits",
@@ -95,7 +87,6 @@ _BUG_PRIOR: Dict[str, list[str]] = {
         "torch.nn.LSTM", "torch.nn.GRU",
         "torch.jit.trace", "torch.matrix_exp",
         "torch.nn.MultiheadAttention",
-        # TF
         "tf.function", "tf.nn.batch_normalization",
         "tf.keras.layers.BatchNormalization",
         "tf.keras.layers.LSTM", "tf.keras.layers.GRU",
@@ -104,11 +95,9 @@ _BUG_PRIOR: Dict[str, list[str]] = {
         "torch.distributed.all_reduce",
         "torch.nn.parallel.DistributedDataParallel",
         "torch.nn.SyncBatchNorm",
-        # TF
         "tf.distribute.", "tf.keras.callbacks.BackupAndRestore",
     ],
 }
-
 
 @dataclass
 class StateSignals:

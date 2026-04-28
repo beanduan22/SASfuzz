@@ -18,13 +18,11 @@ log = logging.getLogger("run_both")
 HERE    = Path(__file__).parent
 PARENT  = HERE.parent
 
-
 def _tail_summary(summary_file: Path, max_lines: int = 40) -> str:
     if not summary_file.exists():
         return "  (summary not found)"
     lines = summary_file.read_text().splitlines()
     return "\n".join(lines[:max_lines])
-
 
 def main() -> None:
     ap = argparse.ArgumentParser(
@@ -161,7 +159,6 @@ def main() -> None:
         log.error("TF fuzzer exited with code %d — check %s", tf_rc, tf_log_path)
 
     sys.exit(0 if pt_rc == 0 and tf_rc == 0 else 1)
-
 
 if __name__ == "__main__":
     main()

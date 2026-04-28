@@ -18,7 +18,6 @@ Output:
   - Return ONLY the complete program code.
 """
 
-
 REPAIR_TEMPLATE = """The program failed with the following error: {error_brief}
 
 Repair instructions:
@@ -32,14 +31,11 @@ Original program:
 Return the FULL corrected program only.
 """
 
-
 def _format_pool(api_list: list[str]) -> str:
     return "\n".join(f"    - {a}" for a in api_list)
 
-
 def _format_skeleton(skeleton: str) -> str:
     return "\n".join("    " + line for line in skeleton.splitlines())
-
 
 def build_synthesis_prompt(
     api_list: list[str],
@@ -52,23 +48,18 @@ def build_synthesis_prompt(
         api_pool=_format_pool(api_list),
     )
 
-
 def build_repair_prompt(original_code: str, error_brief: str) -> str:
     return REPAIR_TEMPLATE.format(
         error_brief=error_brief[:1500],
         original_code=original_code,
     )
 
-
 def build_tf_synthesis_prompt(api_list: list[str], skeleton: str) -> str:
     return build_synthesis_prompt(api_list, skeleton, target_lib="TensorFlow 2.x")
-
 
 def build_tf_repair_prompt(original_code: str, error_brief: str) -> str:
     return build_repair_prompt(original_code, error_brief)
 
-
-# ── Ablation: w/o Skeleton ─────────────────────────────────────────────────
 FREE_FORM_TEMPLATE = """Task:
   Write a complete, executable {target_lib} test program that defines a Model class
   and a make_inputs() function.
@@ -130,11 +121,9 @@ _STATE_HINTS = {
     ),
 }
 
-# Generic base template for w/o Scaffold ablation (state constructs stripped)
 _BASE_PT_TEMPLATE = """import torch
 import torch.nn as nn
 import torch.nn.functional as F
-
 
 class Model(nn.Module):
     def __init__(self):
@@ -146,19 +135,16 @@ class Model(nn.Module):
         # BODY_SLOT
         return h
 
-
 model = Model()
 x = None
 # INPUT_SLOT
 out = model(x)
-
 
 def make_inputs():
     return [x]
 """
 
 _BASE_TF_TEMPLATE = """import tensorflow as tf
-
 
 class Model(tf.keras.Model):
     def __init__(self):
@@ -170,20 +156,17 @@ class Model(tf.keras.Model):
         # BODY_SLOT
         return h
 
-
 model = Model()
 x = None
 # INPUT_SLOT
 out = model(x)
 """
 
-
 def build_free_form_prompt(api_list: list[str], target_lib: str = "PyTorch") -> str:
     return FREE_FORM_TEMPLATE.format(
         target_lib=target_lib,
         api_pool=_format_pool(api_list),
     )
-
 
 def build_no_scaffold_prompt(
     api_list: list[str],

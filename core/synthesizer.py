@@ -20,7 +20,6 @@ logger = logging.getLogger(__name__)
 MAX_REPAIR_ATTEMPTS = 4
 EXEC_TIMEOUT_SECONDS = 20
 
-
 @dataclass
 class SynthesisResult:
     code: str
@@ -32,7 +31,6 @@ class SynthesisResult:
     repaired: bool = False
     error: Optional[str] = None
 
-
 def _strip_markdown(text: str) -> str:
     text = text.strip()
     block = re.search(r"```(?:python)?\s*\n(.*?)```", text, re.DOTALL)
@@ -41,7 +39,6 @@ def _strip_markdown(text: str) -> str:
     text = re.sub(r"^```(?:python)?\s*$", "", text, flags=re.MULTILINE)
     text = re.sub(r"^```\s*$", "", text, flags=re.MULTILINE)
     return text.strip()
-
 
 def _extract_attr_paths(code: str) -> set[str]:
     try:
@@ -66,7 +63,6 @@ def _extract_attr_paths(code: str) -> set[str]:
     Visitor().visit(tree)
     return used
 
-
 def _extract_used_apis(code: str, candidate_pool: List[str]) -> List[str]:
     attrs = _extract_attr_paths(code)
     candidate_set = set(candidate_pool)
@@ -85,14 +81,12 @@ def _extract_used_apis(code: str, candidate_pool: List[str]) -> List[str]:
                 matched.add(api)
     return sorted(matched)
 
-
 def _quick_exec_check(code: str) -> Optional[str]:
     try:
         compile(code, "<generated>", "exec")
         return None
     except SyntaxError as exc:
         return f"SyntaxError: {exc}"
-
 
 def _runtime_check(code: str) -> Optional[str]:
     runner = """
@@ -138,12 +132,10 @@ except Exception:
     except Exception:
         return _summarize_error(traceback.format_exc(limit=3))
 
-
 _FRAMEWORK_FRAME_RE = re.compile(
     r"^\s*File \".*(site-packages|torch|tensorflow|tf2|keras)[\\/].*\".*$",
     re.IGNORECASE,
 )
-
 
 def _summarize_error(raw: str) -> str:
     lines = [ln for ln in raw.splitlines() if ln.strip()]
@@ -167,7 +159,6 @@ def _summarize_error(raw: str) -> str:
         seen.add(p)
         unique.append(p)
     return "\n".join(unique)[:1500]
-
 
 class ModelSynthesizer:
     def __init__(self, client: LLMBackend, target_lib: str = "PyTorch", ablation_mode: str = "none") -> None:

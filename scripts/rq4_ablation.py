@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 RQ4: Ablation study runner.
 
@@ -22,14 +21,13 @@ ABLATION_LABELS = {
     "no_feedback":  "w/o Feedback",
 }
 
-LLM_BACKENDS = ["gpt5", "claude35", "qwen25-32b", "deepseek-v2"]
+LLM_BACKENDS = ["deepseek-v2", "gpt5", "claude35", "qwen25-32b"]
 LLM_LABELS   = {
     "gpt5":        "GPT-5",
     "claude35":    "Claude-3.5",
     "qwen25-32b":  "Qwen2.5-32B",
     "deepseek-v2": "DeepSeek-V2",
 }
-
 
 def run_variant(out_dir, framework, ablation, llm_backend, models, budget, api_set_size):
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -58,7 +56,6 @@ def run_variant(out_dir, framework, ablation, llm_backend, models, budget, api_s
         p = subprocess.Popen(cmd, stdout=lf, stderr=subprocess.STDOUT, cwd=str(HERE.parent))
     return p, log_path
 
-
 def read_metrics(out_dir):
     cov_file = out_dir / "coverage.json"
     if not cov_file.exists():
@@ -68,7 +65,6 @@ def read_metrics(out_dir):
     n_total = max(d.get("n_total_apis", 1), 1)
     totals  = d.get("totals", {})
     n_models = d.get("n_models", 0)
-    # Synthesis success rate = (n_models - failed_synth - invalid) / n_models
     failed = totals.get("failed_synth", 0) + totals.get("invalid_models", 0)
     succ_rate = 100 * (n_models - failed) / max(n_models, 1)
     return {
@@ -77,7 +73,6 @@ def read_metrics(out_dir):
         "code_pct": 100 * n_exec / n_total,
         "n_cases": totals.get("bugs", 0),
     }
-
 
 def main():
     ap = argparse.ArgumentParser(description="RQ4: ablation + LLM sensitivity")
@@ -94,7 +89,6 @@ def main():
     out_root = Path(args.out)
     frameworks = ["pytorch","tensorflow"] if args.framework == "both" else [args.framework]
 
-    # ── Ablation experiment ────────────────────────────────────────────────
     if args.experiment in ("ablation","both"):
         print("=== RQ4 Part 1: Component Ablation ===")
         ablation_procs = {}
@@ -125,7 +119,6 @@ def main():
                 else:
                     print(f"  {label:<22} {'N/A':>7}")
 
-    # ── LLM sensitivity experiment ─────────────────────────────────────────
     if args.experiment in ("llm","both"):
         print("\n=== RQ4 Part 2: LLM Sensitivity ===")
         llm_procs = {}
@@ -155,7 +148,6 @@ def main():
                     print(f"  {label:<16} {m['succ_pct']:>6.2f}% {m['n_api']:>6} {m['code_pct']:>6.2f}% {m['n_cases']:>8}")
                 else:
                     print(f"  {label:<16} {'N/A':>7}")
-
 
 if __name__ == "__main__":
     main()

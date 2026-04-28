@@ -9,7 +9,6 @@ import requests
 
 logger = logging.getLogger(__name__)
 
-
 @runtime_checkable
 class LLMBackend(Protocol):
 
@@ -23,14 +22,11 @@ class LLMBackend(Protocol):
     def stats(self) -> dict:
         ...
 
-
 OLLAMA_URL = "http://localhost:11434"
 
 _DEFAULT_OLLAMA_MODELS = [
     "qwen2.5-coder:32b",
-    "deepseek-v2",
 ]
-
 
 class OllamaClient:
 
@@ -105,7 +101,6 @@ class OllamaClient:
     def stats(self) -> dict:
         return {"call_counts": dict(self._call_counts), "next_model": self.current_model}
 
-
 class OpenAIClient:
 
     def __init__(
@@ -115,14 +110,14 @@ class OpenAIClient:
         max_tokens: int = 4096,
     ) -> None:
         try:
-            import openai as _openai  # noqa: F401
+            import openai as _openai
         except ImportError:
             raise ImportError("pip install openai") from None
         self._model = model
         self._temperature = temperature
         self._max_tokens = max_tokens
         self._call_count = 0
-        self._client = None  # lazy — created on first generate()
+        self._client = None
 
     def _get_client(self):
         if self._client is None:
@@ -152,7 +147,6 @@ class OpenAIClient:
     def stats(self) -> dict:
         return {"call_counts": {self._model: self._call_count}, "next_model": self._model}
 
-
 class AnthropicClient:
 
     def __init__(
@@ -162,14 +156,14 @@ class AnthropicClient:
         max_tokens: int = 4096,
     ) -> None:
         try:
-            import anthropic as _anthropic  # noqa: F401
+            import anthropic as _anthropic
         except ImportError:
             raise ImportError("pip install anthropic") from None
         self._model = model
         self._temperature = temperature
         self._max_tokens = max_tokens
         self._call_count = 0
-        self._client = None  # lazy — created on first generate()
+        self._client = None
 
     def _get_client(self):
         if self._client is None:
@@ -199,19 +193,18 @@ class AnthropicClient:
     def stats(self) -> dict:
         return {"call_counts": {self._model: self._call_count}, "next_model": self._model}
 
-
 class DeepSeekClient:
     """DeepSeek API (OpenAI-compatible at api.deepseek.com)."""
     def __init__(self, model="deepseek-chat", temperature=0.7, max_tokens=4096):
         try:
-            import openai as _openai  # noqa: F401
+            import openai as _openai
         except ImportError:
             raise ImportError("pip install openai") from None
         self._model = model
         self._temperature = temperature
         self._max_tokens = max_tokens
         self._call_count = 0
-        self._client = None  # lazy — created on first generate()
+        self._client = None
 
     def _get_client(self):
         if self._client is None:
@@ -242,30 +235,15 @@ class DeepSeekClient:
 
     def stats(self): return {"call_counts": {self._model: self._call_count}, "next_model": self._model}
 
-
-# Paper-defined backend names → (client class, default model)
 _BACKEND_MAP = {
-    "gpt5":       (OpenAIClient,    "gpt-4o"),        # update to gpt-5 when available
-    "claude35":   (AnthropicClient, "claude-3-5-sonnet-20241022"),
-    "qwen25-32b": (OllamaClient,    ["qwen2.5-coder:32b"]),
-    "deepseek-v2":(OllamaClient,    ["deepseek-v2"]),
-    "deepseek-api":(DeepSeekClient, "deepseek-chat"),
-    "ollama":     (OllamaClient,    None),             # uses default list
+    "deepseek-v2": (DeepSeekClient,  "deepseek-chat"),
+    "gpt5":        (OpenAIClient,    "gpt-4o"),
+    "claude35":    (AnthropicClient, "claude-3-5-sonnet-20241022"),
+    "qwen25-32b":  (OllamaClient,    ["qwen2.5-coder:32b"]),
+    "ollama":      (OllamaClient,    None),
 }
 
-
-def create_client(backend: str = "ollama", model: str | None = None) -> LLMBackend:
-    """
-    Factory that returns the correct LLM client for a named backend.
-
-    Backends (matching paper Table 5):
-      gpt5         → OpenAI GPT-5 / gpt-4o
-      claude35     → Anthropic Claude-3.5-Sonnet
-      qwen25-32b   → Qwen2.5-Coder-32B via local Ollama
-      deepseek-v2  → DeepSeek-V2 via local Ollama
-      deepseek-api → DeepSeek via remote API (needs DEEPSEEK_API_KEY)
-      ollama       → Ollama with default model list
-    """
+def create_client(backend: str = "deepseek-v2", model: str | None = None) -> LLMBackend:
     if backend not in _BACKEND_MAP:
         raise ValueError(f"Unknown backend '{backend}'. Choose from: {list(_BACKEND_MAP)}")
     cls, default = _BACKEND_MAP[backend]

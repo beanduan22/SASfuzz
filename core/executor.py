@@ -17,7 +17,6 @@ logger = logging.getLogger(__name__)
 DEVICE_TIMEOUT = 30
 MUTATION_TIMEOUT = 60
 
-
 _RUNNER_SUFFIX = textwrap.dedent("""
 if __name__ == "__main__":
     import argparse, os, sys, traceback
@@ -115,7 +114,6 @@ if __name__ == "__main__":
     torch.save(result, args.output_file)
 """)
 
-
 def _strip_main_block(code: str) -> str:
     import re
     cleaned = re.sub(
@@ -125,7 +123,6 @@ def _strip_main_block(code: str) -> str:
         flags=re.DOTALL,
     )
     return cleaned.rstrip()
-
 
 import re as _re
 
@@ -168,7 +165,6 @@ _NONDET_GPU_RX = _re.compile(
     r")"
 )
 
-
 def _extract_model_body(code: str) -> str:
     m = _re.search(r"class\s+Model\b[^:]*:", code)
     if not m:
@@ -182,14 +178,11 @@ def _extract_model_body(code: str) -> str:
         body_lines.append(line)
     return "\n".join(body_lines)
 
-
 def has_randomness(code: str) -> bool:
     return bool(_RANDOMNESS_RX.search(_extract_model_body(code)))
 
-
 def has_nondet_gpu_op(code: str) -> bool:
     return bool(_NONDET_GPU_RX.search(code))
-
 
 @dataclass
 class RunResult:
@@ -198,7 +191,6 @@ class RunResult:
     outputs: List[torch.Tensor] = field(default_factory=list)
     outputs_repeat: Optional[List[torch.Tensor]] = None
     error: str = ""
-
 
 @dataclass
 class ExecutionPair:
@@ -209,7 +201,6 @@ class ExecutionPair:
     inputs: Optional[List[torch.Tensor]] = None
     has_nondet_ops: bool = False
 
-
 _MUTATION_NAMES = {
     1: "add_noise",
     2: "scale_small",
@@ -217,7 +208,6 @@ _MUTATION_NAMES = {
     4: "uniform",
     5: "scale_large",
 }
-
 
 def apply_mutation(inputs: List[torch.Tensor], strategy: int) -> List[torch.Tensor]:
     mutated = []
@@ -242,7 +232,6 @@ def apply_mutation(inputs: List[torch.Tensor], strategy: int) -> List[torch.Tens
             t = t * f
         mutated.append(t)
     return mutated
-
 
 class ModelExecutor:
     def __init__(self, output_dir: str | Path) -> None:

@@ -8,7 +8,6 @@ from typing import Dict, List, Optional, Set
 
 from .state_signals import StateSignals
 
-
 @dataclass(frozen=True)
 class SelectionPlan:
     apis: List[str]
@@ -16,7 +15,6 @@ class SelectionPlan:
     @property
     def all_apis(self) -> List[str]:
         return list(self.apis)
-
 
 class MultiRouletteSelector:
     def __init__(
@@ -130,7 +128,6 @@ class MultiRouletteSelector:
         }
 
     def _score(self, api: str, dimension: str = "") -> float:
-        # Eq. 1: s_i(d) = (1 + σ_i(d) + b_i(d)) / (u_i + 1)
         sigma = self._signals.get_sigma(api, dimension) if self._signals else 0
         b = self._signals.get_bug_prior(api, dimension) if self._signals else 0
         return (1.0 + sigma + b) / (self._usage[api] + 1)

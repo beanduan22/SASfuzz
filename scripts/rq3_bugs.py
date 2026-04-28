@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 RQ3: Bug study aggregator.
 
@@ -17,7 +16,7 @@ def main():
     args = ap.parse_args()
 
     root = Path(args.results)
-    rows = []  # (framework, bug_type, skeleton_id, used_apis, detail, timestamp)
+    rows = []
     for bug_json in sorted(root.rglob("bug_*.json")):
         try:
             d = json.loads(bug_json.read_text())
@@ -36,7 +35,6 @@ def main():
             "file":      str(bug_json),
         })
 
-    # Group by (framework, bug_type)
     by_fw_type = collections.defaultdict(list)
     for r in rows:
         by_fw_type[(r["framework"], r["bug_type"])].append(r)

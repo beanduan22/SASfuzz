@@ -111,7 +111,6 @@ _INFRA_REGEX = re.compile(
     r")"
 )
 
-
 def is_excluded(api: str) -> Tuple[bool, str]:
     if _RANDOM_OP_REGEX.match(api):
         return True, "random_generation"
@@ -122,7 +121,6 @@ def is_excluded(api: str) -> Tuple[bool, str]:
     if _INFRA_REGEX.match(api):
         return True, "infrastructure"
     return False, ""
-
 
 _RULES: Dict[str, List[str]] = {
     "gradients_optim": [
@@ -480,7 +478,6 @@ _TENSOR_LOGICAL_SUFFIXES = {
 
 _TENSOR_GRAD_SUFFIXES: set = set()
 
-
 def _classify_tensor_method(api: str) -> str:
     method = api.split(".")[-1]
     if method in _TENSOR_MATH_SUFFIXES:
@@ -495,7 +492,6 @@ def _classify_tensor_method(api: str) -> str:
         return "gradients_optim"
     return _MISC
 
-
 def _matches(api: str, kw: str) -> bool:
     if api == kw:
         return True
@@ -505,7 +501,6 @@ def _matches(api: str, kw: str) -> bool:
         return False
     next_char = api[len(kw) : len(kw) + 1]
     return next_char == "" or not next_char.isalpha()
-
 
 def _classify_api(api: str) -> str:
     for group, keywords in _RULES.items():
@@ -521,7 +516,6 @@ def _classify_api(api: str) -> str:
     if api.endswith("Storage"):
         return "creation_conversion"
     return _MISC
-
 
 _TF_RULES: Dict[str, List[str]] = {
     "gradients_optim": [
@@ -663,7 +657,6 @@ _TF_RULES: Dict[str, List[str]] = {
     ],
 }
 
-
 def _classify_tf_api(api: str) -> str:
     for group, keywords in _TF_RULES.items():
         for kw in keywords:
@@ -671,15 +664,12 @@ def _classify_tf_api(api: str) -> str:
                 return group
     return _MISC
 
-
 _GROUP_ORDER = list(_RULES.keys()) + [_MISC]
-
 
 def _classify(api: str, framework: str) -> str:
     if framework == "torch":
         return _classify_api(api)
     return _classify_tf_api(api)
-
 
 def load_and_classify(
     api_file: str | Path,
@@ -713,7 +703,6 @@ def load_and_classify(
 
     return groups
 
-
 def group_summary(groups: Dict[str, List[str]]) -> str:
     lines = []
     selectable = 0
@@ -728,7 +717,6 @@ def group_summary(groups: Dict[str, List[str]]) -> str:
     lines.append(f"  {'EXCLUDED':25s}: {excluded:4d}")
     lines.append(f"  {'TOTAL':25s}: {selectable + excluded:4d}")
     return "\n".join(lines)
-
 
 if __name__ == "__main__":
     import sys
