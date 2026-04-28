@@ -1,6 +1,6 @@
 # SASFuzz
 
-State-aware fuzzing of deep learning libraries via skeleton-guided synthesis (PyTorch and TensorFlow).
+State-aware fuzzing of deep learning libraries via skeleton-guided synthesis.
 
 ## Setup
 
@@ -11,7 +11,7 @@ pip install torch>=2.9.0 tensorflow>=2.21.0 numpy requests openai
 Set the API key for your chosen backend (DeepSeek is free at platform.deepseek.com):
 
 ```bash
-export DEEPSEEK_API_KEY=your_key     # default backend — free
+export DEEPSEEK_API_KEY=your_key     # default — free
 export OPENAI_API_KEY=your_key       # for --llm-backend gpt5
 export ANTHROPIC_API_KEY=your_key    # for --llm-backend claude35
 ```
@@ -29,13 +29,13 @@ export ANTHROPIC_API_KEY=your_key    # for --llm-backend claude35
 ### PyTorch
 
 ```bash
-python main.py --mode full --output-dir results/pytorch
+python run_pytorch.py --mode full --output-dir results/pytorch
 ```
 
 ### TensorFlow
 
 ```bash
-python run_tf.py --out results/tensorflow
+python run_tensorflow.py --out results/tensorflow
 ```
 
 Stops automatically after 10 consecutive models introduce no new APIs.
@@ -46,7 +46,7 @@ Stops automatically after 10 consecutive models introduce no new APIs.
 
 ### RQ1 — Empirical study of state-related issues (Tables 1 & 2)
 
-RQ1 analyses 329 fix-verified correctness issues from PyTorch and TensorFlow to characterise how prevalent state-related bugs are and which state dimensions they concentrate on.
+RQ1 analyses 329 fix-verified correctness issues from PyTorch and TensorFlow to show that 62.6% are state-related and concentrate on three dimensions: gradient tracking, execution mode, and distribution strategy.
 
 ```bash
 cd RQ1
@@ -57,58 +57,55 @@ python -m rq1.verify_fix  # filter to fix-verified issues only
 python -m rq1.report      # print Tables 1 & 2
 ```
 
-### RQ2 — API coverage and code coverage (Table 3)
+### RQ2 & RQ3 — Coverage and bug detection (Tables 3 & 4)
 
 **PyTorch:**
 ```bash
-python scripts/rq2_coverage.py --framework pytorch --models 1000 --budget 60 \
-    --out results/rq2/pytorch
+python scripts/evaluate.py --framework pytorch --models 1000 --budget 60 \
+    --out results/eval
 ```
 
 **TensorFlow:**
 ```bash
-python scripts/rq2_coverage.py --framework tensorflow --models 1000 --budget 60 \
-    --out results/rq2/tensorflow
+python scripts/evaluate.py --framework tensorflow --models 1000 --budget 60 \
+    --out results/eval
 ```
 
-Coverage numbers are written to `results/rq2/<framework>/coverage.json`. Baselines (Muffin, COMET, ModelMeta) must be run separately with their original artifacts.
-
-### RQ3 — Bug detection (Table 4)
-
-**PyTorch:**
+**Both frameworks:**
 ```bash
-python scripts/rq3_bugs.py --results results/rq2/pytorch
+python scripts/evaluate.py --framework both --models 1000 --budget 60 \
+    --out results/eval
 ```
 
-**TensorFlow:**
+To report from existing results without re-running:
 ```bash
-python scripts/rq3_bugs.py --results results/rq2/tensorflow
+python scripts/evaluate.py --framework both --out results/eval --report-only
 ```
 
 ### RQ4 — Ablation study and LLM sensitivity (Tables 5 & 6)
 
-**Component ablation — PyTorch (Table 5):**
+**Component ablation — PyTorch:**
 ```bash
-python scripts/rq4_ablation.py --experiment ablation --framework pytorch \
-    --models 1000 --budget 60 --out results/rq4/pytorch
+python scripts/ablation.py --experiment ablation --framework pytorch \
+    --models 1000 --budget 60 --out results/ablation
 ```
 
-**Component ablation — TensorFlow (Table 5):**
+**Component ablation — TensorFlow:**
 ```bash
-python scripts/rq4_ablation.py --experiment ablation --framework tensorflow \
-    --models 1000 --budget 60 --out results/rq4/tensorflow
+python scripts/ablation.py --experiment ablation --framework tensorflow \
+    --models 1000 --budget 60 --out results/ablation
 ```
 
-**LLM sensitivity — PyTorch (Table 6):**
+**LLM sensitivity — PyTorch:**
 ```bash
-python scripts/rq4_ablation.py --experiment llm --framework pytorch \
-    --models 1000 --budget 60 --out results/rq4/pytorch
+python scripts/ablation.py --experiment llm --framework pytorch \
+    --models 1000 --budget 60 --out results/ablation
 ```
 
-**LLM sensitivity — TensorFlow (Table 6):**
+**LLM sensitivity — TensorFlow:**
 ```bash
-python scripts/rq4_ablation.py --experiment llm --framework tensorflow \
-    --models 1000 --budget 60 --out results/rq4/tensorflow
+python scripts/ablation.py --experiment llm --framework tensorflow \
+    --models 1000 --budget 60 --out results/ablation
 ```
 
 Ablation variants (`--ablation` flag):

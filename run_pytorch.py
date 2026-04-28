@@ -393,7 +393,7 @@ def run(
     logger.info("Bug reports → %s", output_dir / "bugs")
 
 def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(description="SASFuzz: LLM-based DL library fuzzer")
+    p = argparse.ArgumentParser(description="SASFuzz PyTorch fuzzer")
     p.add_argument("--mode", choices=["subset", "full"], default="subset",
                    help="subset = 5 models for validation; full = n_models")
     p.add_argument("--models", type=int, default=1000,

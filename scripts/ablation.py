@@ -34,7 +34,7 @@ def run_variant(out_dir, framework, ablation, llm_backend, models, budget, api_s
     log_path = out_dir / "run.log"
     if framework == "pytorch":
         cmd = [
-            sys.executable, str(HERE / "main.py"),
+            sys.executable, str(HERE / "run_pytorch.py"),
             "--mode", "full", "--models", str(models),
             "--budget", str(budget),
             "--api-set-size", str(api_set_size),
@@ -44,7 +44,7 @@ def run_variant(out_dir, framework, ablation, llm_backend, models, budget, api_s
         ]
     else:
         cmd = [
-            sys.executable, str(HERE/"run_tf.py"),
+            sys.executable, str(HERE / "run_tensorflow.py"),
             "--models", str(models),
             "--budget", str(budget),
             "--api-set-size", str(api_set_size),
