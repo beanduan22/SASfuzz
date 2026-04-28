@@ -239,18 +239,13 @@ _BACKEND_MAP = {
     "deepseek-v2": (DeepSeekClient,  "deepseek-chat"),
     "gpt5":        (OpenAIClient,    "gpt-4o"),
     "claude35":    (AnthropicClient, "claude-3-5-sonnet-20241022"),
-    "qwen25-32b":  (OllamaClient,    ["qwen2.5-coder:32b"]),
-    "ollama":      (OllamaClient,    None),
 }
 
 def create_client(backend: str = "deepseek-v2", model: str | None = None) -> LLMBackend:
     if backend not in _BACKEND_MAP:
         raise ValueError(f"Unknown backend '{backend}'. Choose from: {list(_BACKEND_MAP)}")
     cls, default = _BACKEND_MAP[backend]
-    if cls is OllamaClient:
-        models_arg = [model] if model else (default or None)
-        return OllamaClient(models=models_arg) if models_arg else OllamaClient()
-    elif cls is OpenAIClient:
+    if cls is OpenAIClient:
         return OpenAIClient(model=model or default)
     elif cls is AnthropicClient:
         return AnthropicClient(model=model or default)

@@ -21,7 +21,7 @@ ABLATION_LABELS = {
     "no_feedback":  "w/o Feedback",
 }
 
-LLM_BACKENDS = ["deepseek-v2", "gpt5", "claude35", "qwen25-32b"]
+LLM_BACKENDS = ["deepseek-v2", "gpt5", "claude35"]
 LLM_LABELS   = {
     "gpt5":        "GPT-5",
     "claude35":    "Claude-3.5",
@@ -76,13 +76,13 @@ def read_metrics(out_dir):
 
 def main():
     ap = argparse.ArgumentParser(description="RQ4: ablation + LLM sensitivity")
-    ap.add_argument("--models",       type=int, default=50)
+    ap.add_argument("--models",       type=int, default=1000)
     ap.add_argument("--budget",       type=int, default=60)
     ap.add_argument("--api-set-size", type=int, default=30)
     ap.add_argument("--out",          default=str(HERE/"results"/"rq4"))
     ap.add_argument("--experiment",   choices=["ablation","llm","both"], default="both")
     ap.add_argument("--framework",    choices=["pytorch","tensorflow","both"], default="pytorch")
-    ap.add_argument("--llm-backend",  default="ollama",
+    ap.add_argument("--llm-backend",  default="deepseek-v2", choices=["deepseek-v2","gpt5","claude35"],
                     help="Backend for ablation experiment (default: ollama)")
     args = ap.parse_args()
 

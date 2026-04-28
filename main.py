@@ -13,7 +13,7 @@ if __name__ == "__main__" and __package__ is None:
 
 from .core.api_loader import group_summary, load_and_classify
 from .core.executor import ModelExecutor, has_randomness, has_nondet_gpu_op
-from .backends.llm_client import OllamaClient, create_client
+from .backends.llm_client import create_client
 from .core.oracle import DifferentialOracle, run_gradcheck
 from .core.selector import MultiRouletteSelector
 from .core.skeletons import get_skeletons
@@ -42,8 +42,7 @@ def run(
     n_models: int,
     api_set_size: int,
     fuzzing_budget_s: int,
-    llm_models: list[str] | None = None,
-    llm_backend: str = "ollama",
+    llm_backend: str = "deepseek-v2",
     llm_model: str | None = None,
     ablation: str = "none",
 ) -> None:
@@ -63,12 +62,7 @@ def run(
         signals = StateSignals.load()
 
     selector    = MultiRouletteSelector(selectable_groups, state_signals=signals)
-
-    if llm_models:
-        client = OllamaClient(models=llm_models)
-    else:
-        client = create_client(llm_backend, llm_model)
-
+    client      = create_client(llm_backend, llm_model)
     synthesizer = ModelSynthesizer(client, target_lib="PyTorch", ablation_mode=ablation)
     executor    = ModelExecutor(output_dir / "workspace")
     oracle      = DifferentialOracle(output_dir)
@@ -410,11 +404,9 @@ def parse_args() -> argparse.Namespace:
                    help="Mutation fuzzing budget in seconds per model")
     p.add_argument("--api-file", type=Path, default=DEFAULT_API_FILE)
     p.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT)
-    p.add_argument("--llm-models", type=str, default=None,
-                   help="Comma-separated Ollama model names (overrides defaults)")
     p.add_argument("--llm-backend", default="deepseek-v2",
-                   choices=["deepseek-v2","gpt5","claude35","qwen25-32b","ollama"],
-                   help="LLM backend (paper Table 5)")
+                   choices=["deepseek-v2","gpt5","claude35"],
+                   help="LLM backend")
     p.add_argument("--llm-model", default=None,
                    help="Override specific model name within the chosen backend")
     p.add_argument("--ablation",  default="none",
@@ -425,9 +417,6 @@ def parse_args() -> argparse.Namespace:
 if __name__ == "__main__":
     args = parse_args()
 
-    llm_models = [m.strip() for m in args.llm_models.split(",")] \
-                 if args.llm_models else None
-
     if args.mode == "subset":
         logger.info("SUBSET VALIDATION MODE: 5 models")
         run(
@@ -436,7 +425,6 @@ if __name__ == "__main__":
             n_models=5,
             api_set_size=12,
             fuzzing_budget_s=30,
-            llm_models=llm_models,
             llm_backend=args.llm_backend,
             llm_model=args.llm_model,
             ablation=args.ablation,

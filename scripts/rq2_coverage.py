@@ -16,10 +16,10 @@ HERE = Path(__file__).parent.parent
 def main():
     ap = argparse.ArgumentParser(description="RQ2: coverage runner")
     ap.add_argument("--framework", choices=["pytorch","tensorflow","both"], default="both")
-    ap.add_argument("--models",    type=int, default=100)
+    ap.add_argument("--models",    type=int, default=1000)
     ap.add_argument("--budget",    type=int, default=60)
     ap.add_argument("--api-set-size", type=int, default=30)
-    ap.add_argument("--llm-backend",  default="ollama")
+    ap.add_argument("--llm-backend",  default="deepseek-v2", choices=["deepseek-v2","gpt5","claude35"])
     ap.add_argument("--out",          default=str(HERE/"results"/"rq2"))
     args = ap.parse_args()
 

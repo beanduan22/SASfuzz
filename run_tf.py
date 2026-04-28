@@ -22,7 +22,7 @@ HERE = Path(__file__).parent
 sys.path.insert(0, str(HERE))
 
 from core.api_loader import group_summary, load_and_classify
-from backends.llm_client import OllamaClient, create_client
+from backends.llm_client import create_client
 from core.prompts import build_tf_repair_prompt, build_tf_synthesis_prompt
 from core.selector import MultiRouletteSelector
 from core.skeletons import get_skeletons, Skeleton
@@ -448,7 +448,7 @@ def main() -> None:
     ap.add_argument("--seed", type=int, default=2026,
                     help="RNG seed for reproducibility")
     ap.add_argument("--llm-backend", default="deepseek-v2",
-                    choices=["deepseek-v2","gpt5","claude35","qwen25-32b","ollama"],
+                    choices=["deepseek-v2","gpt5","claude35"],
                     help="LLM backend (paper Table 5)")
     ap.add_argument("--llm-model", default=None,
                     help="Override specific model name within the chosen backend")
