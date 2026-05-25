@@ -139,16 +139,16 @@ import torch.nn.functional as F
 class Model(nn.Module):
     def __init__(self):
         super().__init__()
-        # self.* = LAYER_SLOT
+        "LAYER_SLOT"
 
     def forward(self, x):
         h = x
-        # BODY_SLOT
+        "BODY_SLOT"
         return h
 
 model = Model()
 x = None
-# INPUT_SLOT
+"INPUT_SLOT"
 out = model(x)
 
 def make_inputs():
@@ -160,16 +160,16 @@ _BASE_TF_TEMPLATE = """import tensorflow as tf
 class Model(tf.keras.Model):
     def __init__(self):
         super().__init__()
-        # self.* = LAYER_SLOT
+        "LAYER_SLOT"
 
     def call(self, x):
         h = x
-        # BODY_SLOT
+        "BODY_SLOT"
         return h
 
 model = Model()
 x = None
-# INPUT_SLOT
+"INPUT_SLOT"
 out = model(x)
 """
 

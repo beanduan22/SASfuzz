@@ -161,14 +161,7 @@ def run(
         synth = synthesizer.synthesize(skeleton, api_set)
 
         model_path = models_dir / f"model_{synth.model_id:04d}.py"
-        model_path.write_text(
-            f"# SASFuzz model {synth.model_id} | llm={synth.llm_model}"
-            f" | skeleton={synth.skeleton_id}"
-            f" | attempts={synth.attempts} | apis={len(synth.used_apis)}"
-            f" | error={'yes' if synth.error else 'no'}\n"
-            f"# CANDIDATE_POOL = {api_set}\n\n"
-            + synth.code
-        )
+        model_path.write_text(synth.code + "\n")
 
         if synth.error:
             logger.error("Synthesis failed for model %d: %s",

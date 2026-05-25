@@ -196,7 +196,7 @@ _GRADCHECK_RUNNER = """
 import sys, traceback
 import torch
 import torch.nn as nn
-import torch.nn.functional as F  # noqa: F401
+import torch.nn.functional as F
 
 code = open(sys.argv[1]).read()
 ns = {}
@@ -561,7 +561,6 @@ class DifferentialOracle:
         lines: list[str] = []
 
         lines += [
-            '#!/usr/bin/env python3',
             '"""',
             f'SASFuzz bug reproducer — {bug_type.upper()}',
             f'Model : {report.model_id}',
@@ -576,10 +575,9 @@ class DifferentialOracle:
             'os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")',
             'import torch',
             'import torch.nn as nn',
-            'import torch.nn.functional as F  # noqa: F401',
+            'import torch.nn.functional as F',
             'from pathlib import Path',
             '',
-            '# Determinism settings (match fuzzer runner).',
             'torch.backends.cuda.matmul.allow_tf32 = False',
             'torch.backends.cudnn.allow_tf32 = False',
             'torch.backends.cudnn.deterministic = True',
@@ -589,7 +587,6 @@ class DifferentialOracle:
             'except Exception:',
             '    pass',
             '',
-            '# ── Model (LLM-generated) ────────────────────────────',
         ]
 
         cleaned_code = model_code.strip()
@@ -601,11 +598,9 @@ class DifferentialOracle:
 
         inputs_file = f"{base}.inputs.pt"
         lines += [
-            "# ── Load buggy inputs ─────────────────────────────",
             "_here = Path(__file__).parent",
             f"inputs = torch.load(_here / {inputs_file!r}, weights_only=False)",
             "",
-            "# ── Build two models with identical weights ───────",
             "torch.manual_seed(42)",
             "torch.cuda.manual_seed_all(42)",
             "cpu_model = Model().cpu().eval()",
@@ -620,16 +615,14 @@ class DifferentialOracle:
             bad_model = "cpu_model" if crashing == "cpu" else "gpu_model"
             lines += [
                 "",
-                f"# ── {ok.upper()} succeeds ────────────────────────",
                 f"ok_inputs = [x.to('{ok}') if isinstance(x, torch.Tensor) else x for x in inputs]",
                 "with torch.set_grad_enabled(True):",
                 f"    ok_out = {ok_model}(*ok_inputs)",
                 f"print(f'{ok.upper()} output ok: {{type(ok_out).__name__}}')",
                 "",
-                f"# ── {crashing.upper()} crashes ───────────────────",
                 f"bad_inputs = [x.to('{crashing}') if isinstance(x, torch.Tensor) else x for x in inputs]",
                 "with torch.set_grad_enabled(True):",
-                f"    bad_out = {bad_model}(*bad_inputs)  # <── expect crash",
+                f"    bad_out = {bad_model}(*bad_inputs)",
                 f"print(f'{crashing.upper()} output: {{bad_out}}')",
             ]
         else:

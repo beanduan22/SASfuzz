@@ -142,14 +142,12 @@ try:
     with tf.device('/CPU:0'):
         m = Model()
         x_tf = tf.constant(x_np)
-        # warm-up so model variables are created and stable
         _ = m(x_tf, training=False)
 
         def f(x):
             return tf.cast(m(tf.cast(x, x_tf.dtype), training=False), tf.float64)
 
         theoretical, numerical = tf.test.compute_gradient(f, [x_tf])
-        # tf.test.compute_gradient returns lists keyed by input/output pairs
         max_err = 0.0
         for t, n in zip(theoretical, numerical):
             t_arr = np.asarray(t, dtype=np.float64)
@@ -697,11 +695,7 @@ def main() -> None:
             continue
 
         model_file = model_dir / f"model_{mid:04d}.py"
-        model_file.write_text(
-            f"# SASFuzz TF model {mid} | skeleton={skeleton.skeleton_id} | attempts={attempts}\n"
-            f"# APIS_SELECTED = {apis}\n"
-            f"# USED_APIS = {used_apis}\n\n{src}\n"
-        )
+        model_file.write_text(src + "\n")
 
         r_base = run_comparison(src, x_base, ws_dir, mid, timeout=90)
         if r_base.get("no_gpu"):

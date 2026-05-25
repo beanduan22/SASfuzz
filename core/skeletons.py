@@ -22,16 +22,16 @@ import torch.nn as nn
 class Model(nn.Module):
     def __init__(self):
         super().__init__()
-        # self.* = LAYER_SLOT
+        "LAYER_SLOT"
 
     def forward(self, x):
         h = x
-        # BODY_SLOT
+        "BODY_SLOT"
         return h
 
 model = Model()
 x = None
-# INPUT_SLOT
+"INPUT_SLOT"
 x.requires_grad_(True)
 out = model(x)
 out.sum().backward()
@@ -51,16 +51,16 @@ import torch.nn as nn
 class Model(nn.Module):
     def __init__(self):
         super().__init__()
-        # self.* = LAYER_SLOT
+        "LAYER_SLOT"
 
     def forward(self, x):
         h = x
-        # BODY_SLOT
+        "BODY_SLOT"
         return h
 
 model = Model()
 x = None
-# INPUT_SLOT
+"INPUT_SLOT"
 with torch.no_grad():
     out = model(x)
 
@@ -80,17 +80,17 @@ class Model(nn.Module):
     def __init__(self):
         super().__init__()
         self.sens = None
-        # MODE_LAYER_SLOT
-        # self.* = LAYER_SLOT
+        "MODE_LAYER_SLOT"
+        "LAYER_SLOT"
 
     def forward(self, x):
         h = x
-        # BODY_SLOT
+        "BODY_SLOT"
         return h
 
 model = Model()
 x = None
-# INPUT_SLOT
+"INPUT_SLOT"
 model.train()
 y_train = model(x)
 model.eval()
@@ -111,16 +111,16 @@ import torch.nn as nn
 class Model(nn.Module):
     def __init__(self):
         super().__init__()
-        # self.* = LAYER_SLOT
+        "LAYER_SLOT"
 
     def forward(self, x):
         h = x
-        # BODY_SLOT
+        "BODY_SLOT"
         return h
 
 model = Model()
 x = None
-# INPUT_SLOT
+"INPUT_SLOT"
 y_eager = model(x)
 traced = torch.jit.trace(model, x)
 y_traced = traced(x)
@@ -145,11 +145,11 @@ from torch.nn.parallel import DistributedDataParallel as DDP
 class Model(nn.Module):
     def __init__(self):
         super().__init__()
-        # self.* = LAYER_SLOT
+        "LAYER_SLOT"
 
     def forward(self, x):
         h = x
-        # BODY_SLOT
+        "BODY_SLOT"
         return h
 
 _tmpdir = tempfile.TemporaryDirectory()
@@ -164,7 +164,7 @@ device = "cpu"
 model = Model().to(device)
 ddp = DDP(model)
 x = None
-# INPUT_SLOT
+"INPUT_SLOT"
 out = ddp(x)
 out.sum().backward()
 
@@ -187,11 +187,11 @@ import torch.distributed as dist
 class Model(nn.Module):
     def __init__(self):
         super().__init__()
-        # self.* = LAYER_SLOT
+        "LAYER_SLOT"
 
     def forward(self, x):
         h = x
-        # BODY_SLOT
+        "BODY_SLOT"
         dist.all_reduce(h, op=REDUCE_OP_SLOT)
         return h
 
@@ -205,7 +205,7 @@ dist.init_process_group(
 )
 model = Model()
 x = None
-# INPUT_SLOT
+"INPUT_SLOT"
 out = model(x)
 
 def make_inputs():
@@ -225,16 +225,16 @@ TENSORFLOW_SKELETONS: list[Skeleton] = [
 class Model(tf.keras.Model):
     def __init__(self):
         super().__init__()
-        # self.* = LAYER_SLOT
+        "LAYER_SLOT"
 
     def call(self, x):
         h = x
-        # BODY_SLOT
+        "BODY_SLOT"
         return h
 
 model = Model()
 x = None
-# INPUT_SLOT
+"INPUT_SLOT"
 with tf.GradientTape() as tape:
     tape.watch(x)
     out = model(x)
@@ -251,18 +251,18 @@ grad = tape.jacobian(out, x)
 class Model(tf.keras.Model):
     def __init__(self):
         super().__init__()
-        # self.* = LAYER_SLOT
+        "LAYER_SLOT"
 
     def call(self, x):
         h = x
-        # BODY_A_SLOT
+        "BODY_A_SLOT"
         h = tf.stop_gradient(h)
-        # BODY_B_SLOT
+        "BODY_B_SLOT"
         return h
 
 model = Model()
 x = None
-# INPUT_SLOT
+"INPUT_SLOT"
 with tf.GradientTape() as tape:
     tape.watch(x)
     out = model(x)
@@ -279,16 +279,16 @@ grad = tape.gradient(out, x)
 class Model(tf.keras.Model):
     def __init__(self):
         super().__init__()
-        # self.* = LAYER_SLOT
+        "LAYER_SLOT"
 
     def call(self, x):
         h = x
-        # BODY_SLOT
+        "BODY_SLOT"
         return h
 
 model = Model()
 x = None
-# INPUT_SLOT
+"INPUT_SLOT"
 y_eager = model(x)
 graph_fn = tf.function(model.__call__)
 y_graph = graph_fn(x)
@@ -304,16 +304,16 @@ y_graph = graph_fn(x)
 class Model(tf.keras.Model):
     def __init__(self):
         super().__init__()
-        # self.* = LAYER_SLOT
+        "LAYER_SLOT"
 
     def call(self, x):
         h = x
-        # BODY_SLOT
+        "BODY_SLOT"
         return h
 
 model = Model()
 x = None
-# INPUT_SLOT
+"INPUT_SLOT"
 y_eager = model(x)
 
 @tf.function(jit_compile=True)
@@ -333,18 +333,18 @@ y_xla = xla_fn(x)
 class Model(tf.keras.Model):
     def __init__(self):
         super().__init__()
-        # self.* = LAYER_SLOT
+        "LAYER_SLOT"
 
     def call(self, x):
         h = x
-        # BODY_SLOT
+        "BODY_SLOT"
         return h
 
 strategy = tf.distribute.MirroredStrategy()
 with strategy.scope():
     model = Model()
 x = None
-# INPUT_SLOT
+"INPUT_SLOT"
 out = strategy.run(
     lambda x: model(x),
     args=(x,),
@@ -361,11 +361,11 @@ out = strategy.run(
 class Model(tf.keras.Model):
     def __init__(self):
         super().__init__()
-        # self.* = LAYER_SLOT
+        "LAYER_SLOT"
 
     def call(self, x):
         h = x
-        # BODY_SLOT
+        "BODY_SLOT"
         ctx = tf.distribute.get_replica_context()
         h = ctx.all_reduce(REDUCE_OP_SLOT, h)
         return h
@@ -374,7 +374,7 @@ strategy = tf.distribute.MirroredStrategy()
 with strategy.scope():
     model = Model()
 x = None
-# INPUT_SLOT
+"INPUT_SLOT"
 out = strategy.run(
     lambda x: model(x),
     args=(x,),
