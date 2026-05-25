@@ -151,7 +151,7 @@ def _default_snapshot() -> Path | None:
 def main() -> None:
     parser = argparse.ArgumentParser(description="RQ1 stage 1: collect filtered issues.")
     parser.add_argument("--start", default="2021-01-01")
-    parser.add_argument("--end", default="2026-04-30")
+    parser.add_argument("--end", default="2026-01-01")
     parser.add_argument("--queries", type=Path, default=CONFIGS / "queries.json")
     parser.add_argument("--keywords", type=Path, default=CONFIGS / "keywords.json")
     parser.add_argument(

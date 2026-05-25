@@ -12,21 +12,20 @@ from pathlib import Path
 
 HERE = Path(__file__).parent.parent
 
-ABLATIONS = ["none", "no_skeleton", "no_scaffold", "no_selection", "no_feedback"]
+                                                                           
+ABLATIONS = ["none", "no_skeleton", "no_scaffold", "no_selection"]
 ABLATION_LABELS = {
-    "none":         "SASFuzz (full)",
+    "none":         "SASFuzz",
     "no_skeleton":  "w/o Skeleton",
     "no_scaffold":  "w/o Scaffold",
-    "no_selection": "w/o Selection",
-    "no_feedback":  "w/o Feedback",
+    "no_selection": "w/o State Rel.",
 }
 
-LLM_BACKENDS = ["deepseek-v2", "gpt5", "claude35"]
+                                                                   
+LLM_BACKENDS = ["gpt5", "qwen"]
 LLM_LABELS   = {
     "gpt5":        "GPT-5",
-    "claude35":    "Claude-3.5",
-    "qwen25-32b":  "Qwen2.5-32B",
-    "deepseek-v2": "DeepSeek-V2",
+    "qwen":        "Qwen3.6-27B",
 }
 
 def run_variant(out_dir, framework, ablation, llm_backend, models, budget, api_set_size):
@@ -82,8 +81,9 @@ def main():
     ap.add_argument("--out",          default=str(HERE/"results"/"rq4"))
     ap.add_argument("--experiment",   choices=["ablation","llm","both"], default="both")
     ap.add_argument("--framework",    choices=["pytorch","tensorflow","both"], default="pytorch")
-    ap.add_argument("--llm-backend",  default="deepseek-v2", choices=["deepseek-v2","gpt5","claude35"],
-                    help="Backend for ablation experiment (default: ollama)")
+    ap.add_argument("--llm-backend",  default="gpt5",
+                    choices=["gpt5","qwen"],
+                    help="Backend for component ablation (paper default: gpt5)")
     args = ap.parse_args()
 
     out_root = Path(args.out)

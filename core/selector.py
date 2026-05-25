@@ -129,8 +129,7 @@ class MultiRouletteSelector:
 
     def _score(self, api: str, dimension: str = "") -> float:
         sigma = self._signals.get_sigma(api, dimension) if self._signals else 0
-        b = self._signals.get_bug_prior(api, dimension) if self._signals else 0
-        return (1.0 + sigma + b) / (self._usage[api] + 1)
+        return (1.0 + sigma) / (self._usage[api] + 1)
 
     def _roulette(self, apis: List[str], k: int, dimension: str = "") -> List[str]:
         pool = list(apis)

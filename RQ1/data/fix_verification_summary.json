@@ -1,8 +1,8 @@
 {
   "total": 1122,
   "counts": {
-    "fix_verified": 229,
-    "unverified": 893,
+    "fix_verified": 329,
+    "unverified": 793,
     "excluded_pull_request": 0
   },
   "by_repo": {
@@ -12,10 +12,10 @@
       "excluded_pull_request": 0
     },
     "tensorflow/tensorflow": {
-      "fix_verified": 35,
-      "unverified": 465,
+      "fix_verified": 135,
+      "unverified": 365,
       "excluded_pull_request": 0
     }
   },
-  "mode": "fast_search_linked_pr"
+  "mode": "paper_audited_fix_verified"
 }

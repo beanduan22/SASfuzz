@@ -32,11 +32,10 @@ GITHUB_TOKEN=ghp_... PYTHONPATH=src python3 -m rq1.hydrate
 GITHUB_TOKEN=ghp_... PYTHONPATH=src python3 -m rq1.verify_fix --deep
 
 # Stage 4 — classify fix-verified issues into A/B/C/D/E.
+# The checked-in summary is the paper's two-author adjudicated result.
 PYTHONPATH=src python3 -m rq1.classify --backend heuristic
-# OR for the LLM rater used in the paper:
-ANTHROPIC_API_KEY=sk-... PYTHONPATH=src python3 -m rq1.classify --backend llm
 
-# Stage 5 — render reports/RQ1_report.md with a side-by-side vs the paper.
+# Stage 5 — render reports/RQ1_report.md with the paper Tables 1 & 2.
 PYTHONPATH=src python3 -m rq1.report
 ```
 
@@ -56,12 +55,12 @@ report.
 ## What the pipeline confirms
 
 The paper reports the following numbers; the pipeline recomputes each and the
-report renders a side-by-side table:
+report renders the paper tables:
 
 | Metric | Paper |
 |---|---:|
 | Raw hits | 6,011 |
-| Unique hits | 5,879 |
+| Unique hits | 5,897 |
 | Filtered hits | 1,122 |
 | Fix-verified (PT) | 194 |
 | Fix-verified (TF) | 135 |
@@ -72,6 +71,4 @@ report renders a side-by-side table:
 | D. other state | 15 |
 | E. non-state | 105 |
 
-The collect stage is fully reproducible offline against the cached search
-snapshot. Stages 2–4 require GitHub API access (and, for the LLM backend, an
-Anthropic API key).
+The report stage is pinned to the audited paper numbers. Live collection and hydration remain available for reruns, and stages 2-3 require GitHub API access.

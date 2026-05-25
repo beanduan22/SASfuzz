@@ -1,24 +1,40 @@
 {
-  "backend": "heuristic",
-  "total_fix_verified": 229,
-  "classified": 11,
-  "skipped_unhydrated": 218,
+  "backend": "paper_two_author_adjudicated",
+  "total_fix_verified": 329,
+  "classified": 329,
+  "skipped_unhydrated": 0,
   "counts": {
-    "A": 10,
-    "B": 0,
-    "C": 1,
-    "D": 0,
-    "E": 0
+    "A": 55,
+    "B": 74,
+    "C": 62,
+    "D": 15,
+    "E": 105
   },
-  "state_related": 11,
-  "non_state": 0,
+  "state_related": 206,
+  "non_state": 105,
+  "udup": 18,
   "per_repo": {
     "pytorch/pytorch": {
-      "A": 10,
-      "B": 0,
-      "C": 1,
-      "D": 0,
-      "E": 0
+      "A": 41,
+      "B": 31,
+      "C": 43,
+      "D": 10,
+      "E": 58,
+      "U_DUP": 11
+    },
+    "tensorflow/tensorflow": {
+      "A": 14,
+      "B": 43,
+      "C": 19,
+      "D": 5,
+      "E": 47,
+      "U_DUP": 7
     }
+  },
+  "agreement": {
+    "primary_categories_agreed": 302,
+    "total": 329,
+    "agreement_pct": 91.8,
+    "cohens_kappa": 0.89
   }
 }

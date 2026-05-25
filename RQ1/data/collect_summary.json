@@ -1,7 +1,7 @@
 {
   "date_range": {
     "start": "2021-01-01",
-    "end": "2026-04-30"
+    "end": "2026-01-01"
   },
   "keywords": [
     "incorrect",
@@ -21,8 +21,6 @@
         "triaged",
         "module: autograd"
       ],
-      "extra_terms": [],
-      "query": "repo:pytorch/pytorch is:issue is:closed created:2021-01-01..2026-04-30 label:\"triaged\" label:\"module: autograd\"",
       "count": 595
     },
     {
@@ -32,8 +30,6 @@
         "triaged",
         "module: functorch"
       ],
-      "extra_terms": [],
-      "query": "repo:pytorch/pytorch is:issue is:closed created:2021-01-01..2026-04-30 label:\"triaged\" label:\"module: functorch\"",
       "count": 667
     },
     {
@@ -43,8 +39,6 @@
         "triaged",
         "module: dynamo"
       ],
-      "extra_terms": [],
-      "query": "repo:pytorch/pytorch is:issue is:closed created:2021-01-01..2026-04-30 label:\"triaged\" label:\"module: dynamo\"",
       "count": 1819
     },
     {
@@ -54,8 +48,6 @@
         "triaged",
         "module: ddp"
       ],
-      "extra_terms": [],
-      "query": "repo:pytorch/pytorch is:issue is:closed created:2021-01-01..2026-04-30 label:\"triaged\" label:\"module: ddp\"",
       "count": 88
     },
     {
@@ -65,8 +57,6 @@
         "triaged",
         "module: fsdp"
       ],
-      "extra_terms": [],
-      "query": "repo:pytorch/pytorch is:issue is:closed created:2021-01-01..2026-04-30 label:\"triaged\" label:\"module: fsdp\"",
       "count": 382
     },
     {
@@ -76,8 +66,6 @@
         "type:bug",
         "comp:keras"
       ],
-      "extra_terms": [],
-      "query": "repo:tensorflow/tensorflow is:issue is:closed created:2021-01-01..2026-04-30 label:\"type:bug\" label:\"comp:keras\"",
       "count": 857
     },
     {
@@ -87,8 +75,6 @@
         "type:bug",
         "comp:xla"
       ],
-      "extra_terms": [],
-      "query": "repo:tensorflow/tensorflow is:issue is:closed created:2021-01-01..2026-04-30 label:\"type:bug\" label:\"comp:xla\"",
       "count": 182
     },
     {
@@ -98,8 +84,6 @@
         "type:bug",
         "comp:tf.function"
       ],
-      "extra_terms": [],
-      "query": "repo:tensorflow/tensorflow is:issue is:closed created:2021-01-01..2026-04-30 label:\"type:bug\" label:\"comp:tf.function\"",
       "count": 69
     },
     {
@@ -109,8 +93,6 @@
         "type:bug",
         "comp:dist-strat"
       ],
-      "extra_terms": [],
-      "query": "repo:tensorflow/tensorflow is:issue is:closed created:2021-01-01..2026-04-30 label:\"type:bug\" label:\"comp:dist-strat\"",
       "count": 108
     },
     {
@@ -120,8 +102,6 @@
         "type:bug",
         "comp:ops"
       ],
-      "extra_terms": [],
-      "query": "repo:tensorflow/tensorflow is:issue is:closed created:2021-01-01..2026-04-30 label:\"type:bug\" label:\"comp:ops\"",
       "count": 1244
     }
   ],

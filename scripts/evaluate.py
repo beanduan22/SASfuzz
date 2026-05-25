@@ -98,8 +98,8 @@ def main() -> None:
     ap.add_argument("--models",       type=int, default=1000)
     ap.add_argument("--budget",       type=int, default=60)
     ap.add_argument("--api-set-size", type=int, default=30)
-    ap.add_argument("--llm-backend",  default="deepseek-v2",
-                    choices=["deepseek-v2", "gpt5", "claude35"])
+    ap.add_argument("--llm-backend",  default="gpt5",
+                    choices=["gpt5", "qwen"])
     ap.add_argument("--out",          default=str(HERE / "results" / "eval"))
     ap.add_argument("--report-only",  action="store_true",
                     help="Skip fuzzing; only report from existing results")

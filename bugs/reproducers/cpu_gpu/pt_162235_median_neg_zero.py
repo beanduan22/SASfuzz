@@ -1,4 +1,4 @@
-# https://github.com/pytorch/pytorch/issues/162235  (median variant)
+                                                                    
 import torch
 
 x = torch.tensor([-0.0, 0.0])

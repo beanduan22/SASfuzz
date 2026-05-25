@@ -1,4 +1,4 @@
-# https://github.com/pytorch/pytorch/issues/156020  (near-FLT_MAX variant)
+                                                                          
 import torch
 
 x = torch.zeros(4, dtype=torch.cfloat) + 1j * 3.4e38

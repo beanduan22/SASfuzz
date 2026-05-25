@@ -1,34 +1,29 @@
 SYNTHESIS_TEMPLATE = """Task:
-  Fill in the typed slots of the given skeleton with API calls drawn from the candidate pool, producing one complete, executable program.
+  Fill in the typed slots of the given skeleton with API calls drawn from the candidate pool, producing one complete, executable model.
 
 Inputs:
-  - Target library: {target_lib}
-  - Skeleton template:
-{skeleton}
-  - Candidate API pool:
-{api_pool}
+  - Target library: {TARGET_LIB}
+  - Skeleton template: {SKELETON}
+  - Candidate API pool: {API_POOL}
 
 Requirements:
-  1) Preserve the skeleton. Do not modify the Model scaffold, the state-installing constructs, or the driver logic.
-  2) Fill the body slot. Compose APIs drawn from the candidate pool into a dependency chain within the model body, using each API at most once.
+  1) Preserve the skeleton. Do not modify the model scaffold, the state-installing constructs, or the driver logic.
+  2) Fill the body slot. Compose APIs drawn from {API_POOL} into a dependency chain within the model body, using each API at most once.
   3) Fill the input slot. Provide a randomly initialized tensor matching the body's expected input shape and dtype.
-  4) The resulting program must be syntactically valid and runnable as a standalone file.
+  4) The resulting model must be syntactically valid and runnable as a standalone file.
 
 Output:
-  - Return ONLY the complete program code.
+  - Return ONLY the complete model code.
 """
 
-REPAIR_TEMPLATE = """The program failed with the following error: {error_brief}
+REPAIR_TEMPLATE = """The model failed with the following error: {ERROR_BRIEF}
 
 Repair instructions:
   1. Fix the error with minimal edits.
-  2. Do not alter the skeleton scaffold: Model class structure, state-installing constructs, and driver logic must be preserved.
+  2. Do not alter the skeleton scaffold: model structure, state-installing constructs, and driver logic must be preserved.
   3. Changes are allowed only within the body slot and the input slot (e.g., adjusting API arguments, input shapes or dtypes, or replacing a problematic API call with another from the original candidate pool). The skeleton scaffold must remain unchanged.
 
-Original program:
-{original_code}
-
-Return the FULL corrected program only.
+Return the FULL corrected model code only.
 """
 
 def _format_pool(api_list: list[str]) -> str:
@@ -43,15 +38,14 @@ def build_synthesis_prompt(
     target_lib: str = "PyTorch",
 ) -> str:
     return SYNTHESIS_TEMPLATE.format(
-        target_lib=target_lib,
-        skeleton=_format_skeleton(skeleton),
-        api_pool=_format_pool(api_list),
+        TARGET_LIB=target_lib,
+        SKELETON=_format_skeleton(skeleton),
+        API_POOL=_format_pool(api_list),
     )
 
 def build_repair_prompt(original_code: str, error_brief: str) -> str:
     return REPAIR_TEMPLATE.format(
-        error_brief=error_brief[:1500],
-        original_code=original_code,
+        ERROR_BRIEF=error_brief[:1500],
     )
 
 def build_tf_synthesis_prompt(api_list: list[str], skeleton: str) -> str:
@@ -78,7 +72,7 @@ Requirements:
   4) The program must be syntactically valid and runnable as a standalone file.
 
 Output:
-  - Return ONLY the complete program code.
+  - Return ONLY the complete model code.
 """
 
 NO_SCAFFOLD_TEMPLATE = """Task:
@@ -103,10 +97,10 @@ Requirements:
   4) The resulting program must be syntactically valid and runnable.
 
 Output:
-  - Return ONLY the complete program code.
+  - Return ONLY the complete model code.
 """
 
-_STATE_HINTS = {
+_STATE_HINTS_PT = {
     "gradient_tracking": (
         "Enable autograd: set requires_grad=True on input tensors and call "
         ".backward() or use torch.autograd.gradcheck on the model output."
@@ -118,6 +112,23 @@ _STATE_HINTS = {
     "distribution_strategy": (
         "Use distributed execution: wrap the model with DistributedDataParallel or "
         "call torch.distributed collective ops (all_reduce, broadcast) on tensors."
+    ),
+}
+
+_STATE_HINTS_TF = {
+    "gradient_tracking": (
+        "Enable autodiff: wrap the forward pass in `tf.GradientTape`, call "
+        "`tape.watch(x)` on the input, and compute gradients via "
+        "`tape.gradient` or `tape.jacobian`."
+    ),
+    "execution_mode": (
+        "Exercise tracing: compare eager output `model(x)` with the traced output "
+        "`tf.function(model.__call__)(x)` (optionally with `jit_compile=True`)."
+    ),
+    "distribution_strategy": (
+        "Use a distribution scope: build the model under "
+        "`tf.distribute.MirroredStrategy().scope()` and run via `strategy.run`, "
+        "or invoke a `tf.distribute` collective such as `all_reduce`."
     ),
 }
 
@@ -173,8 +184,10 @@ def build_no_scaffold_prompt(
     dimension: str,
     target_lib: str = "PyTorch",
 ) -> str:
-    base_tpl = _BASE_PT_TEMPLATE if "PyTorch" in target_lib else _BASE_TF_TEMPLATE
-    hint = _STATE_HINTS.get(dimension, "Add appropriate state constructs.")
+    is_pytorch = "PyTorch" in target_lib
+    base_tpl = _BASE_PT_TEMPLATE if is_pytorch else _BASE_TF_TEMPLATE
+    hints = _STATE_HINTS_PT if is_pytorch else _STATE_HINTS_TF
+    hint = hints.get(dimension, "Add appropriate state constructs.")
     return NO_SCAFFOLD_TEMPLATE.format(
         target_lib=target_lib,
         dimension=dimension,

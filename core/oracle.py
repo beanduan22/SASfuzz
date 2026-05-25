@@ -19,15 +19,15 @@ from .executor import ExecutionPair, RunResult
 logger = logging.getLogger(__name__)
 
 _TOL: dict = {
-    torch.float64: (1e-5, 1e-8),
-    torch.float32: (1e-4, 1e-5),
+    torch.float64: (1e-2, 1e-2),
+    torch.float32: (1e-2, 1e-2),
     torch.bfloat16: (1e-2, 1e-2),
-    torch.float16: (1e-2, 1e-3),
+    torch.float16: (1e-2, 1e-2),
 }
 _INT_MISMATCH_FRAC = 0.01
 
-_NAN_ASYM_FRAC = 1e-3
-_NAN_ASYM_MIN = 4
+_NAN_ASYM_FRAC = 0.0
+_NAN_ASYM_MIN = 1
 
 _INFRA_ERROR_RX = re.compile(
     r"out of memory"
@@ -109,7 +109,7 @@ def _errors_are_similar(err1: str, err2: str) -> bool:
     return common / n > 0.55
 
 def _dtype_tol(t: torch.Tensor) -> Tuple[float, float]:
-    return _TOL.get(t.dtype, (1e-4, 1e-5))
+    return _TOL.get(t.dtype, (1e-2, 1e-2))
 
 def _align_dtype(cpu: torch.Tensor, gpu: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor, Tuple[float, float]]:
     ranking = {
@@ -121,7 +121,7 @@ def _align_dtype(cpu: torch.Tensor, gpu: torch.Tensor) -> Tuple[torch.Tensor, to
     rc = ranking.get(cpu.dtype, 0)
     rg = ranking.get(gpu.dtype, 0)
     target = cpu.dtype if rc <= rg else gpu.dtype
-    tol = _TOL.get(target, (1e-4, 1e-5))
+    tol = _TOL.get(target, (1e-2, 1e-2))
     return cpu.to(target).float(), gpu.to(target).float(), tol
 
 def _relative_error(c: torch.Tensor, g: torch.Tensor, rtol: float, atol: float) -> float:
@@ -186,10 +186,10 @@ def _significant_asymmetry(count: int, total: int) -> bool:
 _MUTATION_NAMES = {
     0: "baseline",
     1: "add_noise",
-    2: "scale_small",
+    2: "multiply",
     3: "mask",
-    4: "uniform",
-    5: "scale_large",
+    4: "special_values",
+    5: "dtype_cast",
 }
 
 _GRADCHECK_RUNNER = """
@@ -455,7 +455,7 @@ class DifferentialOracle:
 
             a, b, (rtol, atol) = _align_dtype(c, g)
             rel = _relative_error(a, b, rtol, atol)
-            BUG_MARGIN = 100.0
+            BUG_MARGIN = 1.0
             if rel <= BUG_MARGIN:
                 continue
 
@@ -643,11 +643,11 @@ class DifferentialOracle:
                 "cpu_outs = [cpu_out] if isinstance(cpu_out, torch.Tensor) else list(cpu_out)",
                 "gpu_outs = [gpu_out] if isinstance(gpu_out, torch.Tensor) else list(gpu_out)",
                 "",
-                "TOL = {torch.float64:(1e-5,1e-8), torch.float32:(1e-4,1e-5),",
-                "       torch.bfloat16:(1e-2,1e-2), torch.float16:(1e-2,1e-3)}",
+                "TOL = {torch.float64:(1e-2,1e-2), torch.float32:(1e-2,1e-2),",
+                "       torch.bfloat16:(1e-2,1e-2), torch.float16:(1e-2,1e-2)}",
                 "for i,(c,g) in enumerate(zip(cpu_outs, gpu_outs)):",
                 "    if isinstance(c, torch.Tensor) and isinstance(g, torch.Tensor):",
-                "        rtol, atol = TOL.get(c.dtype, (1e-4, 1e-5))",
+                "        rtol, atol = TOL.get(c.dtype, (1e-2, 1e-2))",
                 "        c_f, g_f = c.float(), g.float().cpu()",
                 "        finite = torch.isfinite(c_f) & torch.isfinite(g_f)",
                 "        if finite.any():",

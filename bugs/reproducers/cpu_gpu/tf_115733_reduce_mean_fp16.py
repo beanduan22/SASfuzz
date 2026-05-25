@@ -1,4 +1,4 @@
-# https://github.com/tensorflow/tensorflow/issues/115733  (reduce_mean variant)
+                                                                               
 import os; os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 import numpy as np, tensorflow as tf
 

@@ -51,7 +51,9 @@ def _fix_verified_urls() -> set[str] | None:
 
 
 def run(limit: int | None, only_fix_verified: bool = False) -> dict:
-    src = json.loads((DATA / "filtered_issues.json").read_text())
+    all_rows = json.loads((DATA / "filtered_issues.json").read_text())
+    valid_urls = {r["url"] for r in all_rows}
+    src = all_rows
     if only_fix_verified:
         urls = _fix_verified_urls()
         if urls is not None:
@@ -66,12 +68,13 @@ def run(limit: int | None, only_fix_verified: bool = False) -> dict:
     existing: dict[str, dict] = {}
     if progress_path.exists():
         for r in json.loads(progress_path.read_text()):
-            existing[r["url"]] = r
-    out.extend(existing.get(r["url"], r) for r in [])  # placeholder
+            if r.get("url") in valid_urls:
+                existing[r["url"]] = r
+    out.extend(existing.get(r["url"], r) for r in [])               
 
     def _flush() -> None:
         merged = list(existing.values())
-        # add any rows already processed in this run
+                                                    
         seen = {m["url"] for m in merged}
         for r in out:
             if r["url"] not in seen:
