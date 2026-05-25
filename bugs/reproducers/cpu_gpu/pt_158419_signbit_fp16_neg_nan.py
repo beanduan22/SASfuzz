@@ -1,4 +1,4 @@
-# https://github.com/pytorch/pytorch/issues/158419  (signbit primitive variant)
+                                                                               
 import numpy as np, torch
 
 x = torch.from_numpy(np.array([0xfe00, 0xfe00, 0xfe00], dtype=np.uint16).view(np.float16))

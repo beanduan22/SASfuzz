@@ -1,6 +1,7 @@
 {
-  "total": 10,
-  "fetched_live": 10,
-  "served_from_cache": 0,
-  "failed": 0
+  "total": 1122,
+  "fetched_live": 0,
+  "served_from_cache": 1122,
+  "failed": 0,
+  "mode": "paper_snapshot"
 }

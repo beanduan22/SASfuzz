@@ -63,69 +63,33 @@ _SIGMA_HEURISTIC: Dict[str, list[str]] = {
     ],
 }
 
-_BUG_PRIOR: Dict[str, list[str]] = {
-    "gradient_tracking": [
-        "torch.nn.CTCLoss", "torch.nn.functional.ctc_loss",
-        "torch.argmin", "torch.argmax",
-        "torch.Tensor.argmin", "torch.Tensor.argmax",
-        "torch.nn.functional.binary_cross_entropy",
-        "torch.reciprocal", "torch.Tensor.reciprocal",
-        "torch.log", "torch.Tensor.log",
-        "torch.linalg.svd", "torch.linalg.eig", "torch.linalg.eigh",
-        "torch.linalg.lstsq", "torch.linalg.solve",
-        "torch.nn.functional.softmax", "torch.nn.functional.log_softmax",
-        "torch.nn.functional.nll_loss",
-        "torch.nn.Embedding",
-        "tf.math.reciprocal", "tf.GradientTape",
-        "tf.math.log", "tf.gradients",
-        "tf.nn.sigmoid_cross_entropy_with_logits",
-        "tf.nn.softmax_cross_entropy_with_logits",
-    ],
-    "execution_mode": [
-        "torch.nn.BatchNorm1d", "torch.nn.BatchNorm2d", "torch.nn.BatchNorm3d",
-        "torch.nn.functional.batch_norm",
-        "torch.nn.LSTM", "torch.nn.GRU",
-        "torch.jit.trace", "torch.matrix_exp",
-        "torch.nn.MultiheadAttention",
-        "tf.function", "tf.nn.batch_normalization",
-        "tf.keras.layers.BatchNormalization",
-        "tf.keras.layers.LSTM", "tf.keras.layers.GRU",
-    ],
-    "distribution_strategy": [
-        "torch.distributed.all_reduce",
-        "torch.nn.parallel.DistributedDataParallel",
-        "torch.nn.SyncBatchNorm",
-        "tf.distribute.", "tf.keras.callbacks.BackupAndRestore",
-    ],
-}
-
 @dataclass
 class StateSignals:
     """
-    Holds σ_i(d) and b_i(d) tables used in Eq. 1 of the paper.
+    Holds σ_i(d) used in Eq. 1 of the paper:
 
-    sigma:     dimension → set of API names/prefixes with σ=1
-    bug_prior: dimension → set of API names/prefixes with b=1
+        s_i(d) = (1 + σ_i(d)) / (u_i + 1)
+
+    σ_i(d) is the documentation-derived state-relevance signal: it is 1 when
+    a dimension-specific keyword for d matches a tokenized documentation
+    field of API i, and 0 otherwise.
+
+    sigma: dimension → set of API names/prefixes with σ=1
     """
     sigma: Dict[str, Set[str]] = field(default_factory=dict)
-    bug_prior: Dict[str, Set[str]] = field(default_factory=dict)
 
     @classmethod
     def from_file(cls, path: str | Path) -> "StateSignals":
         data = json.loads(Path(path).read_text())
         sigma = {d: set(apis) for d, apis in data.get("sigma", {}).items()}
-        bug_prior = {d: set(apis) for d, apis in data.get("bug_prior", {}).items()}
-        return cls(sigma=sigma, bug_prior=bug_prior)
+        return cls(sigma=sigma)
 
     @classmethod
     def from_heuristics(cls) -> "StateSignals":
         sigma: Dict[str, Set[str]] = {
             d: set(prefixes) for d, prefixes in _SIGMA_HEURISTIC.items()
         }
-        bug_prior: Dict[str, Set[str]] = {
-            d: set(prefixes) for d, prefixes in _BUG_PRIOR.items()
-        }
-        return cls(sigma=sigma, bug_prior=bug_prior)
+        return cls(sigma=sigma)
 
     @classmethod
     def load(cls, signals_file: str | Path | None = None) -> "StateSignals":
@@ -147,8 +111,3 @@ class StateSignals:
         if not dimension:
             return 0
         return int(self._match(api, self.sigma.get(dimension, set())))
-
-    def get_bug_prior(self, api: str, dimension: str) -> int:
-        if not dimension:
-            return 0
-        return int(self._match(api, self.bug_prior.get(dimension, set())))

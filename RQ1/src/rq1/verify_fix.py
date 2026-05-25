@@ -175,8 +175,8 @@ def run_fast(start: str, end: str, queries_path: Path, keywords: list[str]) -> d
     filtered pool. Costs only 10 search calls, but only catches PR-linked closures.
     Use this as a lower-bound when GITHUB_TOKEN is missing.
     """
-    # Fast mode does not need bodies; use the full URL list from collect, then
-    # fold in any extra fields available from the partial hydrate cache.
+                                                                              
+                                                                        
     issues = json.loads((DATA / "filtered_issues.json").read_text())
     full_path = DATA / "filtered_issues_full.json"
     if full_path.exists():
@@ -250,7 +250,7 @@ def main() -> None:
     parser.add_argument("--deep", action="store_true", help="Also follow body 'Fixes #N' references.")
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--start", default="2021-01-01")
-    parser.add_argument("--end", default="2026-04-30")
+    parser.add_argument("--end", default="2026-01-01")
     parser.add_argument("--queries", type=Path, default=CONFIGS / "queries.json")
     parser.add_argument("--keywords", type=Path, default=CONFIGS / "keywords.json")
     args = parser.parse_args()

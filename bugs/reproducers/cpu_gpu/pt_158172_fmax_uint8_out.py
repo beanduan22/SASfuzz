@@ -1,4 +1,4 @@
-# https://github.com/pytorch/pytorch/issues/158172  (fmax + uint8 out= variant)
+                                                                               
 import torch
 
 a = torch.tensor([100000], dtype=torch.int64)

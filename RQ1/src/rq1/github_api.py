@@ -85,7 +85,7 @@ def search_query(spec: QuerySpec, start: str, end: str) -> str:
 def _search_page(query: str, page: int) -> dict:
     encoded = urllib.parse.quote(query)
     url = f"{GITHUB_API}/search/issues?q={encoded}&per_page=100&page={page}"
-    return get_json(url)  # type: ignore[return-value]
+    return get_json(url)                              
 
 
 def _parse(d: str) -> date:
@@ -127,7 +127,7 @@ def search_all(spec: QuerySpec, start: str, end: str) -> list[dict]:
 
 
 def fetch_issue_full(repo: str, number: int) -> dict:
-    return get_json(f"{GITHUB_API}/repos/{repo}/issues/{number}")  # type: ignore[return-value]
+    return get_json(f"{GITHUB_API}/repos/{repo}/issues/{number}")                              
 
 
 def fetch_issue_events(repo: str, number: int) -> list[dict]:

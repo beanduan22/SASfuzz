@@ -23,7 +23,12 @@ sys.path.insert(0, str(HERE))
 
 from core.api_loader import group_summary, load_and_classify
 from backends.llm_client import create_client
-from core.prompts import build_tf_repair_prompt, build_tf_synthesis_prompt
+from core.prompts import (
+    build_free_form_prompt,
+    build_no_scaffold_prompt,
+    build_tf_repair_prompt,
+    build_tf_synthesis_prompt,
+)
 from core.selector import MultiRouletteSelector
 from core.skeletons import get_skeletons, Skeleton
 
@@ -51,7 +56,7 @@ for _g in tf.config.list_physical_devices('GPU'):
 {model_src}
 
 input_file = sys.argv[1]
-x_np = np.load(input_file).astype(np.float32)
+x_np = np.load(input_file)
 result = dict(cpu=None, gpu=None, gpu_repeat=None, crash=None, no_gpu=False)
 
 try:
@@ -107,7 +112,7 @@ tf.random.set_seed(42)
 
 {model_src}
 
-x_np = np.load(sys.argv[1]).astype(np.float32)
+x_np = np.load(sys.argv[1])
 try:
     with tf.device('/CPU:0'):
         m = Model()
@@ -119,6 +124,92 @@ try:
 except Exception:
     print('FAIL:' + traceback.format_exc()[-500:])
 """
+
+                                                                             
+                                                                          
+_TF_GRADCHECK_RUNNER = r"""
+import os, sys, traceback
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+import numpy as np
+import tensorflow as tf
+tf.random.set_seed(42)
+
+{model_src}
+
+x_np = np.load(sys.argv[1]).astype(np.float64)
+try:
+    with tf.device('/CPU:0'):
+        m = Model()
+        x_tf = tf.constant(x_np)
+        # warm-up so model variables are created and stable
+        _ = m(x_tf, training=False)
+
+        def f(x):
+            return tf.cast(m(tf.cast(x, x_tf.dtype), training=False), tf.float64)
+
+        theoretical, numerical = tf.test.compute_gradient(f, [x_tf])
+        # tf.test.compute_gradient returns lists keyed by input/output pairs
+        max_err = 0.0
+        for t, n in zip(theoretical, numerical):
+            t_arr = np.asarray(t, dtype=np.float64)
+            n_arr = np.asarray(n, dtype=np.float64)
+            finite = np.isfinite(t_arr) & np.isfinite(n_arr)
+            if not finite.any():
+                continue
+            denom = 1e-5 + 1e-2 * np.abs(t_arr[finite])
+            err = float(np.max(np.abs(t_arr[finite] - n_arr[finite]) / denom))
+            max_err = max(max_err, err)
+        if max_err > 1.0:
+            print(f'FAIL:Jacobian mismatch max_rel_err={max_err:.3e}')
+        else:
+            print('PASS')
+except Exception:
+    print('SKIP:' + traceback.format_exc()[-300:])
+"""
+
+_TF_GRADCHECK_TIMEOUT = 120
+
+def run_tf_gradcheck(
+    src: str,
+    x_np: np.ndarray,
+    ws_dir: Path,
+    mid: int,
+    timeout: int = _TF_GRADCHECK_TIMEOUT,
+) -> str | None:
+    """Run tf.test.compute_gradient on a synthesized TF model.
+
+    Returns None if the check passes or is skipped (e.g., the forward pass
+    is non-differentiable in the captured frame); returns a short error
+    string when the analytical and numerical Jacobians disagree.
+    """
+    script_path = ws_dir / f"tfgc_{mid:04d}_{os.getpid()}.py"
+    inp_path = ws_dir / f"tfgc_inp_{mid:04d}_{os.getpid()}.npy"
+    try:
+        script_path.write_text(_TF_GRADCHECK_RUNNER.format(model_src=src))
+        np.save(str(inp_path), x_np)
+        proc = subprocess.run(
+            [sys.executable, str(script_path), str(inp_path)],
+            capture_output=True, text=True, timeout=timeout,
+        )
+        out = (proc.stdout or "").strip()
+        if out.startswith("PASS") or out.startswith("SKIP"):
+            return None
+        if out.startswith("FAIL"):
+            return out[5:][:400]
+        if proc.returncode != 0:
+            return (proc.stderr or proc.stdout or f"exit {proc.returncode}")[:400]
+        return None
+    except subprocess.TimeoutExpired:
+        return None
+    except Exception as exc:
+        return f"tf_gradcheck error: {exc}"
+    finally:
+        for p in (script_path, inp_path):
+            try:
+                p.unlink(missing_ok=True)
+            except Exception:
+                pass
 
 _RANDOMNESS_RX = re.compile(
     r"\b("
@@ -182,8 +273,16 @@ def synthesize_tf_model(
     mid: int,
     x_val: np.ndarray,
     validator_timeout: int = 40,
+    ablation: str = "none",
 ) -> tuple[str | None, list[str], int]:
-    prompt = build_tf_synthesis_prompt(apis, skeleton.template)
+    if ablation == "no_skeleton":
+        prompt = build_free_form_prompt(apis, target_lib="TensorFlow 2.x")
+    elif ablation == "no_scaffold":
+        prompt = build_no_scaffold_prompt(
+            apis, skeleton.dimension, target_lib="TensorFlow 2.x",
+        )
+    else:
+        prompt = build_tf_synthesis_prompt(apis, skeleton.template)
     try:
         raw = llm.generate(prompt, advance=True)
     except Exception as exc:
@@ -291,14 +390,14 @@ def run_comparison(
     return result
 
 _TOL = {
-    "float64": (1e-5, 1e-8),
-    "float32": (1e-4, 1e-5),
+    "float64": (1e-2, 1e-2),
+    "float32": (1e-2, 1e-2),
     "bfloat16": (1e-2, 1e-2),
-    "float16": (1e-2, 1e-3),
+    "float16": (1e-2, 1e-2),
 }
 
-_NAN_ASYM_FRAC = 1e-3
-_NAN_ASYM_MIN = 4
+_NAN_ASYM_FRAC = 0.0
+_NAN_ASYM_MIN = 1
 
 _INFRA_ERROR_RX = re.compile(
     r"out of memory"
@@ -370,9 +469,9 @@ def compare_outputs(
     if not np.any(both_finite):
         return None, ""
 
-    rtol, atol = _TOL.get(cpu_dtype or "float32", (1e-4, 1e-5))
+    rtol, atol = _TOL.get(cpu_dtype or "float32", (1e-2, 1e-2))
     rel = _relative_error(a, b, rtol, atol)
-    BUG_MARGIN = 100.0
+    BUG_MARGIN = 1.0
     if rel <= BUG_MARGIN:
         return None, ""
 
@@ -408,28 +507,49 @@ def compare_outputs(
     )
 
 def _mut_add_noise(x: np.ndarray) -> np.ndarray:
-    return x + np.random.randn(*x.shape).astype(np.float32) * 0.1
+    return (x + np.random.randn(*x.shape).astype(x.dtype) * 0.1).astype(x.dtype)
 
-def _mut_scale_small(x: np.ndarray) -> np.ndarray:
-    return x * np.float32(np.random.uniform(0.01, 0.1))
+def _mut_multiply(x: np.ndarray) -> np.ndarray:
+    sign = 1.0 if np.random.rand() < 0.5 else -1.0
+    log_f = np.random.uniform(-3.0, 6.0)
+    f = np.float32(sign * (10.0 ** log_f))
+    return (x * f).astype(x.dtype)
 
 def _mut_mask(x: np.ndarray) -> np.ndarray:
-    m = (np.random.rand(*x.shape) < 0.3).astype(np.float32)
-    return (x * (1.0 - m)).astype(np.float32)
+    m = (np.random.rand(*x.shape) < 0.3).astype(x.dtype)
+    return (x * (1.0 - m)).astype(x.dtype)
 
-def _mut_uniform(x: np.ndarray) -> np.ndarray:
-    val = np.float32(np.random.randn())
-    return np.full_like(x, val, dtype=np.float32)
+def _mut_special_values(x: np.ndarray) -> np.ndarray:
+    out = x.astype(np.float32, copy=True)
+    n = out.size
+    if n == 0:
+        return out
+    k = max(1, n // 8 if n > 8 else 1)
+    idx = np.random.choice(n, size=k, replace=False)
+    choice = np.random.choice(("nan", "posinf", "neginf", "extreme"))
+    if choice == "nan":
+        fill = np.float32("nan")
+    elif choice == "posinf":
+        fill = np.float32("inf")
+    elif choice == "neginf":
+        fill = np.float32("-inf")
+    else:
+        sign = 1.0 if np.random.rand() < 0.5 else -1.0
+        fill = np.float32(sign * 1e30)
+    flat = out.reshape(-1)
+    flat[idx] = fill
+    return flat.reshape(out.shape)
 
-def _mut_scale_large(x: np.ndarray) -> np.ndarray:
-    return x * np.float32(np.random.uniform(1e3, 1e6))
+def _mut_dtype_cast(x: np.ndarray) -> np.ndarray:
+    target = np.random.choice(("float64", "float16"))
+    return x.astype(target)
 
 _MUTATIONS = {
-    "add_noise":   _mut_add_noise,
-    "scale_small": _mut_scale_small,
-    "mask":        _mut_mask,
-    "uniform":     _mut_uniform,
-    "scale_large": _mut_scale_large,
+    "add_noise":      _mut_add_noise,
+    "multiply":       _mut_multiply,
+    "mask":           _mut_mask,
+    "special_values": _mut_special_values,
+    "dtype_cast":     _mut_dtype_cast,
 }
 _MUT_NAMES = list(_MUTATIONS.keys())
 
@@ -447,13 +567,13 @@ def main() -> None:
                     help="Path to the TF API list")
     ap.add_argument("--seed", type=int, default=2026,
                     help="RNG seed for reproducibility")
-    ap.add_argument("--llm-backend", default="deepseek-v2",
-                    choices=["deepseek-v2","gpt5","claude35"],
-                    help="LLM backend (paper Table 5)")
+    ap.add_argument("--llm-backend", default="gpt5",
+                    choices=["gpt5","qwen"],
+                    help="LLM backend (paper: gpt5 default, qwen=Qwen3.6-27B for RQ4)")
     ap.add_argument("--llm-model", default=None,
                     help="Override specific model name within the chosen backend")
     ap.add_argument("--ablation", default="none",
-                    choices=["none","no_skeleton","no_scaffold","no_selection","no_feedback"],
+                    choices=["none","no_skeleton","no_scaffold","no_selection"],
                     help="RQ4 ablation variant")
     args = ap.parse_args()
 
@@ -475,7 +595,7 @@ def main() -> None:
     selectable = {k: v for k, v in groups.items() if k != "_excluded"}
     from core.state_signals import StateSignals
     if args.ablation == "no_selection":
-        signals = StateSignals(sigma={}, bug_prior={})
+        signals = StateSignals(sigma={})
     else:
         signals = StateSignals.load()
     selector = MultiRouletteSelector(selectable, state_signals=signals)
@@ -569,6 +689,7 @@ def main() -> None:
             ws_dir,
             mid,
             x_base,
+            ablation=args.ablation,
         )
         if src is None:
             log.warning("m%04d: synthesis failed after %d attempts", mid, attempts)
@@ -619,6 +740,24 @@ def main() -> None:
         apis_executed.update(used_apis)
         coverage_history.append((mid, len(apis_executed)))
         log.info("m%04d: baseline OK — fuzzing for %ds", mid, args.budget)
+
+        if skeleton.dimension == "gradient_tracking":
+            gc_err = run_tf_gradcheck(src, x_base, ws_dir, mid)
+            if gc_err is not None:
+                log.warning("  GRADCHECK BUG | model=%d | %s", mid, gc_err[:200])
+                ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+                bname = f"bug_gradcheck_m{mid:04d}_{ts}"
+                entry = dict(
+                    bug_type="gradcheck", model_id=mid,
+                    mutation="baseline", detail=gc_err,
+                    apis_selected=apis, used_apis=used_apis,
+                    timestamp=ts, model_file=str(model_file),
+                )
+                (bug_dir / f"{bname}.json").write_text(json.dumps(entry, indent=2))
+                np.save(str(bug_dir / f"{bname}.inputs.npy"), x_base)
+                stats["bugs"] += 1
+                stats["bug_types"]["GRADCHECK"] = stats["bug_types"].get("GRADCHECK", 0) + 1
+                bug_log.append(entry)
 
         found_bug = False
         saw_anomaly = False

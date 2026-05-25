@@ -203,34 +203,73 @@ class ExecutionPair:
 
 _MUTATION_NAMES = {
     1: "add_noise",
-    2: "scale_small",
+    2: "multiply",
     3: "mask",
-    4: "uniform",
-    5: "scale_large",
+    4: "special_values",
+    5: "dtype_cast",
 }
 
+_DTYPE_CAST_TARGETS = (
+    torch.float64,
+    torch.float16,
+    torch.bfloat16,
+)
+
 def apply_mutation(inputs: List[torch.Tensor], strategy: int) -> List[torch.Tensor]:
+    """Five tensor-input mutation strategies (paper Section 3.4):
+
+    1. add random noise
+    2. multiply by a random factor
+    3. random masking / zeroing
+    4. inject special values (NaN, Inf, or extreme magnitudes)
+    5. cast to a different dtype
+    """
+    import random as _random
+
     mutated = []
     for t in inputs:
         if not isinstance(t, torch.Tensor) or not t.is_floating_point():
             mutated.append(t)
             continue
-        t = t.clone().float()
+        original_dtype = t.dtype
+        work = t.clone().float()
         if strategy == 1:
-            t = t + torch.randn_like(t) * 0.1
+            work = work + torch.randn_like(work) * 0.1
+            mutated.append(work.to(original_dtype))
         elif strategy == 2:
-            f = torch.empty(1).uniform_(0.01, 0.1).item()
-            t = t * f
+            sign = 1.0 if _random.random() < 0.5 else -1.0
+            log_f = torch.empty(1).uniform_(-3.0, 6.0).item()
+            f = sign * (10.0 ** log_f)
+            work = work * f
+            mutated.append(work.to(original_dtype))
         elif strategy == 3:
-            mask = torch.bernoulli(torch.full_like(t, 0.3)).bool()
-            t = t.masked_fill(mask, 0.0)
+            mask = torch.bernoulli(torch.full_like(work, 0.3)).bool()
+            work = work.masked_fill(mask, 0.0)
+            mutated.append(work.to(original_dtype))
         elif strategy == 4:
-            val = torch.randn(1).item()
-            t = torch.full_like(t, val)
+            choice = _random.choice(("nan", "posinf", "neginf", "extreme"))
+            n = work.numel()
+            if n == 0:
+                mutated.append(work.to(original_dtype))
+                continue
+            k = max(1, min(n, n // 8 if n > 8 else 1))
+            flat = work.reshape(-1)
+            idx = torch.randperm(n)[:k]
+            if choice == "nan":
+                fill = float("nan")
+            elif choice == "posinf":
+                fill = float("inf")
+            elif choice == "neginf":
+                fill = float("-inf")
+            else:
+                fill = (1.0 if _random.random() < 0.5 else -1.0) * 1e30
+            flat[idx] = fill
+            mutated.append(flat.reshape(work.shape).to(original_dtype))
         elif strategy == 5:
-            f = torch.empty(1).uniform_(1e3, 1e6).item()
-            t = t * f
-        mutated.append(t)
+            target_dtype = _random.choice(_DTYPE_CAST_TARGETS)
+            mutated.append(work.to(target_dtype))
+        else:
+            mutated.append(t)
     return mutated
 
 class ModelExecutor:

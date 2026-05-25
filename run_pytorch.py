@@ -31,8 +31,8 @@ HERE = Path(__file__).parent
 DEFAULT_API_FILE = HERE / "torch_valid_apis.txt"
 DEFAULT_OUTPUT   = HERE / "results"
 
-_MUTATION_NAMES = {1: "add_noise", 2: "scale_small", 3: "mask",
-                   4: "uniform",   5: "scale_large"}
+_MUTATION_NAMES = {1: "add_noise", 2: "multiply", 3: "mask",
+                   4: "special_values", 5: "dtype_cast"}
 
 NEAR_MISS_REL_ERR = 1e-2
 
@@ -42,7 +42,7 @@ def run(
     n_models: int,
     api_set_size: int,
     fuzzing_budget_s: int,
-    llm_backend: str = "deepseek-v2",
+    llm_backend: str = "gpt5",
     llm_model: str | None = None,
     ablation: str = "none",
 ) -> None:
@@ -57,7 +57,7 @@ def run(
     selectable_groups = {k: v for k, v in groups.items() if k != "_excluded"}
 
     if ablation == "no_selection":
-        signals = StateSignals(sigma={}, bug_prior={})
+        signals = StateSignals(sigma={})
     else:
         signals = StateSignals.load()
 
@@ -253,7 +253,7 @@ def run(
         cur_inputs = inputs
 
         while time.time() - budget_start < fuzzing_budget_s:
-            strategy = random.choice([1, 2, 3, 4, 5]) if ablation == "no_feedback" else _pick_strategy()
+            strategy = _pick_strategy()
             mut_name = _MUTATION_NAMES[strategy]
             mutation_count += 1
             elapsed = time.time() - budget_start
@@ -404,13 +404,13 @@ def parse_args() -> argparse.Namespace:
                    help="Mutation fuzzing budget in seconds per model")
     p.add_argument("--api-file", type=Path, default=DEFAULT_API_FILE)
     p.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT)
-    p.add_argument("--llm-backend", default="deepseek-v2",
-                   choices=["deepseek-v2","gpt5","claude35"],
-                   help="LLM backend")
+    p.add_argument("--llm-backend", default="gpt5",
+                   choices=["gpt5","qwen"],
+                   help="LLM backend (paper: gpt5 default, qwen=Qwen3.6-27B for RQ4)")
     p.add_argument("--llm-model", default=None,
                    help="Override specific model name within the chosen backend")
     p.add_argument("--ablation",  default="none",
-                   choices=["none","no_skeleton","no_scaffold","no_selection","no_feedback"],
+                   choices=["none","no_skeleton","no_scaffold","no_selection"],
                    help="RQ4 ablation variant")
     return p.parse_args()
 
@@ -436,7 +436,6 @@ if __name__ == "__main__":
             n_models=args.models,
             api_set_size=args.api_set_size,
             fuzzing_budget_s=args.budget,
-            llm_models=llm_models,
             llm_backend=args.llm_backend,
             llm_model=args.llm_model,
             ablation=args.ablation,

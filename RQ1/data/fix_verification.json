@@ -123,7 +123,7 @@
     "url": "https://github.com/pytorch/pytorch/issues/53989",
     "repo": "pytorch/pytorch",
     "number": 53989,
-    "title": null,
+    "title": "grad of sinc explodes at 0",
     "verdict": "fix_verified",
     "signals": {
       "linked_pr": true
@@ -133,7 +133,7 @@
     "url": "https://github.com/pytorch/pytorch/issues/55587",
     "repo": "pytorch/pytorch",
     "number": 55587,
-    "title": null,
+    "title": "`Softplus` forward and backward discrepancy",
     "verdict": "fix_verified",
     "signals": {
       "linked_pr": true
@@ -143,7 +143,7 @@
     "url": "https://github.com/pytorch/pytorch/issues/56683",
     "repo": "pytorch/pytorch",
     "number": 56683,
-    "title": null,
+    "title": "binary_cross_entropy misses derivative for target even if the variable is unused for backward ",
     "verdict": "fix_verified",
     "signals": {
       "linked_pr": true
@@ -163,7 +163,7 @@
     "url": "https://github.com/pytorch/pytorch/issues/56760",
     "repo": "pytorch/pytorch",
     "number": 56760,
-    "title": null,
+    "title": "Derivative of sinc(x) at x=0 returns NaN, should be 0",
     "verdict": "fix_verified",
     "signals": {
       "linked_pr": true
@@ -183,7 +183,7 @@
     "url": "https://github.com/pytorch/pytorch/issues/57006",
     "repo": "pytorch/pytorch",
     "number": 57006,
-    "title": null,
+    "title": "[grad] index_fill : Incorrect gradient when index has duplicates",
     "verdict": "fix_verified",
     "signals": {
       "linked_pr": true
@@ -1767,6 +1767,16 @@
     "verdict": "unverified",
     "signals": {
       "linked_pr": false
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/92675",
+    "repo": "pytorch/pytorch",
+    "number": 92675,
+    "title": "Add rearrange operator to PyTorch natively",
+    "verdict": "fix_verified",
+    "signals": {
+      "linked_pr": true
     }
   },
   {
@@ -3503,16 +3513,6 @@
     "url": "https://github.com/pytorch/pytorch/issues/119832",
     "repo": "pytorch/pytorch",
     "number": 119832,
-    "title": null,
-    "verdict": "unverified",
-    "signals": {
-      "linked_pr": false
-    }
-  },
-  {
-    "url": "https://github.com/pytorch/pytorch/issues/119949",
-    "repo": "pytorch/pytorch",
-    "number": 119949,
     "title": null,
     "verdict": "unverified",
     "signals": {
@@ -5830,6 +5830,16 @@
     }
   },
   {
+    "url": "https://github.com/pytorch/pytorch/issues/169253",
+    "repo": "pytorch/pytorch",
+    "number": 169253,
+    "title": "torch.compile bug: class-level list mutations are dropped",
+    "verdict": "unverified",
+    "signals": {
+      "linked_pr": false
+    }
+  },
+  {
     "url": "https://github.com/pytorch/pytorch/issues/169578",
     "repo": "pytorch/pytorch",
     "number": 169578,
@@ -5897,6 +5907,16 @@
     "verdict": "fix_verified",
     "signals": {
       "linked_pr": true
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/172206",
+    "repo": "pytorch/pytorch",
+    "number": 172206,
+    "title": "torch.compile() produces inconsistent results compared to normal execution for models with random operations",
+    "verdict": "unverified",
+    "signals": {
+      "linked_pr": false
     }
   },
   {
@@ -6000,6 +6020,16 @@
     }
   },
   {
+    "url": "https://github.com/pytorch/pytorch/issues/175855",
+    "repo": "pytorch/pytorch",
+    "number": 175855,
+    "title": "torch.compile yields incorrect results when iterating over a list",
+    "verdict": "unverified",
+    "signals": {
+      "linked_pr": false
+    }
+  },
+  {
     "url": "https://github.com/pytorch/pytorch/issues/175875",
     "repo": "pytorch/pytorch",
     "number": 175875,
@@ -6014,6 +6044,16 @@
     "repo": "pytorch/pytorch",
     "number": 175943,
     "title": null,
+    "verdict": "unverified",
+    "signals": {
+      "linked_pr": false
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/176129",
+    "repo": "pytorch/pytorch",
+    "number": 176129,
+    "title": "[Dynamo][Guards] id_match_unchecked repr(val) triggers excessive memcpy activity in profiling traces",
     "verdict": "unverified",
     "signals": {
       "linked_pr": false
@@ -6057,6 +6097,16 @@
     "verdict": "fix_verified",
     "signals": {
       "linked_pr": true
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/176693",
+    "repo": "pytorch/pytorch",
+    "number": 176693,
+    "title": "Generator expression with conditional filter produces incorrect results",
+    "verdict": "unverified",
+    "signals": {
+      "linked_pr": false
     }
   },
   {
@@ -6160,6 +6210,16 @@
     }
   },
   {
+    "url": "https://github.com/pytorch/pytorch/issues/178046",
+    "repo": "pytorch/pytorch",
+    "number": 178046,
+    "title": "`torch.compile` silently accepts `nn.Parameter` as `fill_value` in `torch.full()` where eager raises TypeError",
+    "verdict": "fix_verified",
+    "signals": {
+      "linked_pr": true
+    }
+  },
+  {
     "url": "https://github.com/pytorch/pytorch/issues/178179",
     "repo": "pytorch/pytorch",
     "number": 178179,
@@ -6170,10 +6230,40 @@
     }
   },
   {
+    "url": "https://github.com/pytorch/pytorch/issues/178224",
+    "repo": "pytorch/pytorch",
+    "number": 178224,
+    "title": "[torch.compile] GuardManager destructor may segfault during interpreter shutdown when recursive dict-tag cleanup touches a freed PyCapsule",
+    "verdict": "unverified",
+    "signals": {
+      "linked_pr": false
+    }
+  },
+  {
     "url": "https://github.com/pytorch/pytorch/issues/178365",
     "repo": "pytorch/pytorch",
     "number": 178365,
     "title": null,
+    "verdict": "fix_verified",
+    "signals": {
+      "linked_pr": true
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/178447",
+    "repo": "pytorch/pytorch",
+    "number": 178447,
+    "title": "Dynamo `TritonHOPifier.call_run` doesn't propagate kernel_source -> `AssertionError`: Can't construct an AttrSource without a valid base source",
+    "verdict": "unverified",
+    "signals": {
+      "linked_pr": false
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/178887",
+    "repo": "pytorch/pytorch",
+    "number": 178887,
+    "title": "[Bug] FakeMode in `fullgraph=True` fails",
     "verdict": "fix_verified",
     "signals": {
       "linked_pr": true
@@ -6190,10 +6280,60 @@
     }
   },
   {
+    "url": "https://github.com/pytorch/pytorch/issues/180195",
+    "repo": "pytorch/pytorch",
+    "number": 180195,
+    "title": "DISABLED test_vjp_vmap_cpu (__main__.TestComposabilityCPU)",
+    "verdict": "unverified",
+    "signals": {
+      "linked_pr": false
+    }
+  },
+  {
     "url": "https://github.com/pytorch/pytorch/issues/180201",
     "repo": "pytorch/pytorch",
     "number": 180201,
     "title": null,
+    "verdict": "unverified",
+    "signals": {
+      "linked_pr": false
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/180213",
+    "repo": "pytorch/pytorch",
+    "number": 180213,
+    "title": "DISABLED test_vmap_vjp_cpu (__main__.TestComposabilityCPU)",
+    "verdict": "unverified",
+    "signals": {
+      "linked_pr": false
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/180322",
+    "repo": "pytorch/pytorch",
+    "number": 180322,
+    "title": "DISABLED test_vjp_vjp_cpu (__main__.TestComposabilityCPU)",
+    "verdict": "unverified",
+    "signals": {
+      "linked_pr": false
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/180337",
+    "repo": "pytorch/pytorch",
+    "number": 180337,
+    "title": "DISABLED test_vmap_grad_cpu (__main__.TestComposabilityCPU)",
+    "verdict": "unverified",
+    "signals": {
+      "linked_pr": false
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/180741",
+    "repo": "pytorch/pytorch",
+    "number": 180741,
+    "title": "[Dynamo] speech_transformer SIGSEGV on A10G in periodic benchmarks",
     "verdict": "unverified",
     "signals": {
       "linked_pr": false
@@ -6210,10 +6350,60 @@
     }
   },
   {
+    "url": "https://github.com/pytorch/pytorch/issues/180837",
+    "repo": "pytorch/pytorch",
+    "number": 180837,
+    "title": "[Dynamo] Failed to set tensor attribute 'imag' when modifying complex tensor components",
+    "verdict": "fix_verified",
+    "signals": {
+      "linked_pr": true
+    }
+  },
+  {
     "url": "https://github.com/pytorch/pytorch/issues/181101",
     "repo": "pytorch/pytorch",
     "number": 181101,
     "title": null,
+    "verdict": "fix_verified",
+    "signals": {
+      "linked_pr": true
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/181146",
+    "repo": "pytorch/pytorch",
+    "number": 181146,
+    "title": "torch.compile: autograd.Function.apply with aliased inputs drops per-slot gradient contributions",
+    "verdict": "unverified",
+    "signals": {
+      "linked_pr": false
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/181225",
+    "repo": "pytorch/pytorch",
+    "number": 181225,
+    "title": "DISABLED test_no_grad_inside_grad_cpu (__main__.TestHigherOrderOperatorInteractionCPU)",
+    "verdict": "unverified",
+    "signals": {
+      "linked_pr": false
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/181832",
+    "repo": "pytorch/pytorch",
+    "number": 181832,
+    "title": "[FSDP2] Inplace operation on a view tensor can drop the fsdp pre-backward hook on it.",
+    "verdict": "unverified",
+    "signals": {
+      "linked_pr": false
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/181936",
+    "repo": "pytorch/pytorch",
+    "number": 181936,
+    "title": "[MPS] Non-deterministic backward pass for F.linear",
     "verdict": "fix_verified",
     "signals": {
       "linked_pr": true
@@ -10810,10 +11000,30 @@
     }
   },
   {
+    "url": "https://github.com/tensorflow/tensorflow/issues/76729",
+    "repo": "tensorflow/tensorflow",
+    "number": 76729,
+    "title": "Aborted (core dumped) in `tf.raw_ops.ResourceScatterNdop`",
+    "verdict": "unverified",
+    "signals": {
+      "linked_pr": false
+    }
+  },
+  {
     "url": "https://github.com/tensorflow/tensorflow/issues/77057",
     "repo": "tensorflow/tensorflow",
     "number": 77057,
     "title": null,
+    "verdict": "unverified",
+    "signals": {
+      "linked_pr": false
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/77559",
+    "repo": "tensorflow/tensorflow",
+    "number": 77559,
+    "title": "tf.custom_gradient for function with kwarg shows unexpected behavior",
     "verdict": "unverified",
     "signals": {
       "linked_pr": false
@@ -10964,6 +11174,16 @@
     "repo": "tensorflow/tensorflow",
     "number": 89252,
     "title": null,
+    "verdict": "unverified",
+    "signals": {
+      "linked_pr": false
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/90305",
+    "repo": "tensorflow/tensorflow",
+    "number": 90305,
+    "title": "TensorFlow issue with data generator used for training a Keras LSTM autoencoder",
     "verdict": "unverified",
     "signals": {
       "linked_pr": false
@@ -11217,6 +11437,16 @@
     "verdict": "unverified",
     "signals": {
       "linked_pr": false
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/112572",
+    "repo": "tensorflow/tensorflow",
+    "number": 112572,
+    "title": "TensorFlow 2.20+ breaks hwloc PCI discovery for NCCL network plugins (aws-ofi-nccl) on GPU instances",
+    "verdict": "fix_verified",
+    "signals": {
+      "linked_pr": true
     }
   }
 ]

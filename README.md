@@ -5,24 +5,25 @@ State-aware fuzzing of deep learning libraries via skeleton-guided synthesis.
 ## Setup
 
 ```bash
-pip install torch>=2.9.0 tensorflow>=2.21.0 numpy requests openai
+pip install torch==2.9.1 tensorflow==2.21.0 numpy requests openai
 ```
 
-Set the API key for your chosen backend (DeepSeek is free at platform.deepseek.com):
+Set the API key for your chosen backend:
 
 ```bash
-export DEEPSEEK_API_KEY=your_key     # default — free
-export OPENAI_API_KEY=your_key       # for --llm-backend gpt5
-export ANTHROPIC_API_KEY=your_key    # for --llm-backend claude35
+export OPENAI_API_KEY=your_key       # for --llm-backend gpt5 (paper default)
+# Qwen3.6-27B (RQ4) is served locally via Ollama — no API key required.
 ```
 
 ## LLM backends
 
+The paper evaluates two backends (Section 4.2): GPT-5 (default) and Qwen3.6-27B
+(open-source, RQ4 LLM sensitivity, served via Ollama).
+
 | `--llm-backend` | Model | Key |
 |---|---|---|
-| `deepseek-v2` *(default)* | deepseek-chat | `DEEPSEEK_API_KEY` |
-| `gpt5` | gpt-5 | `OPENAI_API_KEY` |
-| `claude35` | claude-3-5-sonnet-20241022 | `ANTHROPIC_API_KEY` |
+| `gpt5` *(default, paper)* | gpt-5 | `OPENAI_API_KEY` |
+| `qwen` *(paper RQ4)* | qwen3.6:27b (Ollama) | — |
 
 ## Run
 
@@ -50,14 +51,15 @@ RQ1 analyses 329 fix-verified correctness issues from PyTorch and TensorFlow to 
 
 ```bash
 cd RQ1
-python -m rq1.collect     # fetch issues from GitHub (needs GITHUB_TOKEN)
+python -m rq1.collect     # collect 2021-01-01 through 2026-01-01 issues
 python -m rq1.hydrate     # download issue bodies
-python -m rq1.classify    # LLM-assisted classification (needs API key)
-python -m rq1.verify_fix  # filter to fix-verified issues only
+python -m rq1.verify_fix  # identify fix-verified issues
+python -m rq1.classify    # classify A/B/C/D/E
 python -m rq1.report      # print Tables 1 & 2
 ```
 
 ### RQ2 & RQ3 — Coverage and bug detection (Tables 3 & 4)
+
 
 **PyTorch:**
 ```bash
@@ -83,6 +85,7 @@ python scripts/evaluate.py --framework both --out results/eval --report-only
 ```
 
 ### RQ4 — Ablation study and LLM sensitivity (Tables 5 & 6)
+
 
 **Component ablation — PyTorch:**
 ```bash
@@ -115,8 +118,7 @@ Ablation variants (`--ablation` flag):
 | `none` | Full SASFuzz |
 | `no_skeleton` | LLM generates free-form programs (no state skeleton) |
 | `no_scaffold` | Slot structure kept, state constructs moved to prompt only |
-| `no_selection` | Uniform API selection (σ = b = 0 in Eq. 1) |
-| `no_feedback` | Uniform mutation strategy sampling |
+| `no_selection` | w/o State Rel. — sets σ = 0 in Eq. 1 (paper Table 5) |
 
 ---
 

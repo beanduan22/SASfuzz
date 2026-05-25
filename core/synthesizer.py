@@ -17,7 +17,7 @@ from .prompts import build_repair_prompt, build_synthesis_prompt, build_free_for
 
 logger = logging.getLogger(__name__)
 
-MAX_REPAIR_ATTEMPTS = 4
+MAX_REPAIR_ATTEMPTS = 3
 EXEC_TIMEOUT_SECONDS = 20
 
 @dataclass

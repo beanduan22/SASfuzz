@@ -10,9 +10,10 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from rq1.classify import heuristic_label, _text  # noqa: E402
-from rq1.collect import _keyword_match, _split_url  # noqa: E402
-from rq1.verify_fix import verdict_of, CLOSE_REF_RE  # noqa: E402
+from rq1 import hydrate as hydrate_mod              
+from rq1.classify import heuristic_label, _text              
+from rq1.collect import _keyword_match, _split_url              
+from rq1.verify_fix import verdict_of, CLOSE_REF_RE              
 
 
 def _rubric() -> dict:
@@ -98,3 +99,35 @@ def test_heuristic_non_state():
     }
     label, _ = heuristic_label(issue, _rubric())
     assert label == "E"
+
+
+def test_hydrate_drops_stale_progress_rows(tmp_path, monkeypatch):
+    data = tmp_path / "data"
+    data.mkdir()
+    current = {
+        "url": "https://github.com/pytorch/pytorch/issues/1",
+        "repo": "pytorch/pytorch",
+        "number": 1,
+        "title": "wrong result",
+        "body": "incorrect output",
+        "labels": ["triaged", "module: autograd"],
+    }
+    stale = {
+        "url": "https://github.com/pytorch/pytorch/issues/2",
+        "repo": "pytorch/pytorch",
+        "number": 2,
+        "title": "old wrong result",
+        "body": "incorrect output",
+        "labels": ["triaged", "module: dynamo"],
+    }
+    (data / "filtered_issues.json").write_text(json.dumps([current]))
+    (data / "filtered_issues_full.json").write_text(json.dumps([stale]))
+
+    monkeypatch.setattr(hydrate_mod, "DATA", data)
+    monkeypatch.setattr(hydrate_mod, "CACHE", data / "issue_cache")
+
+    summary = hydrate_mod.run(limit=None)
+    rows = json.loads((data / "filtered_issues_full.json").read_text())
+
+    assert summary["total"] == 1
+    assert [r["url"] for r in rows] == [current["url"]]

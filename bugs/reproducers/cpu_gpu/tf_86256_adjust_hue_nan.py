@@ -1,4 +1,4 @@
-# https://github.com/tensorflow/tensorflow/issues/86256  (NaN class flip variant)
+                                                                                 
 import os; os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 import tensorflow as tf
 

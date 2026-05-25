@@ -1,5 +1,1880 @@
 [
   {
+    "url": "https://github.com/pytorch/pytorch/issues/100528",
+    "repo": "pytorch/pytorch",
+    "number": 100528,
+    "title": "Backward hook execution order changes when input.requires_grad is False",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 3,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/102329",
+    "repo": "pytorch/pytorch",
+    "number": 102329,
+    "title": "[torch.compile] Dynamo passes wrong number of arguments to instance attribute function *args",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 2,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/102457",
+    "repo": "pytorch/pytorch",
+    "number": 102457,
+    "title": "Batching rule for `aten::_scaled_dot_product_efficient_attention`",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 2,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/102720",
+    "repo": "pytorch/pytorch",
+    "number": 102720,
+    "title": "vmap breaks gradient on custom c++ functions",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 5,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/103322",
+    "repo": "pytorch/pytorch",
+    "number": 103322,
+    "title": "Disabling ALL TestOptim on the dynamo config",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/103563",
+    "repo": "pytorch/pytorch",
+    "number": 103563,
+    "title": "[Dynamo] VariableTracker.recursively_contains doesn't get update correctly when mutation happens",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 2,
+      "B": 3,
+      "C": 0,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/105077",
+    "repo": "pytorch/pytorch",
+    "number": 105077,
+    "title": "torch.load fails under FakeTensorMode for GPT2 model",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 1,
+      "B": 2,
+      "C": 0,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/105736",
+    "repo": "pytorch/pytorch",
+    "number": 105736,
+    "title": "vmap function ignores keyword arguments on some functions",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 2,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/105929",
+    "repo": "pytorch/pytorch",
+    "number": 105929,
+    "title": "Dynamo silently ignores TorchDispatchMode",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 3,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/106378",
+    "repo": "pytorch/pytorch",
+    "number": 106378,
+    "title": "[dynamo] can't compile if tensor subclass implements __torch_function__ using super()",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 2,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/106893",
+    "repo": "pytorch/pytorch",
+    "number": 106893,
+    "title": "[autograd.Function] torch.compile w/ once_differentiable leads to opaque graph break",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 4,
+      "B": 3,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/107315",
+    "repo": "pytorch/pytorch",
+    "number": 107315,
+    "title": "Dynamo pytree registration is distinct from user pytree registration, leading to behavior divergence",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/110315",
+    "repo": "pytorch/pytorch",
+    "number": 110315,
+    "title": "torch._dynamo.exc.Unsupported: unexpected sourceless type bases: (<class 'torchrec.streamable.Pipelineable'>,)",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/111733",
+    "repo": "pytorch/pytorch",
+    "number": 111733,
+    "title": "Bug: torch.compile fails to compile torch.func.vmap with reduction functions and raw python numbers",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 4,
+      "B": 6,
+      "C": 0,
+      "D": 2,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/111869",
+    "repo": "pytorch/pytorch",
+    "number": 111869,
+    "title": "[dynamo] `get_fake_value` doesn't always return fake values",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/113298",
+    "repo": "pytorch/pytorch",
+    "number": 113298,
+    "title": "[contextlib] `DecoratorContextManager` and hence `set_grad_enabled` behaves in an unexpected way",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 1,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/113539",
+    "repo": "pytorch/pytorch",
+    "number": 113539,
+    "title": "incorrect results for ndarray.methods under torch.Dynamo",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/113642",
+    "repo": "pytorch/pytorch",
+    "number": 113642,
+    "title": "interpolate::trilinear returns wrong gradients on CUDA",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 3,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/113740",
+    "repo": "pytorch/pytorch",
+    "number": 113740,
+    "title": "torch.compile segmentation fault",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 2,
+      "B": 3,
+      "C": 1,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/113894",
+    "repo": "pytorch/pytorch",
+    "number": 113894,
+    "title": "[Dynamo] [Python3.10] Missing support for strict=True kwargs in zip()",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 3,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/114105",
+    "repo": "pytorch/pytorch",
+    "number": 114105,
+    "title": "Unexpected `None` value for stream with dynamo",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 2,
+      "C": 0,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/114674",
+    "repo": "pytorch/pytorch",
+    "number": 114674,
+    "title": "Dynamo guards key error for `guarded_backend_cache.cached_backends`",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 1,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/115607",
+    "repo": "pytorch/pytorch",
+    "number": 115607,
+    "title": "dynamo does not correctly handle future iterations if a specific iteration is frozen",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 1,
+      "B": 1,
+      "C": 0,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/115816",
+    "repo": "pytorch/pytorch",
+    "number": 115816,
+    "title": "Warning in autograd init regarding to aten::reshape",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 1,
+      "B": 0,
+      "C": 0,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/116494",
+    "repo": "pytorch/pytorch",
+    "number": 116494,
+    "title": "Dynamo'd optimizer does not handle closure correctly",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 1,
+      "B": 2,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/117011",
+    "repo": "pytorch/pytorch",
+    "number": 117011,
+    "title": "torch.nn.functional.interpolate(mode='nearest'): backward(grad_output) should check grad_output.numel() <= std::numeric_limits<int32_t>::max()",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 3,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/117026",
+    "repo": "pytorch/pytorch",
+    "number": 117026,
+    "title": "torch._dynamo.exc.InternalTorchDynamoError: ListIteratorVariable() has no type",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 3,
+      "C": 0,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/118262",
+    "repo": "pytorch/pytorch",
+    "number": 118262,
+    "title": "Make it more obvious when Dynamo is triggering on unexpected frames",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 3,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/118395",
+    "repo": "pytorch/pytorch",
+    "number": 118395,
+    "title": "Dynamo x autograd.Function: graph breaks on non-{Tensor, symnode, constant} inputs",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 2,
+      "B": 3,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/122768",
+    "repo": "pytorch/pytorch",
+    "number": 122768,
+    "title": "[dynamo] Tracing triton kernel unexpectedly",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 4,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/124590",
+    "repo": "pytorch/pytorch",
+    "number": 124590,
+    "title": "DISABLED test_aot_module_simplified_fake_tensor_gm_raises (__main__.TestAOTModuleSimplified)",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 1,
+      "B": 2,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/124653",
+    "repo": "pytorch/pytorch",
+    "number": 124653,
+    "title": "dynamo creates unnecessary buffers",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 4,
+      "C": 0,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/124735",
+    "repo": "pytorch/pytorch",
+    "number": 124735,
+    "title": "torch._dynamo.allow_in_graph seems to silently no-op on staticmethods",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 3,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/125021",
+    "repo": "pytorch/pytorch",
+    "number": 125021,
+    "title": "DISABLED test_allocation_id_uniqueness (__main__.TestTorchTidyProfiler)",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 2,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/125078",
+    "repo": "pytorch/pytorch",
+    "number": 125078,
+    "title": "`torch.compile` fails with `jacfwd` when multiplying/dividing float and tensor",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 4,
+      "B": 4,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/125403",
+    "repo": "pytorch/pytorch",
+    "number": 125403,
+    "title": "Could not jit compile custom extension in dataparallel mode ",
+    "primary": "C",
+    "category_name": "distribution_strategy",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 2,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/125567",
+    "repo": "pytorch/pytorch",
+    "number": 125567,
+    "title": "DISABLED test_module_order (__main__.OptimizedModuleTest)",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 2,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/126026",
+    "repo": "pytorch/pytorch",
+    "number": 126026,
+    "title": "Graph break: Unsupported: torch.* op returned non-Tensor bool call_function <built-in function _is_any_autocast_enabled>",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 2,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/126528",
+    "repo": "pytorch/pytorch",
+    "number": 126528,
+    "title": "[Dynamo] TypeError: tvm() got an unexpected keyword argument 'options'",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 3,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/128072",
+    "repo": "pytorch/pytorch",
+    "number": 128072,
+    "title": "Map with multiple arguments not supported in Dynamo and causes graph breaks",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 2,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/128264",
+    "repo": "pytorch/pytorch",
+    "number": 128264,
+    "title": "unexpected `inference_mode` interaction with `torch.autograd.functional.jacobian`",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 2,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/128796",
+    "repo": "pytorch/pytorch",
+    "number": 128796,
+    "title": "add x/0 gradient behaviour to documentation",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 1,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/130653",
+    "repo": "pytorch/pytorch",
+    "number": 130653,
+    "title": "torch.autograd.Function does not support kwarg-only kwargs for vmap",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 3,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/133027",
+    "repo": "pytorch/pytorch",
+    "number": 133027,
+    "title": "[dynamo][side-effects] Add mutable_local invariants to Variable Trackers",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/137284",
+    "repo": "pytorch/pytorch",
+    "number": 137284,
+    "title": "Incorrect Cholesky backward grad due to incorrect symmetrization",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 3,
+      "B": 1,
+      "C": 0,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/137476",
+    "repo": "pytorch/pytorch",
+    "number": 137476,
+    "title": "torch.compile graph break: torch._dynamo.exc.Unsupported: __self__ mismatch for bound method",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 2,
+      "C": 0,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/138062",
+    "repo": "pytorch/pytorch",
+    "number": 138062,
+    "title": "Wrong example for allow_in_graph",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 3,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/138077",
+    "repo": "pytorch/pytorch",
+    "number": 138077,
+    "title": "tensor.type() incorrectly handled in dynamo for devices other than CPU or CUDA",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 3,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/138269",
+    "repo": "pytorch/pytorch",
+    "number": 138269,
+    "title": "`out=` dynamo support using `eager` (on CPU) backend.",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 5,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/139103",
+    "repo": "pytorch/pytorch",
+    "number": 139103,
+    "title": "test/functorch/test_ops.py:test_extremal_numerics_l1_loss_cpu segfaults when wrapped with Dynamo",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 1,
+      "B": 1,
+      "C": 0,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/140903",
+    "repo": "pytorch/pytorch",
+    "number": 140903,
+    "title": "Grabbing dtype from NamedTuple vs Tuple for cast causes graph breaks \"Unexpected type in sourceless builder.\"",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 1,
+      "B": 3,
+      "C": 1,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/141046",
+    "repo": "pytorch/pytorch",
+    "number": 141046,
+    "title": "Potential BC regression in nightly: `torch.compile(..., fullgraph=True)`  does not work with `torch.device` TorchFunctionMode",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 2,
+      "B": 5,
+      "C": 1,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/141196",
+    "repo": "pytorch/pytorch",
+    "number": 141196,
+    "title": "torch.compile + Huggingface GenerationMixin",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 3,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/141261",
+    "repo": "pytorch/pytorch",
+    "number": 141261,
+    "title": "[dynamo] Trace through dataclasses functions",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/143071",
+    "repo": "pytorch/pytorch",
+    "number": 143071,
+    "title": "Python's math module is a footgun: Add a warning or error message when applying certain math module functions to tensors",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 2,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/144211",
+    "repo": "pytorch/pytorch",
+    "number": 144211,
+    "title": "`torch.nn.functional.one_hot` has inconsistent execution behavior under torch.compile",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 2,
+      "C": 1,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/144461",
+    "repo": "pytorch/pytorch",
+    "number": 144461,
+    "title": "ThroughputBenchmark incorrectly change autocast dtype on CPU",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 1,
+      "B": 5,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/146932",
+    "repo": "pytorch/pytorch",
+    "number": 146932,
+    "title": "Use of @property on in-graph constructed NJT fails Dynamo tracing",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 4,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/147801",
+    "repo": "pytorch/pytorch",
+    "number": 147801,
+    "title": "Incorrect Gradients at Boundary Points for `torch.nn.functional.hardswish`",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 3,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/147826",
+    "repo": "pytorch/pytorch",
+    "number": 147826,
+    "title": "Inconsistent results from `is_compile_supported ` with equivalent device identifiers",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/148179",
+    "repo": "pytorch/pytorch",
+    "number": 148179,
+    "title": "Dynamo failure on handling list comparisons",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 1,
+      "B": 3,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/150765",
+    "repo": "pytorch/pytorch",
+    "number": 150765,
+    "title": "torch.compile failed to handle a custom __delattr__ method correctly",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 3,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/150883",
+    "repo": "pytorch/pytorch",
+    "number": 150883,
+    "title": "`torch.autograd.backward` fails with single scalar `Tensor` as `inputs`",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 3,
+      "B": 1,
+      "C": 1,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/151670",
+    "repo": "pytorch/pytorch",
+    "number": 151670,
+    "title": "[inductor] [cuda] [fake tensor] `torch.ones(x.size(0))` becomes a fake tensor for `torch.diagonal_scatter`",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 3,
+      "C": 0,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/152316",
+    "repo": "pytorch/pytorch",
+    "number": 152316,
+    "title": "[dynamo] torch._dynamo crashes on `self.value.__module__` inside  SkipFunctionVariable.call_function() (PyTorch 2.7, works 2.6)",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 3,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/154009",
+    "repo": "pytorch/pytorch",
+    "number": 154009,
+    "title": "SourcelessBuilder.create does not know how to wrap <class '__main__.InFlexData'>",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 3,
+      "C": 1,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/154365",
+    "repo": "pytorch/pytorch",
+    "number": 154365,
+    "title": "Dynamo cannot trace into wrap_triton",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 2,
+      "C": 1,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/155426",
+    "repo": "pytorch/pytorch",
+    "number": 155426,
+    "title": "`torch._dynamo.exc.Unsupported: Attempted to call function marked as skipped`. Explanation: Dynamo developers have intentionally marked that the function `_immutable_list_unflatten`",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 1,
+      "B": 4,
+      "C": 1,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/155898",
+    "repo": "pytorch/pytorch",
+    "number": 155898,
+    "title": "`torch.compile` fails when using `sdpa_kernel` with kwarg `set_priority` due to overly strict `TorchDynamo` assertion",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 3,
+      "C": 1,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/157417",
+    "repo": "pytorch/pytorch",
+    "number": 157417,
+    "title": "einops 0.6.1 x torch.compile broken in pytorch nightlies",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 3,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/157452",
+    "repo": "pytorch/pytorch",
+    "number": 157452,
+    "title": "we should graph break on nn.Parameter constructors",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 2,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/157569",
+    "repo": "pytorch/pytorch",
+    "number": 157569,
+    "title": "torch.compile with numpy code differs from numpy's behavior",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 2,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/158120",
+    "repo": "pytorch/pytorch",
+    "number": 158120,
+    "title": "AttributeError: partially initialized module 'torch._dynamo' has no attribute 'disable' (most likely due to a circular import)",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/158447",
+    "repo": "pytorch/pytorch",
+    "number": 158447,
+    "title": "Dynamo Deep-Dive",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 2,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/159041",
+    "repo": "pytorch/pytorch",
+    "number": 159041,
+    "title": "FakeTensor causes incorrect default device in the compiled model.",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 3,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/159590",
+    "repo": "pytorch/pytorch",
+    "number": 159590,
+    "title": "DTensor Compile w/ Dynamic Shapes Autograd - Unhashable SymInt in sharding propagation when inputs have requires_grad=True",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 2,
+      "B": 4,
+      "C": 3,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/160513",
+    "repo": "pytorch/pytorch",
+    "number": 160513,
+    "title": "Forward autodiff : Multiplying by python float changes the dual dtype in some situations",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 2,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/160751",
+    "repo": "pytorch/pytorch",
+    "number": 160751,
+    "title": "torch.compile aot_eager mode removes torch.cuda.synchronize() causing missed exceptions",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 3,
+      "B": 4,
+      "C": 0,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/161010",
+    "repo": "pytorch/pytorch",
+    "number": 161010,
+    "title": "torch.compile doesn't preserve stride with clone(memory_format=torch.preserve_format)",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 2,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/161207",
+    "repo": "pytorch/pytorch",
+    "number": 161207,
+    "title": "[dynamo][ued] Graph break from `module.to(...)`",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 2,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/161275",
+    "repo": "pytorch/pytorch",
+    "number": 161275,
+    "title": "[dynamo] Inplace ops' requires_grad-ness metadata are traced wrong and can cause silent incorrectness",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 2,
+      "B": 2,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/161562",
+    "repo": "pytorch/pytorch",
+    "number": 161562,
+    "title": "`set_fullgraph(False)` actually skips the frame if a graph break happens",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 2,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/161790",
+    "repo": "pytorch/pytorch",
+    "number": 161790,
+    "title": "Dynamo should error (or at least warn) if it tries to skip the frame on fullgraph=True",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 2,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/161831",
+    "repo": "pytorch/pytorch",
+    "number": 161831,
+    "title": "[dynamo][fake tensor][dynamic shapes] Unreadable error when user gives wrong shapes",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 3,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/161993",
+    "repo": "pytorch/pytorch",
+    "number": 161993,
+    "title": "[dynamo] GB0007 workaround incorrect on website",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/162522",
+    "repo": "pytorch/pytorch",
+    "number": 162522,
+    "title": "torch.compile generated wrong graph when tracing torch.use_deterministic_algorithms",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 5,
+      "C": 0,
+      "D": 2,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/162817",
+    "repo": "pytorch/pytorch",
+    "number": 162817,
+    "title": "[FakeTensor][ATen] Inconsistent behaviours of view_copy in Eager and FakeTensor mode",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/164247",
+    "repo": "pytorch/pytorch",
+    "number": 164247,
+    "title": "Dynamo graph break on flex attention code",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 3,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/164298",
+    "repo": "pytorch/pytorch",
+    "number": 164298,
+    "title": "Wrong type hint for `grad_outputs` in `torch.autograd.grad`",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 1,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/165427",
+    "repo": "pytorch/pytorch",
+    "number": 165427,
+    "title": "PyTorch's atan2 function avoids computational anomalies when the input is zero, but the backward gradient becomes NaN.",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 1,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/166173",
+    "repo": "pytorch/pytorch",
+    "number": 166173,
+    "title": "dynamo should expose \"are there any side effects in my code\" to vLLM",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/166626",
+    "repo": "pytorch/pytorch",
+    "number": 166626,
+    "title": "torch.compile fails with device mismatch in tensor factory methods during graph tracing",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 1,
+      "B": 6,
+      "C": 1,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/167142",
+    "repo": "pytorch/pytorch",
+    "number": 167142,
+    "title": "[dynamo, BE] get rid of IncorrectUsage exception",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/167400",
+    "repo": "pytorch/pytorch",
+    "number": 167400,
+    "title": "[dynamo] patching nn.Module forward is silently incorrect",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 2,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/167453",
+    "repo": "pytorch/pytorch",
+    "number": 167453,
+    "title": "recompilation reason due to different backend is empty",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 3,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/167693",
+    "repo": "pytorch/pytorch",
+    "number": 167693,
+    "title": "DISABLED test_side_stream_backward_overlap_cuda (__main__.TestAutogradStreamSynchronizationCUDA)",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 1,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/167991",
+    "repo": "pytorch/pytorch",
+    "number": 167991,
+    "title": "Warnings from inside Dynamo should include at least one level of stack trace",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/168059",
+    "repo": "pytorch/pytorch",
+    "number": 168059,
+    "title": "Gradients wrt unused tensors are still marked with requires_grad=True if allow_unused=True",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 4,
+      "B": 1,
+      "C": 1,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/168245",
+    "repo": "pytorch/pytorch",
+    "number": 168245,
+    "title": "[compiler] TypeError: 'NoneType' object is not callable with getattr fallback in torch.compile",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 1,
+      "B": 6,
+      "C": 0,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/168317",
+    "repo": "pytorch/pytorch",
+    "number": 168317,
+    "title": "[dynamo] expand ignore_logger_methods to arbitrary functions",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 3,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/169778",
+    "repo": "pytorch/pytorch",
+    "number": 169778,
+    "title": "assertion error: mismatched stride in custom (meta) kernel",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 2,
+      "B": 4,
+      "C": 1,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/171704",
+    "repo": "pytorch/pytorch",
+    "number": 171704,
+    "title": "`torch.trace` backward produces incorrect gradients for non-square inputs.",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 3,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/172088",
+    "repo": "pytorch/pytorch",
+    "number": 172088,
+    "title": "TorchFunctionMode shouldn't be active when checking guards",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 2,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/172248",
+    "repo": "pytorch/pytorch",
+    "number": 172248,
+    "title": "torch.compile breaks when using effectful ops in backward",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 4,
+      "B": 2,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/172386",
+    "repo": "pytorch/pytorch",
+    "number": 172386,
+    "title": "torch.func.vjp: compiled vjp_fn returns incorrect zero gradients",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 2,
+      "B": 3,
+      "C": 0,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/173240",
+    "repo": "pytorch/pytorch",
+    "number": 173240,
+    "title": "Bug: torch.compile(fullgraph=True) fails with ArgsMismatchError when tree_map operates on multiple custom pytree types",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 3,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/174050",
+    "repo": "pytorch/pytorch",
+    "number": 174050,
+    "title": "torch.compile produce inconsistent results when user overrides Python magic methods __class__",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 3,
+      "C": 1,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/175263",
+    "repo": "pytorch/pytorch",
+    "number": 175263,
+    "title": "[dynamo] Wrong HAS_ATTR guard",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/176432",
+    "repo": "pytorch/pytorch",
+    "number": 176432,
+    "title": "Bug in batch rules for group norm backward operator - wrong variable used.",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 5,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/176667",
+    "repo": "pytorch/pytorch",
+    "number": 176667,
+    "title": "assert len(dynamic_sizes) == dim, caused by symbolic_context reuse, when _is_view() mismatches for param and grad",
+    "primary": "C",
+    "category_name": "distribution_strategy",
+    "evidence": {
+      "A": 4,
+      "B": 3,
+      "C": 5,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/176854",
+    "repo": "pytorch/pytorch",
+    "number": 176854,
+    "title": "torch.compile does not correctly propagate detach_() in-place autograd semantics",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 2,
+      "B": 3,
+      "C": 1,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/176862",
+    "repo": "pytorch/pytorch",
+    "number": 176862,
+    "title": "TorchDynamo Produces Incorrect Output Shape When Model Uses Runtime Shape-Based Dictionary Lookups",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 1,
+      "B": 5,
+      "C": 1,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/177252",
+    "repo": "pytorch/pytorch",
+    "number": 177252,
+    "title": "[Inductor] AssertionError: wrong number of dimensions1 in backward() with dynamic shape involving nonzero() and item()",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 4,
+      "B": 3,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/177318",
+    "repo": "pytorch/pytorch",
+    "number": 177318,
+    "title": "torch.func transforms silently return zeros under inference_mode",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 5,
+      "B": 0,
+      "C": 0,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/177600",
+    "repo": "pytorch/pytorch",
+    "number": 177600,
+    "title": "Dynamo crashes on `triton.autotune` configuration including `prune_configs_by` if kernel is called twice",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 3,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/177633",
+    "repo": "pytorch/pytorch",
+    "number": 177633,
+    "title": "[dynamo] Exception object interface (str, repr, args, __class__) not fully traced",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 2,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/178039",
+    "repo": "pytorch/pytorch",
+    "number": 178039,
+    "title": "`torch.compile` crashes with FakeTensor view stride error on valid model with `index_put_` scatter",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 1,
+      "B": 7,
+      "C": 1,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/178046",
+    "repo": "pytorch/pytorch",
+    "number": 178046,
+    "title": "`torch.compile` silently accepts `nn.Parameter` as `fill_value` in `torch.full()` where eager raises TypeError",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 1,
+      "B": 6,
+      "C": 0,
+      "D": 2,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/178179",
+    "repo": "pytorch/pytorch",
+    "number": 178179,
+    "title": "Dynamo + `triton.heuristics` + `triton.autotune` with `prune_configs_by` -> `AssertionError: Can't construct an AttrSource without a valid base source`",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 3,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/178365",
+    "repo": "pytorch/pytorch",
+    "number": 178365,
+    "title": "Dynamo does not guard on function.__defaults__, causing silent correctness bugs with flex_attention",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 2,
+      "C": 0,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/178887",
+    "repo": "pytorch/pytorch",
+    "number": 178887,
+    "title": "[Bug] FakeMode in `fullgraph=True` fails",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 2,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/180179",
+    "repo": "pytorch/pytorch",
+    "number": 180179,
+    "title": "torch.cuda.Stream traced incorrectly by torch.compile",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 2,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/180837",
+    "repo": "pytorch/pytorch",
+    "number": 180837,
+    "title": "[Dynamo] Failed to set tensor attribute 'imag' when modifying complex tensor components",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 1,
+      "B": 6,
+      "C": 1,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/181101",
+    "repo": "pytorch/pytorch",
+    "number": 181101,
+    "title": "[dynamo] bool() on user-defined objects mishandles __bool__=None, non-bool returns, and negative __len__",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 2,
+      "C": 0,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/181936",
+    "repo": "pytorch/pytorch",
+    "number": 181936,
+    "title": "[MPS] Non-deterministic backward pass for F.linear",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 3,
+      "B": 1,
+      "C": 0,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
     "url": "https://github.com/pytorch/pytorch/issues/50617",
     "repo": "pytorch/pytorch",
     "number": 50617,
@@ -158,6 +2033,1491 @@
     "category_name": "gradient_tracking",
     "evidence": {
       "A": 2,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/58354",
+    "repo": "pytorch/pytorch",
+    "number": 58354,
+    "title": "Segmentation fault when a Tensor backward hook removes itself",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 4,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/58816",
+    "repo": "pytorch/pytorch",
+    "number": 58816,
+    "title": "nn.SmoothL1Loss does not  immediate raise an error when given wrong dtype",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 4,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/59584",
+    "repo": "pytorch/pytorch",
+    "number": 59584,
+    "title": "`renorm` is failing for slow gradcheck",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 1,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/61926",
+    "repo": "pytorch/pytorch",
+    "number": 61926,
+    "title": "forward-mode AD: Check to see that generated code for output_differentiability: [false] is fine",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 1,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/62327",
+    "repo": "pytorch/pytorch",
+    "number": 62327,
+    "title": "DISABLED test_fn_gradgrad_linalg_det_cuda_float64 (__main__.TestGradientsCUDA)",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 1,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/62328",
+    "repo": "pytorch/pytorch",
+    "number": 62328,
+    "title": "DISABLED test_fn_gradgrad_linalg_det_cuda_complex128 (__main__.TestGradientsCUDA)",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 1,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/62895",
+    "repo": "pytorch/pytorch",
+    "number": 62895,
+    "title": "Tests from TestMultithreadAutograd do not fail even when they should",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 1,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/64000",
+    "repo": "pytorch/pytorch",
+    "number": 64000,
+    "title": "Softmax/logsoftmax use more memory for backward than needed",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 1,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/64163",
+    "repo": "pytorch/pytorch",
+    "number": 64163,
+    "title": "Gradient is incorrect for `torch.nn.functional.nll_loss` for CUDA",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 2,
+      "B": 0,
+      "C": 0,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/64813",
+    "repo": "pytorch/pytorch",
+    "number": 64813,
+    "title": "Segfault on setting gradient value to instance of user-defined class",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 2,
+      "B": 1,
+      "C": 0,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/64999",
+    "repo": "pytorch/pytorch",
+    "number": 64999,
+    "title": "[feature request] OpInfo: possibility to test forward AD without backward AD implemented",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 1,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/65599",
+    "repo": "pytorch/pytorch",
+    "number": 65599,
+    "title": "Inconsistent subgradients of matrix frobenius norm",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 3,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/65911",
+    "repo": "pytorch/pytorch",
+    "number": 65911,
+    "title": "`pinv` could be differentiable on a wider range of inputs",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 2,
+      "B": 1,
+      "C": 0,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/66420",
+    "repo": "pytorch/pytorch",
+    "number": 66420,
+    "title": "lstsq not working with autograd",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 2,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/67367",
+    "repo": "pytorch/pytorch",
+    "number": 67367,
+    "title": "Multi-output forward grad codegen is wrong if output values are used",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 1,
+      "B": 1,
+      "C": 0,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/67461",
+    "repo": "pytorch/pytorch",
+    "number": 67461,
+    "title": "Jacobian mismatch for `nn.functional.poisson_nll_loss`",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 1,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/67462",
+    "repo": "pytorch/pytorch",
+    "number": 67462,
+    "title": "Jacobian mismatch for `nn.functional.ctc_loss`",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 1,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/67512",
+    "repo": "pytorch/pytorch",
+    "number": 67512,
+    "title": "linalg.det fails test_noncontiguous_samples",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 1,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/67657",
+    "repo": "pytorch/pytorch",
+    "number": 67657,
+    "title": "Gradient tests failing for `max_unpool1d`",
+    "primary": "D",
+    "category_name": "other_state",
+    "evidence": {
+      "A": 1,
+      "B": 0,
+      "C": 0,
+      "D": 2,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/69034",
+    "repo": "pytorch/pytorch",
+    "number": 69034,
+    "title": "forward-mode AD: minimum, min, maximum, max formulas are loudly incorrect",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 1,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/70046",
+    "repo": "pytorch/pytorch",
+    "number": 70046,
+    "title": "DISABLED test_fn_fwgrad_bwgrad_linalg_pinv_singular_cuda_complex128 (__main__.TestGradientsCUDA)",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 1,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/70357",
+    "repo": "pytorch/pytorch",
+    "number": 70357,
+    "title": "torch.sparse_coo_tensor._values() incorrectly returns a detached tensor",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 2,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/71155",
+    "repo": "pytorch/pytorch",
+    "number": 71155,
+    "title": "PyTorch bug: Cannot pass gradient through index_add",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 4,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/72612",
+    "repo": "pytorch/pytorch",
+    "number": 72612,
+    "title": "Custom function recent change introduces bad refcounting",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 1,
+      "B": 0,
+      "C": 0,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/74166",
+    "repo": "pytorch/pytorch",
+    "number": 74166,
+    "title": "[FSDP] Investigate summon_full_params with CPU offloading",
+    "primary": "C",
+    "category_name": "distribution_strategy",
+    "evidence": {
+      "A": 0,
+      "B": 0,
+      "C": 1,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/75666",
+    "repo": "pytorch/pytorch",
+    "number": 75666,
+    "title": "checkpointing of DDP comms hook",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 1,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/75852",
+    "repo": "pytorch/pytorch",
+    "number": 75852,
+    "title": "torch.stack backward does not automatically cast real float to complex float",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 3,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/78867",
+    "repo": "pytorch/pytorch",
+    "number": 78867,
+    "title": "`kl_div` will crash in the backward pass on cuda",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 3,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/78868",
+    "repo": "pytorch/pytorch",
+    "number": 78868,
+    "title": "`adapative_{avg, max}_pool` will crash in the backward pass on cuda on empty output size",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 3,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/80761",
+    "repo": "pytorch/pytorch",
+    "number": 80761,
+    "title": "`det` will return wrong gradient for `1x1` matrix with 0 value.",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 3,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/80766",
+    "repo": "pytorch/pytorch",
+    "number": 80766,
+    "title": "Convolution overrideable missed transposed parameter",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 1,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/80839",
+    "repo": "pytorch/pytorch",
+    "number": 80839,
+    "title": "Reverse mode gives wrong gradient for `init.constant_`",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 2,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/82644",
+    "repo": "pytorch/pytorch",
+    "number": 82644,
+    "title": "torch.prod : backward errors when a tensor contains zero value",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 3,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/84511",
+    "repo": "pytorch/pytorch",
+    "number": 84511,
+    "title": "Crash in backward propagation",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 2,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/85409",
+    "repo": "pytorch/pytorch",
+    "number": 85409,
+    "title": "Result of backward is wrong with conj_view and neg_view for Tensor.sum_to_size",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 1,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/89903",
+    "repo": "pytorch/pytorch",
+    "number": 89903,
+    "title": "torch.pow has incorrect backward result when the base is real negative and exponent is complex",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 3,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/90362",
+    "repo": "pytorch/pytorch",
+    "number": 90362,
+    "title": "TorchDynamo example crashes on Apple Silicon with `-march=native` flag not supported",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 4,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/91161",
+    "repo": "pytorch/pytorch",
+    "number": 91161,
+    "title": "Error on python object destruction in python 3.11",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 2,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/91174",
+    "repo": "pytorch/pytorch",
+    "number": 91174,
+    "title": "vmap support for nansum, nanmean",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 2,
+      "B": 0,
+      "C": 1,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/91403",
+    "repo": "pytorch/pytorch",
+    "number": 91403,
+    "title": "vmap support for torch.tril, torch.triu",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 2,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/91404",
+    "repo": "pytorch/pytorch",
+    "number": 91404,
+    "title": "vmap support for torch.trace",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 2,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/92283",
+    "repo": "pytorch/pytorch",
+    "number": 92283,
+    "title": "Randomness 'different' results in weird behavior of Dropout",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 1,
+      "B": 0,
+      "C": 0,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/92675",
+    "repo": "pytorch/pytorch",
+    "number": 92675,
+    "title": "Add rearrange operator to PyTorch natively",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 1,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/92750",
+    "repo": "pytorch/pytorch",
+    "number": 92750,
+    "title": "[autograd] backward() should not be allowed for complex scalar output",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 3,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/92804",
+    "repo": "pytorch/pytorch",
+    "number": 92804,
+    "title": "Cuda streams and torch.compile",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 3,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/92985",
+    "repo": "pytorch/pytorch",
+    "number": 92985,
+    "title": "`torch.amax` will fail when computing forward mode jacobian",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 2,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/93391",
+    "repo": "pytorch/pytorch",
+    "number": 93391,
+    "title": "FSDP ``state_dict`` transformations of modules with persistent buffers fail with mixed precision enabled",
+    "primary": "C",
+    "category_name": "distribution_strategy",
+    "evidence": {
+      "A": 0,
+      "B": 0,
+      "C": 2,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/93776",
+    "repo": "pytorch/pytorch",
+    "number": 93776,
+    "title": "analysis.has_mutation version tracker does not capture all mutation",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 1,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/93890",
+    "repo": "pytorch/pytorch",
+    "number": 93890,
+    "title": "[Dynamo] torch.autocast context manager doesn't support graph break ",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 2,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/94575",
+    "repo": "pytorch/pytorch",
+    "number": 94575,
+    "title": "[Dynamo] Key Mismatch When Loading Checkpoints Trained with Dynamo",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 3,
+      "C": 0,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/95550",
+    "repo": "pytorch/pytorch",
+    "number": 95550,
+    "title": "torch.to_dense backward ignores unspecified elements in sparse inputs",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 2,
+      "B": 1,
+      "C": 0,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/95561",
+    "repo": "pytorch/pytorch",
+    "number": 95561,
+    "title": "`jacrev` and `jacfwd` triggers INTERNAL ASSERT FAILED when indexing the tensor directly",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 3,
+      "B": 0,
+      "C": 0,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/95892",
+    "repo": "pytorch/pytorch",
+    "number": 95892,
+    "title": "```load_sharded_optimizer_state_dict``` error on multi node",
+    "primary": "C",
+    "category_name": "distribution_strategy",
+    "evidence": {
+      "A": 0,
+      "B": 0,
+      "C": 2,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/96149",
+    "repo": "pytorch/pytorch",
+    "number": 96149,
+    "title": "Dynamo failure when generating guard with eval()",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/96345",
+    "repo": "pytorch/pytorch",
+    "number": 96345,
+    "title": "`PixelShuffle` and `PixelUnshuffle` crash with floating point exception when computing `jacrev`",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 3,
+      "B": 0,
+      "C": 0,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/96737",
+    "repo": "pytorch/pytorch",
+    "number": 96737,
+    "title": "Tracer incorrectly get Guard name in dynamo",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 2,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/96813",
+    "repo": "pytorch/pytorch",
+    "number": 96813,
+    "title": "Incorrect backward for smooth_l1_loss when beta = 0 on GPU",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 3,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/97161",
+    "repo": "pytorch/pytorch",
+    "number": 97161,
+    "title": "Segmentation Fault for `vmap`ed function accessing `BatchedTensor.data`",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 3,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/97246",
+    "repo": "pytorch/pytorch",
+    "number": 97246,
+    "title": "functorch roll-up issue for 2.1",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 1,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/98021",
+    "repo": "pytorch/pytorch",
+    "number": 98021,
+    "title": "RuntimeError: unwrapped_count > 0 INTERNAL ASSERT FAILED at \"../aten/src/ATen/functorch/TensorWrapper.cpp\":181, please report a bug to PyTorch. Should have at least one dead wrapper",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 1,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/98829",
+    "repo": "pytorch/pytorch",
+    "number": 98829,
+    "title": "[FSDP] 'fully_shard' may determine compute device incorrectly, as 'compute device' is now a member of _FSDPState.",
+    "primary": "C",
+    "category_name": "distribution_strategy",
+    "evidence": {
+      "A": 0,
+      "B": 0,
+      "C": 2,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/99165",
+    "repo": "pytorch/pytorch",
+    "number": 99165,
+    "title": "`torch.autograd.graph.Node.register_hook` can override `grad_inputs`, not `grad_outputs`",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 5,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/pytorch/pytorch/issues/99638",
+    "repo": "pytorch/pytorch",
+    "number": 99638,
+    "title": "Incorrect gradient for masked_select when inputs are non-contiguous",
+    "primary": "A",
+    "category_name": "gradient_tracking",
+    "evidence": {
+      "A": 3,
+      "B": 0,
+      "C": 0,
+      "D": 2,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/100590",
+    "repo": "tensorflow/tensorflow",
+    "number": 100590,
+    "title": "tf.clip_by_value / tf.minimum and tf.maximum produce incorrect results with int64 on Windows",
+    "primary": "E",
+    "category_name": "non_state",
+    "evidence": {
+      "A": 0,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/105728",
+    "repo": "tensorflow/tensorflow",
+    "number": 105728,
+    "title": "XLA: tf.function(jit_compile=True) fails when calling a tf.function-decorated method inside a Keras Layer, raising NotImplementedError (numpy() only available in eager mode)",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 5,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/108073",
+    "repo": "tensorflow/tensorflow",
+    "number": 108073,
+    "title": "Improve error message: Confusing \"'str' object has no attribute 'base_dtype'\" when tf.Variable is incorrectly used as scalar parameter",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 3,
+      "C": 0,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/108471",
+    "repo": "tensorflow/tensorflow",
+    "number": 108471,
+    "title": "BertInputTensorsMd.md \"tesnor\" -> \"tensor\"",
+    "primary": "E",
+    "category_name": "non_state",
+    "evidence": {
+      "A": 0,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/112572",
+    "repo": "tensorflow/tensorflow",
+    "number": 112572,
+    "title": "TensorFlow 2.20+ breaks hwloc PCI discovery for NCCL network plugins (aws-ofi-nccl) on GPU instances",
+    "primary": "C",
+    "category_name": "distribution_strategy",
+    "evidence": {
+      "A": 0,
+      "B": 0,
+      "C": 1,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/46888",
+    "repo": "tensorflow/tensorflow",
+    "number": 46888,
+    "title": "tf.math.segment_max/min/mean/sun/prod crashes(aborts) when segment_ids is large",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/46898",
+    "repo": "tensorflow/tensorflow",
+    "number": 46898,
+    "title": "`tf.random.fixed_unigram_candidate_sampler` crashes(abort) when `vocab_file` is invalid",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/46899",
+    "repo": "tensorflow/tensorflow",
+    "number": 46899,
+    "title": "tf.ragged.range and  tf.range crash (abort) when `start` is large",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/46900",
+    "repo": "tensorflow/tensorflow",
+    "number": 46900,
+    "title": "tf.strings.substr crashes(aborts) ",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/46909",
+    "repo": "tensorflow/tensorflow",
+    "number": 46909,
+    "title": "tf.summary.create_file_writer aborts ",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/46911",
+    "repo": "tensorflow/tensorflow",
+    "number": 46911,
+    "title": "tf.keras.backend.tile crash(aborts) when n is large",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/46913",
+    "repo": "tensorflow/tensorflow",
+    "number": 46913,
+    "title": "tf.keras.layers.RepeatVector crashes(aborts) when n is large",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/46914",
+    "repo": "tensorflow/tensorflow",
+    "number": 46914,
+    "title": "tf.keras.layers.UpSampling2D crashes(aborts) when size is large",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/46915",
+    "repo": "tensorflow/tensorflow",
+    "number": 46915,
+    "title": "tf.nn.atrous_conv2d crashes(aborts) when rate is large value",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/46993",
+    "repo": "tensorflow/tensorflow",
+    "number": 46993,
+    "title": "`tf.keras.layers.ELU` and  `tf.keras.layers.LeakyReLU` outputs nan if `alpha=None`",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/48646",
+    "repo": "tensorflow/tensorflow",
+    "number": 48646,
+    "title": "ReLU layer wrong result with negative threshold",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/48961",
+    "repo": "tensorflow/tensorflow",
+    "number": 48961,
+    "title": "GlobalAveragePooling1D does not work with a mask when mixed precision policy is set.",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/49930",
+    "repo": "tensorflow/tensorflow",
+    "number": 49930,
+    "title": "Incorrect variance in normalization layer of EfficientNet",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 1,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/50288",
+    "repo": "tensorflow/tensorflow",
+    "number": 50288,
+    "title": "Keras generic_utils Mangles ConvLSTM2D Default Layer Name",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/51792",
+    "repo": "tensorflow/tensorflow",
+    "number": 51792,
+    "title": "weighted_moments produces NaNs when weights are all zeros",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/51908",
+    "repo": "tensorflow/tensorflow",
+    "number": 51908,
+    "title": "tf.pad crashes with large paddings",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/51967",
+    "repo": "tensorflow/tensorflow",
+    "number": 51967,
+    "title": "tf.nn.sigmoid_cross_entropy_with_logits should support broadcasting",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/52676",
+    "repo": "tensorflow/tensorflow",
+    "number": 52676,
+    "title": "Undefined behaviour in Range",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 1,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/53300",
+    "repo": "tensorflow/tensorflow",
+    "number": 53300,
+    "title": "tf.stack silently output wrong result with 0-dimension tensor",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/54414",
+    "repo": "tensorflow/tensorflow",
+    "number": 54414,
+    "title": "`tf.clip_by_norm` gives WRONG results when given negative `norm`",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/55203",
+    "repo": "tensorflow/tensorflow",
+    "number": 55203,
+    "title": "`tf.gather_nd` and `tf.gather` have inconsistent type check for `batch_dims`",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/55292",
+    "repo": "tensorflow/tensorflow",
+    "number": 55292,
+    "title": "`tf.experimental.numpy.array` should have the same behavior as `numpy.array`, but currently crashes",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/59067",
+    "repo": "tensorflow/tensorflow",
+    "number": 59067,
+    "title": "TF 2.11.0: tf.image.ssim return_index_map=True outputs wrong shape",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 1,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/60457",
+    "repo": "tensorflow/tensorflow",
+    "number": 60457,
+    "title": "error message of tf.eye is inconsistent with doc",
+    "primary": "E",
+    "category_name": "non_state",
+    "evidence": {
+      "A": 0,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/61820",
+    "repo": "tensorflow/tensorflow",
+    "number": 61820,
+    "title": "The `mask` dtype should be asserted to be boolean in `tf.compat.v1.boolean_mask` (and `tf.boolean_mask`)",
+    "primary": "E",
+    "category_name": "non_state",
+    "evidence": {
+      "A": 0,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/62549",
+    "repo": "tensorflow/tensorflow",
+    "number": 62549,
+    "title": "Inconsistency in XLA Cotionmpila with Operand Order Swap in `tf.add` with Specific Operators on GPU",
+    "primary": "B",
+    "category_name": "execution_mode",
+    "evidence": {
+      "A": 0,
+      "B": 2,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/62950",
+    "repo": "tensorflow/tensorflow",
+    "number": 62950,
+    "title": "`tf.raw_ops.Conv2DBackpropInput` aborts due to lack of input check",
+    "primary": "E",
+    "category_name": "non_state",
+    "evidence": {
+      "A": 0,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/63823",
+    "repo": "tensorflow/tensorflow",
+    "number": 63823,
+    "title": "tf.keras.layers.PReLU outputs NaN on positive input",
+    "primary": "E",
+    "category_name": "non_state",
+    "evidence": {
+      "A": 0,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/64081",
+    "repo": "tensorflow/tensorflow",
+    "number": 64081,
+    "title": "slient overflow occurs in tf.range leading to incorrect result, here is a possible fix",
+    "primary": "E",
+    "category_name": "non_state",
+    "evidence": {
+      "A": 0,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/64256",
+    "repo": "tensorflow/tensorflow",
+    "number": 64256,
+    "title": "tf.raw_ops.ApproximateEqual/Erfinv fail support a few data types, inconsistent with the documentation",
+    "primary": "E",
+    "category_name": "non_state",
+    "evidence": {
+      "A": 0,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0
+    }
+  },
+  {
+    "url": "https://github.com/tensorflow/tensorflow/issues/97096",
+    "repo": "tensorflow/tensorflow",
+    "number": 97096,
+    "title": "`tf.math.argmax` throws `InvalidArgumentError` with valid `axis` of `int16` dtype",
+    "primary": "E",
+    "category_name": "non_state",
+    "evidence": {
+      "A": 0,
       "B": 0,
       "C": 0,
       "D": 0,

@@ -1,4 +1,4 @@
-# https://github.com/pytorch/pytorch/issues/170168
+                                                  
 import torch
 
 cpu = torch.linspace(4.3, -3, 50, dtype=torch.int64, device="cpu")

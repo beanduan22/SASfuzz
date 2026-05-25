@@ -1,16 +1,8 @@
 """Stage 4: classify each fix-verified issue into A/B/C/D/E.
 
-Two backends share one rubric (configs/rubric.json):
-
-  - 'heuristic'  (default, deterministic, no API)
-       Scores each category by the number of distinct signal substrings that
-       appear in the issue title, body, or labels. The highest score wins.
-       Ties break in the rubric's listed order (A → B → C → D); E is assigned
-       only when no signal fires.
-
-  - 'llm'        (requires ANTHROPIC_API_KEY)
-       Sends each issue's title+body+labels to Claude with the rubric prompt
-       and parses the returned single-letter primary category.
+The offline helper backend is deterministic and shares the rubric in
+configs/rubric.json. The paper numbers are the two-author adjudicated labels
+stored in the checked-in summary.
 
 Inputs:
     data/fix_verification.json
@@ -25,8 +17,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
-import re
 from pathlib import Path
 from typing import Iterable
 
@@ -64,51 +54,6 @@ def heuristic_label(issue: dict, rubric: dict) -> tuple[str, dict[str, int]]:
     return "E", scores
 
 
-def llm_label(issue: dict, rubric: dict) -> tuple[str, dict | None]:
-    """Use Claude to classify. Skipped when ANTHROPIC_API_KEY is missing."""
-    api_key = os.environ.get("ANTHROPIC_API_KEY")
-    if not api_key:
-        raise RuntimeError("ANTHROPIC_API_KEY not set; cannot use LLM backend")
-
-    try:
-        import anthropic  # type: ignore
-    except ImportError as exc:
-        raise RuntimeError("anthropic SDK not installed; pip install anthropic") from exc
-
-    client = anthropic.Anthropic(api_key=api_key)
-    prompt = _build_prompt(issue, rubric)
-    msg = client.messages.create(
-        model=os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-4-6"),
-        max_tokens=200,
-        messages=[{"role": "user", "content": prompt}],
-    )
-    text = "".join(part.text for part in msg.content if hasattr(part, "text")).strip()
-    m = re.search(r"\b([ABCDE])\b", text)
-    if not m:
-        return "E", {"raw": text}
-    return m.group(1), {"raw": text}
-
-
-def _build_prompt(issue: dict, rubric: dict) -> str:
-    cats = "\n".join(
-        f"{letter}. {spec['name']}: {spec['description']}"
-        for letter, spec in rubric["categories"].items()
-    )
-    body = (issue.get("body") or "")[:4000]
-    labels = ", ".join(issue.get("labels") or [])
-    return (
-        "You are classifying a closed GitHub issue from PyTorch or TensorFlow into "
-        "exactly one primary category. Read the rubric, then output ONLY the single "
-        "letter A/B/C/D/E.\n\n"
-        f"Rubric:\n{cats}\n\n"
-        f"Issue URL: {issue.get('url')}\n"
-        f"Title: {issue.get('title')}\n"
-        f"Labels: {labels}\n"
-        f"Body:\n{body}\n\n"
-        "Answer with one letter."
-    )
-
-
 def run(backend: str, limit: int | None) -> dict:
     rubric = json.loads((CONFIGS / "rubric.json").read_text())
 
@@ -138,12 +83,9 @@ def run(backend: str, limit: int | None) -> dict:
         if not issue.get("body") and not issue.get("labels"):
             skipped_unhydrated += 1
             continue
-        if backend == "heuristic":
-            letter, evidence = heuristic_label(issue, rubric)
-        elif backend == "llm":
-            letter, evidence = llm_label(issue, rubric)
-        else:
+        if backend != "heuristic":
             raise ValueError(f"unknown backend: {backend}")
+        letter, evidence = heuristic_label(issue, rubric)
 
         out.append(
             {
@@ -179,7 +121,7 @@ def run(backend: str, limit: int | None) -> dict:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="RQ1 stage 4: classify into A/B/C/D/E.")
-    parser.add_argument("--backend", choices=("heuristic", "llm"), default="heuristic")
+    parser.add_argument("--backend", choices=("heuristic",), default="heuristic")
     parser.add_argument("--limit", type=int, default=None)
     args = parser.parse_args()
     print(json.dumps(run(args.backend, args.limit), indent=2))
