@@ -11,7 +11,7 @@ pip install torch==2.9.1 tensorflow==2.21.0 numpy requests openai
 Set the API key for your chosen backend:
 
 ```bash
-export OPENAI_API_KEY=your_key       # for --llm-backend gpt5 (paper default)
+export OPENAI_API_KEY=your_key
 # Qwen3.6-27B (RQ4) is served locally via Ollama — no API key required.
 ```
 
@@ -51,11 +51,11 @@ RQ1 analyses 329 fix-verified correctness issues from PyTorch and TensorFlow to 
 
 ```bash
 cd RQ1
-python -m rq1.collect     # collect 2021-01-01 through 2026-01-01 issues
-python -m rq1.hydrate     # download issue bodies
-python -m rq1.verify_fix  # identify fix-verified issues
-python -m rq1.classify    # classify A/B/C/D/E
-python -m rq1.report      # print Tables 1 & 2
+python -m rq1.collect
+python -m rq1.hydrate
+python -m rq1.verify_fix
+python -m rq1.classify
+python -m rq1.report
 ```
 
 ### RQ2 & RQ3 — Coverage and bug detection (Tables 3 & 4)

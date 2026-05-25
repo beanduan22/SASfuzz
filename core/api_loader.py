@@ -1,5 +1,7 @@
 from __future__ import annotations
+import inspect
 import re
+from collections import deque
 from pathlib import Path
 from typing import Dict, List, Tuple
 
@@ -671,6 +673,82 @@ def _classify(api: str, framework: str) -> str:
         return _classify_api(api)
     return _classify_tf_api(api)
 
+
+def _public_runtime_apis(framework: str) -> List[str]:
+    if framework == "tf":
+        return _discover_tf_apis()
+    return _discover_torch_apis()
+
+def _discover_torch_apis() -> List[str]:
+    import torch
+    roots = [("torch", torch)]
+    for name in ("nn", "nn.functional", "linalg", "fft", "special", "optim"):
+        obj = torch
+        ok = True
+        for part in name.split("."):
+            try:
+                obj = getattr(obj, part)
+            except Exception:
+                ok = False
+                break
+        if ok:
+            roots.append((f"torch.{name}", obj))
+    return _walk_public_api(roots, ("torch.testing",), 4, 1720)
+
+def _discover_tf_apis() -> List[str]:
+    import tensorflow as tf
+    roots = [("tf", tf)]
+    for name in ("keras", "nn", "math", "linalg", "signal", "distribute"):
+        try:
+            roots.append((f"tf.{name}", getattr(tf, name)))
+        except Exception:
+            pass
+    excluded = (
+        "tf.compat", "tf.raw_ops", "tf.experimental", "tf.test", "tf.debugging",
+        "tf.config", "tf.data", "tf.io", "tf.summary", "tf.train", "tf.profiler",
+        "tf.queue", "tf.feature_column", "tf.lookup", "tf.errors", "tf.types",
+        "tf.mlir", "tf.nest", "tf.sets", "tf.quantization", "tf.lite",
+        "tf.saved_model",
+    )
+    return _walk_public_api(roots, excluded, 4, 2255)
+
+def _walk_public_api(
+    roots: List[tuple[str, object]],
+    excluded_prefixes: tuple[str, ...],
+    max_depth: int,
+    limit: int,
+) -> List[str]:
+    seen: set[int] = set()
+    names: set[str] = set()
+    queue = deque((name, obj, 0) for name, obj in roots)
+    while queue:
+        prefix, obj, depth = queue.popleft()
+        if depth > max_depth or any(prefix.startswith(x) for x in excluded_prefixes):
+            continue
+        oid = id(obj)
+        if oid in seen:
+            continue
+        seen.add(oid)
+        try:
+            members = dir(obj)
+        except Exception:
+            continue
+        for attr in members:
+            if attr.startswith("_"):
+                continue
+            name = f"{prefix}.{attr}"
+            if any(name.startswith(x) for x in excluded_prefixes):
+                continue
+            try:
+                value = getattr(obj, attr)
+            except Exception:
+                continue
+            if callable(value) and not is_excluded(name)[0]:
+                names.add(name)
+            if depth < max_depth and (inspect.ismodule(value) or inspect.isclass(value)):
+                queue.append((name, value, depth + 1))
+    return sorted(names)[:limit]
+
 def load_and_classify(
     api_file: str | Path,
     *,
@@ -682,7 +760,10 @@ def load_and_classify(
         name = path.name.lower()
         framework = "tf" if name.startswith("tf") else "torch"
 
-    apis = [line.strip() for line in path.read_text().splitlines() if line.strip()]
+    if path.exists():
+        apis = [line.strip() for line in path.read_text().splitlines() if line.strip()]
+    else:
+        apis = _public_runtime_apis(framework)
 
     groups: Dict[str, List[str]] = {g: [] for g in _GROUP_ORDER}
     groups["random_generation"] = []
@@ -720,7 +801,7 @@ def group_summary(groups: Dict[str, List[str]]) -> str:
 
 if __name__ == "__main__":
     import sys
-    files = sys.argv[1:] or ["torch_valid_apis.txt", "tf_valid_apis.txt"]
+    files = sys.argv[1:] or []
     for f in files:
         if not Path(f).exists():
             continue
