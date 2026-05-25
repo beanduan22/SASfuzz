@@ -96,7 +96,7 @@ def main() -> None:
     ap = argparse.ArgumentParser(description="SASFuzz evaluation: coverage + bugs (RQ2 & RQ3)")
     ap.add_argument("--framework", choices=["pytorch", "tensorflow", "both"], default="both")
     ap.add_argument("--models",       type=int, default=1000)
-    ap.add_argument("--budget",       type=int, default=60)
+    ap.add_argument("--budget",       type=int, default=86400)
     ap.add_argument("--api-set-size", type=int, default=30)
     ap.add_argument("--llm-backend",  default="gpt5",
                     choices=["gpt5", "qwen"])
@@ -119,11 +119,11 @@ def main() -> None:
 
         start = time.time()
         while any(p.poll() is None for _, p, _ in procs):
-            time.sleep(60)
-            elapsed = (time.time() - start) / 60
+            time.sleep(300)
+            elapsed = (time.time() - start) / 3600
             for fw, p, _ in procs:
                 status = "DONE" if p.poll() is not None else "running"
-                print(f"  [{elapsed:.0f}min] {fw}: {status}")
+                print(f"  [{elapsed:.1f}h] {fw}: {status}")
 
     print("\n=== Results ===")
     for fw in frameworks:

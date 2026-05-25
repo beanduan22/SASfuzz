@@ -555,8 +555,8 @@ def main() -> None:
     ap = argparse.ArgumentParser(description="SASFuzz TF (CPU vs GPU)")
     ap.add_argument("--models", type=int, default=1000,
                     help="Number of models to synthesise")
-    ap.add_argument("--budget", type=int, default=60,
-                    help="Mutation fuzzing budget in seconds per model")
+    ap.add_argument("--budget", type=int, default=86400,
+                    help="24h mutation fuzzing budget in seconds")
     ap.add_argument("--api-set-size", type=int, default=12,
                     help="APIs per synthesised model")
     ap.add_argument("--out", default=str(HERE / "results" / "tf_run"),
@@ -663,7 +663,7 @@ def main() -> None:
 
     for mid in range(1, args.models + 1):
         stats["models"] += 1
-        log.info("=" * 60)
+        log.info("=" * 72)
         log.info("Model %d / %d", mid, args.models)
 
         skeleton = skeletons[(mid - 1) % len(skeletons)]
@@ -838,7 +838,7 @@ def main() -> None:
         if _update_no_new_api_streak(used_apis):
             break
 
-    log.info("=" * 60)
+    log.info("=" * 72)
     log.info(
         "DONE | models=%d failed_synth=%d invalid=%d no_gpu=%d "
         "bugs=%d clean=%d mutations=%d",

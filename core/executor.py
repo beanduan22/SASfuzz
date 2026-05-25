@@ -15,7 +15,7 @@ import torch
 logger = logging.getLogger(__name__)
 
 DEVICE_TIMEOUT = 30
-MUTATION_TIMEOUT = 60
+MUTATION_TIMEOUT = 86400
 
 _RUNNER_SUFFIX = textwrap.dedent("""
 if __name__ == "__main__":

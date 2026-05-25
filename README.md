@@ -63,19 +63,19 @@ python -m rq1.report
 
 **PyTorch:**
 ```bash
-python scripts/evaluate.py --framework pytorch --models 1000 --budget 60 \
+python scripts/evaluate.py --framework pytorch --models 1000 --budget 86400 \
     --out results/eval
 ```
 
 **TensorFlow:**
 ```bash
-python scripts/evaluate.py --framework tensorflow --models 1000 --budget 60 \
+python scripts/evaluate.py --framework tensorflow --models 1000 --budget 86400 \
     --out results/eval
 ```
 
 **Both frameworks:**
 ```bash
-python scripts/evaluate.py --framework both --models 1000 --budget 60 \
+python scripts/evaluate.py --framework both --models 1000 --budget 86400 \
     --out results/eval
 ```
 
@@ -90,25 +90,25 @@ python scripts/evaluate.py --framework both --out results/eval --report-only
 **Component ablation — PyTorch:**
 ```bash
 python scripts/ablation.py --experiment ablation --framework pytorch \
-    --models 1000 --budget 60 --out results/ablation
+    --models 1000 --budget 86400 --out results/ablation
 ```
 
 **Component ablation — TensorFlow:**
 ```bash
 python scripts/ablation.py --experiment ablation --framework tensorflow \
-    --models 1000 --budget 60 --out results/ablation
+    --models 1000 --budget 86400 --out results/ablation
 ```
 
 **LLM sensitivity — PyTorch:**
 ```bash
 python scripts/ablation.py --experiment llm --framework pytorch \
-    --models 1000 --budget 60 --out results/ablation
+    --models 1000 --budget 86400 --out results/ablation
 ```
 
 **LLM sensitivity — TensorFlow:**
 ```bash
 python scripts/ablation.py --experiment llm --framework tensorflow \
-    --models 1000 --budget 60 --out results/ablation
+    --models 1000 --budget 86400 --out results/ablation
 ```
 
 Ablation variants (`--ablation` flag):

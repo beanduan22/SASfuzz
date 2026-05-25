@@ -142,7 +142,7 @@ def run(
         model_num = i + 1
         skeleton = skeletons[i % len(skeletons)]
         i += 1
-        logger.info("=" * 60)
+        logger.info("=" * 72)
         if n_models > 0:
             logger.info("Model %d / %d", model_num, n_models)
         else:
@@ -313,7 +313,7 @@ def run(
         if _update_no_new_api_streak(synth.used_apis):
             break
 
-    logger.info("=" * 60)
+    logger.info("=" * 72)
     logger.info(
         "DONE | models=%d failed_synth=%d invalid=%d rejected_random=%d "
         "bugs=%d clean=%d nondet=%d gen_fail=%d",
@@ -324,7 +324,7 @@ def run(
     n_total = len(all_apis_union)
     n_att = len(apis_attempted)
     n_exec = len(apis_executed)
-    logger.info("=" * 60)
+    logger.info("=" * 72)
     logger.info("API COVERAGE")
     logger.info("  Total APIs in selectable pool : %d", n_total)
     logger.info("  APIs attempted  (selected)    : %d  (%.1f%%)",
@@ -393,8 +393,8 @@ def parse_args() -> argparse.Namespace:
                    help="Number of models to synthesise (default 1000)")
     p.add_argument("--api-set-size", type=int, default=12,
                    help="APIs per synthesised model")
-    p.add_argument("--budget", type=int, default=60,
-                   help="Mutation fuzzing budget in seconds per model")
+    p.add_argument("--budget", type=int, default=86400,
+                   help="24h mutation fuzzing budget in seconds")
     p.add_argument("--api-file", type=Path, default=DEFAULT_API_FILE)
     p.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT)
     p.add_argument("--llm-backend", default="gpt5",

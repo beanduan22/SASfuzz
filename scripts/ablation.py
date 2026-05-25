@@ -5,7 +5,7 @@ Runs SASFuzz with each ablation variant on both frameworks and reports
 the metrics table matching paper Table 5.
 
 Usage:
-    python scripts/rq4_ablation.py --models 50 --budget 60
+    python scripts/ablation.py --models 50 --budget 86400
 """
 import argparse, json, subprocess, sys, time
 from pathlib import Path
@@ -76,7 +76,7 @@ def read_metrics(out_dir):
 def main():
     ap = argparse.ArgumentParser(description="RQ4: ablation + LLM sensitivity")
     ap.add_argument("--models",       type=int, default=1000)
-    ap.add_argument("--budget",       type=int, default=60)
+    ap.add_argument("--budget",       type=int, default=86400)
     ap.add_argument("--api-set-size", type=int, default=30)
     ap.add_argument("--out",          default=str(HERE/"results"/"rq4"))
     ap.add_argument("--experiment",   choices=["ablation","llm","both"], default="both")
