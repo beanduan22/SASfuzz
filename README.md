@@ -60,6 +60,17 @@ python -m rq1.report
 
 ### RQ2 & RQ3 — Coverage and bug detection (Tables 3 & 4)
 
+The state-aware bug reproducer artifact is in `bugs/reproducers/state`. The
+paper-counted artifact contains 47 standalone scripts: 18 PyTorch and 29
+TensorFlow reproducers, distributed over gradient tracking (18), execution mode
+(14), and distribution strategy (15). These scripts intentionally omit external
+source metadata and maintainer outcome metadata.
+
+Run one reproducer directly:
+
+```bash
+python bugs/reproducers/state/state_bug_001.py
+```
 
 **PyTorch:**
 ```bash
