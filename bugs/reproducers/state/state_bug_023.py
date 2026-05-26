@@ -1,43 +1,9 @@
-from __future__ import annotations
-
-import math
 import os
-import traceback
 import warnings
-from typing import Callable
-
-
-os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "3")
-os.environ.setdefault("TF_ENABLE_ONEDNN_OPTS", "0")
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
+os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
 warnings.filterwarnings("ignore")
-
-
-class SkipCase(Exception):
-    pass
-
-
-
-def _print_result(ok: bool, detail: str) -> bool:
-    print(detail)
-    print("BUG_REPRODUCED" if ok else "NOT_REPRODUCED")
-    return bool(ok)
-
-
-def _tf():
-    try:
-        import tensorflow as tf
-    except ImportError as exc:
-        raise SkipCase(f"missing tensorflow: {exc}") from exc
-    return tf
-
-
-def _tf_require_gpu(tf) -> None:
-    if not tf.config.list_physical_devices("GPU"):
-        raise SkipCase("TensorFlow GPU is not visible")
-    try:
-        tf.config.set_soft_device_placement(False)
-    except Exception:
-        pass
+import tensorflow as tf
 
 
 def _to_numpy(value):
@@ -51,11 +17,9 @@ def _to_numpy(value):
         return type(value)(_to_numpy(v) for v in value)
     return value
 
-
-def _tf_device_result(device: str, fn: Callable[[], object], use_strategy: bool = False):
-    tf = _tf()
+def _tf_device_result(device, fn, use_strategy=False):
     if "GPU" in device.upper():
-        _tf_require_gpu(tf)
+        assert tf.config.list_physical_devices("GPU"), "GPU is required"
     try:
         if use_strategy:
             strategy = tf.distribute.MirroredStrategy(devices=[device])
@@ -69,35 +33,19 @@ def _tf_device_result(device: str, fn: Callable[[], object], use_strategy: bool 
         return None, type(exc).__name__ + ": " + str(exc).splitlines()[0][:160]
 
 
-def _case_023() -> bool:
-    tf = _tf()
-    _tf_require_gpu(tf)
+def run():
+    assert tf.config.list_physical_devices('GPU'), 'GPU is required'
     x = tf.ones((3, 1), tf.float32)
     y = tf.ones((1, 5, 2), tf.float32)
 
     def op():
         return tf.raw_ops.NotEqual(x=x, y=y, incompatible_shape_error=False)
-
-    cpu, cpu_err = _tf_device_result("/CPU:0", op, use_strategy=True)
-    gpu, gpu_err = _tf_device_result("/GPU:0", op, use_strategy=True)
-    ok = cpu_err is None and bool(cpu) is True and gpu_err is not None
-    return _print_result(ok, f"state=distribution_strategy(MirroredStrategy) cpu={cpu}/{cpu_err} gpu={gpu}/{gpu_err}")
-
-
-def main() -> int:
-    print("CASE state_bug_023 [tensorflow]")
-    print("status=confirmed state_dimension=distribution strategy")
-    try:
-        ok = _case_023()
-        return 0 if ok else 1
-    except SkipCase as exc:
-        print(f"SKIPPED: {exc}")
-        return 2
-    except Exception:
-        print("HARNESS_ERROR:")
-        traceback.print_exc()
-        return 3
+    cpu, cpu_err = _tf_device_result('/CPU:0', op, use_strategy=True)
+    gpu, gpu_err = _tf_device_result('/GPU:0', op, use_strategy=True)
+    ok = cpu_err is None and bool(cpu) is True and (gpu_err is not None)
+    print(f'state=distribution_strategy(MirroredStrategy) cpu={cpu}/{cpu_err} gpu={gpu}/{gpu_err}')
+    print('BUG_REPRODUCED' if ok else 'NOT_REPRODUCED')
+    return
 
 
-if __name__ == "__main__":
-    raise SystemExit(main())
+run()
