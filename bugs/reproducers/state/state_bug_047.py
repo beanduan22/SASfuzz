@@ -1,17 +1,23 @@
 import torch
-assert torch.cuda.is_available(), 'CUDA is required'
 import torch.nn as nn
-import torch.nn.functional as F
 
-class M(nn.Module):
+assert torch.cuda.is_available(), 'CUDA is required'
+
+class Model(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.sens = nn.ReLU()
 
     def forward(self, x):
-        return F.relu(x)
-model = M()
+        h = self.sens(x)
+        return h
+
+model = Model()
+x = torch.tensor([-0.0])
 model.train()
+y_train = model(x)
 model.eval()
-x_cpu = torch.tensor([-0.0])
-x_gpu = x_cpu.cuda()
-cpu = model(x_cpu)
-gpu = model(x_gpu).cpu()
-print(f'state=execution_mode(train/eval switch) cpu={cpu} sign={torch.signbit(cpu)} gpu={gpu} sign={torch.signbit(gpu)}')
+y_eval = model(x.cuda()).cpu()
+
+print('Train:', y_train, torch.signbit(y_train))
+print('Eval:', y_eval, torch.signbit(y_eval))

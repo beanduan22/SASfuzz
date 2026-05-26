@@ -1,51 +1,18 @@
 import os
-import warnings
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
-warnings.filterwarnings('ignore')
 import tensorflow as tf
-import numpy as np
 
-def _to_numpy(value):
-    if hasattr(value, 'numpy'):
-        return value.numpy()
-    if hasattr(value, 'values') and hasattr(value, 'indices'):
-        return (_to_numpy(value.values), _to_numpy(value.indices))
-    if isinstance(value, tuple) and hasattr(value, '_fields'):
-        return tuple((_to_numpy(v) for v in value))
-    if isinstance(value, (tuple, list)):
-        return type(value)((_to_numpy(v) for v in value))
-    return value
+class Model(tf.keras.Model):
+    def call(self, x):
+        a, b = x
+        h = tf.sparse.cross([a, b]).values
+        return h
 
-def _tf_device_result(device, fn, use_strategy=False):
-    if 'GPU' in device.upper():
-        assert tf.config.list_physical_devices('GPU'), 'GPU is required'
-    try:
-        if use_strategy:
-            strategy = tf.distribute.MirroredStrategy(devices=[device])
-            with strategy.scope():
-                out = strategy.run(fn)
-        else:
-            with tf.device(device):
-                out = fn()
-        return (_to_numpy(out), None)
-    except Exception as exc:
-        return (None, type(exc).__name__ + ': ' + str(exc).splitlines()[0][:160])
+strategy = tf.distribute.MirroredStrategy()
+with strategy.scope():
+    model = Model()
+x = (tf.constant([[float('inf')], [2.0]], tf.float32), tf.constant([[5], [6]], tf.int32))
+out = strategy.run(lambda x: model(x), args=(x,))
+state = [v.numpy() for v in strategy.experimental_local_results(out)]
 
-def _arrays_differ(a, b, equal_nan=True, check_sign=False):
-    aa = np.asarray(a)
-    bb = np.asarray(b)
-    if aa.shape != bb.shape:
-        return True
-    if check_sign and (not np.array_equal(np.signbit(aa), np.signbit(bb))):
-        return True
-    return not np.array_equal(aa, bb, equal_nan=equal_nan)
-assert tf.config.list_physical_devices('GPU'), 'GPU is required'
-a = tf.constant([[float('inf')], [2.0]], tf.float32)
-b = tf.constant([[5], [6]], tf.int32)
-
-def op():
-    return tf.sparse.cross([a, b]).values
-cpu, cpu_err = _tf_device_result('/CPU:0', op, use_strategy=True)
-gpu, gpu_err = _tf_device_result('/GPU:0', op, use_strategy=True)
-print(f'state=distribution_strategy(MirroredStrategy) cpu={cpu} gpu={gpu} cpu_err={cpu_err} gpu_err={gpu_err}')
+print('State:', state)

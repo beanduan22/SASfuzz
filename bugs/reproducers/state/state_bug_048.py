@@ -1,16 +1,24 @@
 import os
-import warnings
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
-warnings.filterwarnings('ignore')
 import tensorflow as tf
 import numpy as np
-assert tf.config.list_physical_devices('GPU'), 'GPU is required'
+
+class Model(tf.keras.Model):
+    def call(self, x):
+        h = tf.clip_by_value(x, 0.0, 2.0)
+        ctx = tf.distribute.get_replica_context()
+        h = ctx.all_reduce('sum', h)
+        return h
+
+strategy = tf.distribute.MirroredStrategy()
+with strategy.scope():
+    model = Model()
 x = tf.constant([-0.0, -0.0], tf.float64)
-with tf.device('/CPU:0'):
-    cpu = tf.clip_by_value(x, 0.0, 2.0).numpy()
-with tf.device('/GPU:0'):
-    gpu = tf.clip_by_value(x, 0.0, 2.0).numpy()
-cpu_sign = np.signbit(cpu)
-gpu_sign = np.signbit(gpu)
-print(f'state=distribution_strategy(device placement) cpu={cpu.tolist()} gpu={gpu.tolist()} cpu_sign={cpu_sign.tolist()} gpu_sign={gpu_sign.tolist()}')
+out = strategy.run(lambda x: model(x), args=(x,))
+state = [v.numpy() for v in strategy.experimental_local_results(out)]
+expected = tf.clip_by_value(x, 0.0, 2.0).numpy()
+
+print('State:', state)
+print('Expected:', expected)
+print('State sign:', [np.signbit(v).tolist() for v in state])
+print('Expected sign:', np.signbit(expected).tolist())

@@ -1,16 +1,31 @@
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
+
 torch.manual_seed(0)
-fc1 = nn.Linear(8, 8)
-fc2 = nn.Linear(8, 8)
-bn = nn.BatchNorm1d(8)
-x = torch.randn(4, 8, requires_grad=True)
-with torch.enable_grad():
-    y = fc1(x)
-    y = torch.nn.functional.hardswish(y)
-    y = bn(y)
-    y = fc2(y)
-    y = torch.log1p(y)
-    out = torch.xlogy(y, y)
+
+class Model(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.fc1 = nn.Linear(8, 8)
+        self.sens = nn.BatchNorm1d(8)
+        self.fc2 = nn.Linear(8, 8)
+
+    def forward(self, x):
+        h = self.fc1(x)
+        h = F.hardswish(h)
+        h = self.sens(h)
+        h = self.fc2(h)
+        h = torch.log1p(h)
+        return torch.xlogy(h, h)
+
+model = Model()
+x = torch.randn(4, 8)
+x.requires_grad_(True)
+out = model(x)
+out.sum().backward()
 minimal = torch.xlogy(torch.tensor(0.0), torch.tensor(0.0))
-print(f'state=gradient_tracking(torch.enable_grad) minimal_xlogy_0_0={minimal} any_model_nan={torch.isnan(out).any().item()}')
+
+print('Output has NaN:', torch.isnan(out).any().item())
+print('Gradient has NaN:', torch.isnan(x.grad).any().item())
+print('xlogy(0, 0):', minimal)

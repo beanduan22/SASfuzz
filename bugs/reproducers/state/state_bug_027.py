@@ -1,42 +1,19 @@
 import os
-import warnings
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
-warnings.filterwarnings('ignore')
 import tensorflow as tf
 import numpy as np
 
-def _to_numpy(value):
-    if hasattr(value, 'numpy'):
-        return value.numpy()
-    if hasattr(value, 'values') and hasattr(value, 'indices'):
-        return (_to_numpy(value.values), _to_numpy(value.indices))
-    if isinstance(value, tuple) and hasattr(value, '_fields'):
-        return tuple((_to_numpy(v) for v in value))
-    if isinstance(value, (tuple, list)):
-        return type(value)((_to_numpy(v) for v in value))
-    return value
+class Model(tf.keras.Model):
+    def call(self, x):
+        data, ids = x
+        h = tf.math.unsorted_segment_max(data, ids, num_segments=9)
+        return h
 
-def _tf_device_result(device, fn, use_strategy=False):
-    if 'GPU' in device.upper():
-        assert tf.config.list_physical_devices('GPU'), 'GPU is required'
-    try:
-        if use_strategy:
-            strategy = tf.distribute.MirroredStrategy(devices=[device])
-            with strategy.scope():
-                out = strategy.run(fn)
-        else:
-            with tf.device(device):
-                out = fn()
-        return (_to_numpy(out), None)
-    except Exception as exc:
-        return (None, type(exc).__name__ + ': ' + str(exc).splitlines()[0][:160])
-assert tf.config.list_physical_devices('GPU'), 'GPU is required'
-data = tf.constant([7.0, np.nan, -2.0], tf.float32)
-ids = tf.constant([0, 4, 5], tf.int32)
+strategy = tf.distribute.MirroredStrategy()
+with strategy.scope():
+    model = Model()
+x = (tf.constant([7.0, np.nan, -2.0], tf.float32), tf.constant([0, 4, 5], tf.int32))
+out = strategy.run(lambda x: model(x), args=(x,))
+state = [v.numpy() for v in strategy.experimental_local_results(out)]
 
-def op():
-    return tf.math.unsorted_segment_max(data, ids, num_segments=9)
-cpu, cpu_err = _tf_device_result('/CPU:0', op, use_strategy=True)
-gpu, gpu_err = _tf_device_result('/GPU:0', op, use_strategy=True)
-print(f'state=distribution_strategy(MirroredStrategy) cpu={cpu} gpu={gpu} cpu_err={cpu_err} gpu_err={gpu_err}')
+print('State:', state)

@@ -1,8 +1,19 @@
 import torch
+import torch.nn as nn
+
 assert torch.cuda.is_available(), 'CUDA is required'
-x = torch.tensor([[0.01, 0.0, 0.0, 0.0, 0.1], [0.0, 0.01, 0.0, 0.1, 0.0], [0.0, 0.0, 0.01, 0.0, 0.0], [0.0, 0.1, 0.0, 0.01, 0.0], [0.1, 0.0, 0.0, 0.0, 0.01]])
+
+class Model(nn.Module):
+    def forward(self, x):
+        vals, vecs = torch.lobpcg(x)
+        return vals, vecs
+
+model = Model()
+x = torch.tensor([[0.0100, 0.0000, 0.0000, 0.0000, 0.1000], [0.0000, 0.0100, 0.0000, 0.1000, 0.0000], [0.0000, 0.0000, 0.0100, 0.0000, 0.0000], [0.0000, 0.1000, 0.0000, 0.0100, 0.0000], [0.1000, 0.0000, 0.0000, 0.0000, 0.0100]])
 with torch.no_grad():
-    cpu_vals, cpu_vecs = torch.lobpcg(x)
-    gpu_vals, gpu_vecs = torch.lobpcg(x.cuda())
-diff = float((cpu_vecs.abs() - gpu_vecs.cpu().abs()).abs().max().item())
-print(f'state=gradient_tracking(torch.no_grad) eig_cpu={cpu_vals} eig_gpu={gpu_vals.cpu()} vec_abs_diff={diff:.4e}')
+    vals_cpu, vecs_cpu = model(x)
+    vals_gpu, vecs_gpu = model(x.cuda())
+
+print('CPU eigenvalues:', vals_cpu)
+print('CUDA eigenvalues:', vals_gpu.cpu())
+print('Vector abs diff:', float((vecs_cpu.abs() - vecs_gpu.cpu().abs()).abs().max().item()))

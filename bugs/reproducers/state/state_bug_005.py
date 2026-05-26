@@ -1,21 +1,21 @@
 import os
-import warnings
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
-warnings.filterwarnings('ignore')
 import tensorflow as tf
+
+class Model(tf.keras.Model):
+    def call(self, x):
+        h = tf.nn.relu(x)
+        return tf.argmin(h, axis=-1)
+
+model = Model()
 x = tf.constant([[3.0, -2.0, -7.0, 4.0, -1.0]], tf.float32)
-eager = tf.argmin(tf.nn.relu(x), axis=-1).numpy().tolist()
+y_eager = model(x)
 tf.config.optimizer.set_experimental_options({'arithmetic_optimization': True})
-
-@tf.function
-def arith_on(v):
-    return tf.argmin(tf.nn.relu(v), axis=-1)
-on = arith_on(x).numpy().tolist()
+graph_fn = tf.function(model.__call__)
+y_graph = graph_fn(x)
 tf.config.optimizer.set_experimental_options({'arithmetic_optimization': False})
+expected = tf.argmin(tf.nn.relu(x), axis=-1)
 
-@tf.function
-def arith_off(v):
-    return tf.argmin(tf.nn.relu(v), axis=-1)
-off = arith_off(x).numpy().tolist()
-print(f'state=execution_mode(tf.function optimizer) eager={eager} on={on} off={off}')
+print('Eager:', y_eager.numpy())
+print('Graph:', y_graph.numpy())
+print('Expected:', expected.numpy())

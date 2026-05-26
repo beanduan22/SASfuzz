@@ -1,8 +1,19 @@
 import torch
+import torch.nn as nn
 import numpy as np
+
 assert torch.cuda.is_available(), 'CUDA is required'
-src = torch.from_numpy(np.array([65024, 65024, 65024], dtype=np.uint16).view(np.float16))
+
+class Model(nn.Module):
+    def forward(self, x):
+        h = torch.signbit(x)
+        return h
+
+model = Model()
+x = torch.from_numpy(np.array([0xFE00, 0xFE00, 0xFE00], dtype=np.uint16).view(np.float16))
 with torch.no_grad():
-    cpu = torch.signbit(src)
-    gpu = torch.signbit(src.cuda()).cpu()
-print(f'state=gradient_tracking(torch.no_grad) cpu={cpu.tolist()} gpu={gpu.tolist()}')
+    y_cpu = model(x)
+    y_gpu = model(x.cuda()).cpu()
+
+print('CPU:', y_cpu.tolist())
+print('CUDA:', y_gpu.tolist())

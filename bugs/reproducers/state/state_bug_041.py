@@ -1,31 +1,28 @@
 import torch
-assert torch.cuda.is_available(), 'CUDA is required'
 import torch.nn as nn
 
-class Model(nn.Module):
+assert torch.cuda.is_available(), 'CUDA is required'
 
+class Model(nn.Module):
     def __init__(self):
         super().__init__()
-        self.avg_pool1d = nn.AvgPool1d(kernel_size=2)
-        self.channel_shuffle = nn.ChannelShuffle(groups=3)
+        self.sens = nn.ChannelShuffle(groups=3)
+        self.pool = nn.AvgPool1d(kernel_size=2)
 
     def forward(self, x):
-        x = x.view(-1, 3, 32 * 32)
-        x = self.avg_pool1d(x)
-        return self.channel_shuffle(x)
+        h = x.view(-1, 3, 32 * 32)
+        h = self.pool(h)
+        return self.sens(h)
+
 model = Model()
-model.train()
-model.eval()
 x = torch.rand(2, 3, 32, 32)
-cpu_err = gpu_err = None
+model.train()
+y_train = model.cpu()(x)
+model.eval()
 try:
-    cpu = model.cpu()(x)
+    y_eval = model.cuda()(x.cuda())
 except Exception as exc:
-    cpu = None
-    cpu_err = type(exc).__name__ + ': ' + str(exc)[:120]
-try:
-    gpu = model.cuda()(x.cuda())
-except Exception as exc:
-    gpu = None
-    gpu_err = type(exc).__name__ + ': ' + str(exc)[:160]
-print(f'state=execution_mode(train/eval switch) cpu_shape={(None if cpu is None else tuple(cpu.shape))} cpu_err={cpu_err} gpu_err={gpu_err}')
+    y_eval = type(exc).__name__ + ': ' + str(exc).splitlines()[0]
+
+print('Train:', tuple(y_train.shape))
+print('Eval:', y_eval)

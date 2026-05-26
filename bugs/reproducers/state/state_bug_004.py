@@ -1,14 +1,20 @@
 import os
-import warnings
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
-warnings.filterwarnings('ignore')
 import tensorflow as tf
-print('state=gradient_tracking(fake_quant gradient op)')
-print('about to call fake_quant_with_min_max_vars_gradient with invalid min/max shapes')
+
+class Model(tf.keras.Model):
+    def call(self, x):
+        h = tf.quantization.fake_quant_with_min_max_vars_gradient(gradients=x, inputs=x, min=[1, 1], max=[1, 1])
+        return h[0]
+
+model = Model()
+x = tf.constant(1.0)
 try:
-    tf.quantization.fake_quant_with_min_max_vars_gradient(gradients=1, inputs=1, min=[1, 1], max=[1, 1])
+    with tf.GradientTape() as tape:
+        tape.watch(x)
+        out = model(x)
+    grad = tape.gradient(out, x)
+    print('Output:', out.numpy())
+    print('Gradient:', None if grad is None else grad.numpy())
 except Exception as exc:
-    print(f'raised Python exception instead of abort: {type(exc).__name__}: {exc}')
-else:
-    print('call returned normally')
+    print('Error:', type(exc).__name__, str(exc).splitlines()[0])

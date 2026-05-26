@@ -1,9 +1,21 @@
 import torch
+import torch.nn as nn
+
 assert torch.cuda.is_available(), 'CUDA is required'
 torch.manual_seed(0)
+
+class Model(nn.Module):
+    def forward(self, x):
+        h = torch.std(x)
+        return h
+
+model = Model()
+x = torch.randn(1000, dtype=torch.float32) * 1e19 + 1e20
 with torch.no_grad():
-    x = torch.randn(1000, dtype=torch.float32) * 1e+19 + 1e+20
-    ref = torch.std(x.double()).item()
-    cpu = torch.std(x).item()
-    gpu = torch.std(x.cuda()).cpu().item()
-print(f'state=gradient_tracking(torch.no_grad) ref={ref:.4e} cpu={cpu:.4e} gpu={gpu}')
+    y_cpu = model(x)
+    y_gpu = model(x.cuda()).cpu()
+    expected = torch.std(x.double())
+
+print('CPU:', y_cpu.item())
+print('CUDA:', y_gpu.item())
+print('Expected:', expected.item())
