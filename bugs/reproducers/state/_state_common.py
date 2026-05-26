@@ -12,6 +12,7 @@ from typing import Callable, Dict, Iterable, Optional, Tuple
 
 
 os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "3")
+os.environ.setdefault("TF_ENABLE_ONEDNN_OPTS", "0")
 warnings.filterwarnings("ignore")
 
 
@@ -23,11 +24,8 @@ class SkipCase(Exception):
 class Case:
     key: str
     framework: str
-    issue: int
     status: str
     state_dimension: str
-    title: str
-    url: str
     func: Callable[[], bool]
     needs_gpu: bool = False
     fatal_expected: bool = False
@@ -136,7 +134,7 @@ def _max_abs_diff(a, b) -> float:
 
 
 
-def tf_115768() -> bool:
+def _case_001() -> bool:
     np = _np()
     tf = _tf()
     a = tf.ones((8, 8), tf.float32)
@@ -158,7 +156,7 @@ def tf_115768() -> bool:
     return _print_result(ok, f"state=execution_mode(tf.function) cpu={cpu} gpu={gpu} expected={expected}")
 
 
-def tf_115734() -> bool:
+def _case_002() -> bool:
     np = _np()
     tf = _tf()
     _tf_require_gpu(tf)
@@ -177,7 +175,7 @@ def tf_115734() -> bool:
     return _print_result(any(mismatches), "state=distribution_strategy(MirroredStrategy)")
 
 
-def tf_116047() -> bool:
+def _case_003() -> bool:
     np = _np()
     tf = _tf()
     x = np.array(
@@ -222,7 +220,7 @@ def tf_116047() -> bool:
     )
 
 
-def tf_46910() -> bool:
+def _case_004() -> bool:
     tf = _tf()
     print("state=gradient_tracking(fake_quant gradient op)")
     print("about to call fake_quant_with_min_max_vars_gradient with invalid min/max shapes")
@@ -235,7 +233,7 @@ def tf_46910() -> bool:
     return _print_result(False, "call returned normally")
 
 
-def tf_118374() -> bool:
+def _case_005() -> bool:
     tf = _tf()
     x = tf.constant([[3.0, -2.0, -7.0, 4.0, -1.0]], tf.float32)
     eager = tf.argmin(tf.nn.relu(x), axis=-1).numpy().tolist()
@@ -257,7 +255,7 @@ def tf_118374() -> bool:
     return _print_result(ok, f"state=execution_mode(tf.function optimizer) eager={eager} on={on} off={off}")
 
 
-def tf_117189() -> bool:
+def _case_006() -> bool:
     np = _np()
     tf = _tf()
     _tf_require_gpu(tf)
@@ -274,7 +272,7 @@ def tf_117189() -> bool:
     return _print_result(ok, f"state=distribution_strategy(MirroredStrategy) cpu={cpu} cpu_err={cpu_err} gpu={gpu} gpu_err={gpu_err}")
 
 
-def tf_116148() -> bool:
+def _case_007() -> bool:
     np = _np()
     tf = _tf()
     _tf_require_gpu(tf)
@@ -323,7 +321,7 @@ def tf_116148() -> bool:
     return _print_result(diff > 1e-6, f"state=gradient_tracking(GradientTape) seed={seed} max_diff={diff} cpu={cpu} gpu={gpu}")
 
 
-def tf_115736() -> bool:
+def _case_008() -> bool:
     tf = _tf()
     _tf_require_gpu(tf)
     cases = [
@@ -344,7 +342,7 @@ def tf_115736() -> bool:
     return _print_result(any(mismatches), "state=distribution_strategy(MirroredStrategy)")
 
 
-def tf_115735() -> bool:
+def _case_009() -> bool:
     np = _np()
     tf = _tf()
     _tf_require_gpu(tf)
@@ -363,7 +361,7 @@ def tf_115735() -> bool:
     return _print_result(cpu_pos != gpu_pos, f"state=execution_mode(tf.function) cpu={cpu.tolist()} gpu={gpu.tolist()}")
 
 
-def tf_115733() -> bool:
+def _case_010() -> bool:
     np = _np()
     tf = _tf()
     _tf_require_gpu(tf)
@@ -383,7 +381,7 @@ def tf_115733() -> bool:
     return _print_result(ok, f"state=execution_mode(tf.function) cpu={cpu} gpu={gpu}")
 
 
-def tf_115732() -> bool:
+def _case_011() -> bool:
     np = _np()
     tf = _tf()
     np.random.seed(0)
@@ -405,7 +403,7 @@ def tf_115732() -> bool:
     return _print_result(ok, f"state=execution_mode(tf.function) ref={ref} cpu={cpu} gpu={gpu}")
 
 
-def tf_115731() -> bool:
+def _case_012() -> bool:
     np = _np()
     tf = _tf()
     _tf_require_gpu(tf)
@@ -427,7 +425,7 @@ def tf_115731() -> bool:
     return _print_result(ok, f"state=distribution_strategy(MirroredStrategy) cpu_err={cpu_err_val:.4e} gpu_err={gpu_err_val:.4e}")
 
 
-def tf_62553() -> bool:
+def _case_013() -> bool:
     np = _np()
     tf = _tf()
 
@@ -446,7 +444,7 @@ def tf_62553() -> bool:
     return _print_result(ok, f"state=gradient_tracking(GradientTape.jacobian) out={out.tolist()} expected={expected.tolist()}")
 
 
-def tf_62556() -> bool:
+def _case_014() -> bool:
     np = _np()
     tf = _tf()
 
@@ -463,7 +461,7 @@ def tf_62556() -> bool:
     return _print_result(ok, f"state=gradient_tracking(GradientTape.gradient) out={out.tolist()} expected={expected.tolist()}")
 
 
-def tf_62557() -> bool:
+def _case_015() -> bool:
     np = _np()
     tf = _tf()
 
@@ -482,7 +480,7 @@ def tf_62557() -> bool:
     return _print_result(ok, f"state=gradient_tracking(GradientTape.jacobian) out={out.tolist()} expected={expected.tolist()}")
 
 
-def tf_62559() -> bool:
+def _case_016() -> bool:
     tf = _tf()
 
     def log_fn(a):
@@ -503,7 +501,7 @@ def tf_62559() -> bool:
     return _print_result(False, f"state=gradient_tracking(GradientTape.jacobian + py_function) returned={out}")
 
 
-def tf_62563() -> bool:
+def _case_017() -> bool:
     tf = _tf()
     a = tf.constant([0, -2, 1, -4, 3])
 
@@ -521,7 +519,7 @@ def tf_62563() -> bool:
     return _print_result(ok, f"state=execution_mode(tf.function) tf.negative(top_k)={y} unary_minus_err={unary_err}")
 
 
-def tf_117771() -> bool:
+def _case_018() -> bool:
     tf = _tf()
     w_init = tf.constant([[0.1], [0.2], [0.3], [0.4], [0.5], [0.6]], tf.float32)
     x = tf.constant([[2.0, 4.0, 6.0, 8.0]], tf.float32, shape=[1, 4])
@@ -556,7 +554,7 @@ def tf_117771() -> bool:
     return _print_result(ok, f"state=execution_mode(tf.function jit_compile=True) eager={eager_out}/{eager_err} xla={xla_out}/{xla_err}")
 
 
-def tf_117772() -> bool:
+def _case_019() -> bool:
     np = _np()
     tf = _tf()
     x = tf.constant(np.arange(12, dtype=np.float32).reshape(1, 2, 3, 2))
@@ -588,11 +586,11 @@ def tf_117772() -> bool:
     return _print_result(ok, f"state=execution_mode(tf.function jit_compile=True) eager={eager_shape}/{eager_err} xla={xla_shape}/{xla_err}")
 
 
-def tf_117774() -> bool:
-    return tf_115736()
+def _case_020() -> bool:
+    return _case_008()
 
 
-def tf_118196() -> bool:
+def _case_021() -> bool:
     tf = _tf()
     _tf_require_gpu(tf)
 
@@ -608,7 +606,7 @@ def tf_118196() -> bool:
     return _print_result(ok, f"state=distribution_strategy(MirroredStrategy) cpu={cpu}/{cpu_err} gpu={gpu}/{gpu_err}")
 
 
-def tf_118194() -> bool:
+def _case_022() -> bool:
     np = _np()
     tf = _tf()
     _tf_require_gpu(tf)
@@ -625,7 +623,7 @@ def tf_118194() -> bool:
     return _print_result(ok, f"state=distribution_strategy(MirroredStrategy) cpu={cpu}/{cpu_err} gpu={gpu}/{gpu_err}")
 
 
-def tf_118203() -> bool:
+def _case_023() -> bool:
     tf = _tf()
     _tf_require_gpu(tf)
     x = tf.ones((3, 1), tf.float32)
@@ -640,7 +638,7 @@ def tf_118203() -> bool:
     return _print_result(ok, f"state=distribution_strategy(MirroredStrategy) cpu={cpu}/{cpu_err} gpu={gpu}/{gpu_err}")
 
 
-def tf_118202() -> bool:
+def _case_024() -> bool:
     tf = _tf()
     _tf_require_gpu(tf)
     x = tf.constant([-47], tf.int64)
@@ -655,7 +653,7 @@ def tf_118202() -> bool:
     return _print_result(ok, f"state=distribution_strategy(MirroredStrategy) cpu={cpu} gpu={gpu} cpu_err={cpu_err} gpu_err={gpu_err}")
 
 
-def tf_118201() -> bool:
+def _case_025() -> bool:
     tf = _tf()
     _tf_require_gpu(tf)
     x = tf.constant([[2.0, 4.0, 6.0], [4.0, 10.0, 12.0], [6.0, 12.0, 18.0]], tf.float32)
@@ -669,7 +667,7 @@ def tf_118201() -> bool:
     return _print_result(ok, f"state=distribution_strategy(MirroredStrategy) cpu={cpu} gpu={gpu} cpu_err={cpu_err} gpu_err={gpu_err}")
 
 
-def tf_118198() -> bool:
+def _case_026() -> bool:
     tf = _tf()
     _tf_require_gpu(tf)
     a = tf.constant([[float("inf")], [2.0]], tf.float32)
@@ -684,7 +682,7 @@ def tf_118198() -> bool:
     return _print_result(ok, f"state=distribution_strategy(MirroredStrategy) cpu={cpu} gpu={gpu} cpu_err={cpu_err} gpu_err={gpu_err}")
 
 
-def tf_118197() -> bool:
+def _case_027() -> bool:
     np = _np()
     tf = _tf()
     _tf_require_gpu(tf)
@@ -700,7 +698,7 @@ def tf_118197() -> bool:
     return _print_result(ok, f"state=distribution_strategy(MirroredStrategy) cpu={cpu} gpu={gpu} cpu_err={cpu_err} gpu_err={gpu_err}")
 
 
-def tf_118192() -> bool:
+def _case_028() -> bool:
     np = _np()
     tf = _tf()
     _tf_require_gpu(tf)
@@ -722,7 +720,7 @@ def tf_118192() -> bool:
     return _print_result(ok, f"state=distribution_strategy(MirroredStrategy) cpu_err={cpu_err_val:.4e} gpu_err={gpu_err_val:.4e}")
 
 
-def tf_118200() -> bool:
+def _case_029() -> bool:
     tf = _tf()
     _tf_require_gpu(tf)
 
@@ -746,7 +744,7 @@ def tf_118200() -> bool:
 
 
 
-def pt_181807() -> bool:
+def _case_030() -> bool:
     torch = _torch()
     _torch_require_cuda(torch)
     with torch.no_grad():
@@ -756,7 +754,7 @@ def pt_181807() -> bool:
     return _print_result(ok, f"state=gradient_tracking(torch.no_grad) cpu={cpu.tolist()} gpu={gpu.tolist()}")
 
 
-def pt_180156() -> bool:
+def _case_031() -> bool:
     torch = _torch()
     _torch_require_cuda(torch)
     torch.manual_seed(0)
@@ -769,7 +767,7 @@ def pt_180156() -> bool:
     return _print_result(ok, f"state=gradient_tracking(torch.no_grad) ref={ref:.4e} cpu={cpu:.4e} gpu={gpu}")
 
 
-def pt_114085() -> bool:
+def _case_032() -> bool:
     torch = _torch()
     _torch_require_cuda(torch)
     with torch.no_grad():
@@ -785,7 +783,7 @@ def pt_114085() -> bool:
     return _print_result(ok, f"state=gradient_tracking(torch.no_grad) cpu={cpu.tolist()} gpu={gpu.tolist()}")
 
 
-def pt_180154() -> bool:
+def _case_033() -> bool:
     np = _np()
     torch = _torch()
     _torch_require_cuda(torch)
@@ -802,7 +800,7 @@ def pt_180154() -> bool:
     return _print_result(ok, f"state=gradient_tracking(torch.no_grad) cpu_err={cpu_err:.4e} gpu_err={gpu_err:.4e}")
 
 
-def pt_181805() -> bool:
+def _case_034() -> bool:
     torch = _torch()
     _torch_require_cuda(torch)
     with torch.no_grad():
@@ -817,7 +815,7 @@ def pt_181805() -> bool:
     return _print_result(ok, f"state=gradient_tracking(torch.no_grad) cpu={out_cpu.tolist()} gpu={gpu.tolist()}")
 
 
-def pt_181804() -> bool:
+def _case_035() -> bool:
     np = _np()
     torch = _torch()
     _torch_require_cuda(torch)
@@ -830,7 +828,7 @@ def pt_181804() -> bool:
     return _print_result(ok, f"state=gradient_tracking(torch.no_grad) cpu={cpu} sign={torch.signbit(cpu)} gpu={gpu} sign={torch.signbit(gpu)}")
 
 
-def pt_181801() -> bool:
+def _case_036() -> bool:
     torch = _torch()
     _torch_require_cuda(torch)
     import torch.nn as nn
@@ -851,7 +849,7 @@ def pt_181801() -> bool:
     return _print_result(ok, f"state=execution_mode(train/eval switch) cpu={cpu} sign={torch.signbit(cpu)} gpu={gpu} sign={torch.signbit(gpu)}")
 
 
-def pt_181534() -> bool:
+def _case_037() -> bool:
     torch = _torch()
     import torch.nn as nn
     import torch.nn.functional as F
@@ -875,7 +873,7 @@ def pt_181534() -> bool:
     return _print_result(False, "state=gradient_tracking(torch.autograd.gradcheck) gradcheck passed")
 
 
-def pt_114569() -> bool:
+def _case_038() -> bool:
     torch = _torch()
     _torch_require_cuda(torch)
     with torch.no_grad():
@@ -886,7 +884,7 @@ def pt_114569() -> bool:
     return _print_result(ok, f"state=gradient_tracking(torch.no_grad) cpu={cpu} sign={torch.signbit(cpu)} gpu={gpu} sign={torch.signbit(gpu)}")
 
 
-def pt_181806() -> bool:
+def _case_039() -> bool:
     np = _np()
     torch = _torch()
     _torch_require_cuda(torch)
@@ -898,7 +896,7 @@ def pt_181806() -> bool:
     return _print_result(ok, f"state=gradient_tracking(torch.no_grad) cpu={cpu.tolist()} gpu={gpu.tolist()}")
 
 
-def pt_114052() -> bool:
+def _case_040() -> bool:
     torch = _torch()
     _torch_require_cuda(torch)
     import os
@@ -956,7 +954,7 @@ def pt_114052() -> bool:
     return _print_result(ok, f"state=distribution_strategy(DDP) max_diff={diff:.4e}")
 
 
-def pt_121208() -> bool:
+def _case_041() -> bool:
     torch = _torch()
     _torch_require_cuda(torch)
     import torch.nn as nn
@@ -991,7 +989,7 @@ def pt_121208() -> bool:
     return _print_result(ok, f"state=execution_mode(train/eval switch) cpu_shape={None if cpu is None else tuple(cpu.shape)} cpu_err={cpu_err} gpu_err={gpu_err}")
 
 
-def pt_114093() -> bool:
+def _case_042() -> bool:
     torch = _torch()
     _torch_require_cuda(torch)
     import torch.nn as nn
@@ -1026,7 +1024,7 @@ def pt_114093() -> bool:
     return _print_result(not close, f"state=execution_mode(train/eval switch) allclose={close} max_diff={diff:.4e}")
 
 
-def pt_114080() -> bool:
+def _case_043() -> bool:
     torch = _torch()
     _torch_require_cuda(torch)
     import torch.nn as nn
@@ -1046,7 +1044,7 @@ def pt_114080() -> bool:
     return _print_result(ok, f"state=execution_mode(torch.jit.trace) cpu={cpu} gpu={gpu}")
 
 
-def pt_114081() -> bool:
+def _case_044() -> bool:
     torch = _torch()
     _torch_require_cuda(torch)
     x = torch.tensor(
@@ -1066,7 +1064,7 @@ def pt_114081() -> bool:
     return _print_result(ok, f"state=gradient_tracking(torch.no_grad) eig_cpu={cpu_vals} eig_gpu={gpu_vals.cpu()} vec_abs_diff={diff:.4e}")
 
 
-def pt_114087() -> bool:
+def _case_045() -> bool:
     torch = _torch()
     _torch_require_cuda(torch)
     torch.manual_seed(0)
@@ -1081,7 +1079,7 @@ def pt_114087() -> bool:
     return _print_result(not close, f"state=gradient_tracking(torch.no_grad) allclose={close} max_diff={diff:.4e}")
 
 
-def pt_179784() -> bool:
+def _case_046() -> bool:
     torch = _torch()
     import torch.nn as nn
 
@@ -1102,70 +1100,90 @@ def pt_179784() -> bool:
     return _print_result(ok, f"state=gradient_tracking(torch.enable_grad) minimal_xlogy_0_0={minimal} any_model_nan={torch.isnan(out).any().item()}")
 
 
-def pt_181533() -> bool:
-    return pt_181801()
+def _case_047() -> bool:
+    return _case_036()
 
+
+
+def _case_048() -> bool:
+    tf = _tf()
+    np = _np()
+    _tf_require_gpu(tf)
+    x = tf.constant([-0.0, -0.0], tf.float64)
+    with tf.device("/CPU:0"):
+        cpu = tf.clip_by_value(x, 0.0, 2.0).numpy()
+    with tf.device("/GPU:0"):
+        gpu = tf.clip_by_value(x, 0.0, 2.0).numpy()
+    cpu_sign = np.signbit(cpu)
+    gpu_sign = np.signbit(gpu)
+    ok = not np.array_equal(cpu_sign, gpu_sign)
+    return _print_result(
+        ok,
+        f"state=distribution_strategy(device placement) cpu={cpu.tolist()} gpu={gpu.tolist()} "
+        f"cpu_sign={cpu_sign.tolist()} gpu_sign={gpu_sign.tolist()}",
+    )
 
 def _register() -> Dict[str, Case]:
     cases = [
-        Case("tf-115768", "tensorflow", 115768, "fixed", "execution mode", "logdet singular matrix returns NaN instead of -inf", "https://github.com/tensorflow/tensorflow/issues/115768", tf_115768),
-        Case("tf-115734", "tensorflow", 115734, "fixed", "distribution strategy", "complex64 abs CPU/GPU NaN inconsistency", "https://github.com/tensorflow/tensorflow/issues/115734", tf_115734, needs_gpu=True),
-        Case("tf-116047", "tensorflow", 116047, "fixed", "execution mode", "TFLite converter removes non-trivial permutation", "https://github.com/tensorflow/tensorflow/issues/116047", tf_116047),
-        Case("tf-46910", "tensorflow", 46910, "fixed", "gradient tracking", "fake_quant gradient abort on invalid min/max", "https://github.com/tensorflow/tensorflow/issues/46910", tf_46910, fatal_expected=True),
-        Case("tf-118374", "tensorflow", 118374, "confirmed", "execution mode", "arithmetic optimization changes argmin result", "https://github.com/tensorflow/tensorflow/issues/118374", tf_118374),
-        Case("tf-117189", "tensorflow", 117189, "confirmed", "distribution strategy", "adjust_hue NaN CPU/GPU inconsistency", "https://github.com/tensorflow/tensorflow/issues/117189", tf_117189, needs_gpu=True),
-        Case("tf-116148", "tensorflow", 116148, "confirmed", "gradient tracking", "Dense+Hashing+swish CPU/GPU inconsistency", "https://github.com/tensorflow/tensorflow/issues/116148", tf_116148, needs_gpu=True),
-        Case("tf-115736", "tensorflow", 115736, "confirmed", "distribution strategy", "cast NaN/Inf to int CPU/GPU inconsistency", "https://github.com/tensorflow/tensorflow/issues/115736", tf_115736, needs_gpu=True),
-        Case("tf-115735", "tensorflow", 115735, "confirmed", "execution mode", "sort NaN CPU/GPU placement inconsistency", "https://github.com/tensorflow/tensorflow/issues/115735", tf_115735, needs_gpu=True),
-        Case("tf-115733", "tensorflow", 115733, "confirmed", "execution mode", "float16 reduce_std CPU NaN GPU Inf", "https://github.com/tensorflow/tensorflow/issues/115733", tf_115733, needs_gpu=True),
-        Case("tf-115732", "tensorflow", 115732, "confirmed", "execution mode", "float16 reduce_mean N=65536 CPU returns zero", "https://github.com/tensorflow/tensorflow/issues/115732", tf_115732),
-        Case("tf-115731", "tensorflow", 115731, "confirmed", "distribution strategy", "bfloat16 cumsum CPU/GPU precision inconsistency", "https://github.com/tensorflow/tensorflow/issues/115731", tf_115731, needs_gpu=True),
-        Case("tf-62553", "tensorflow", 62553, "confirmed", "gradient tracking", "GradientTape divide jacobian unexpected NaN", "https://github.com/tensorflow/tensorflow/issues/62553", tf_62553),
-        Case("tf-62556", "tensorflow", 62556, "confirmed", "gradient tracking", "GradientTape reduce_prod gradient unexpected zero", "https://github.com/tensorflow/tensorflow/issues/62556", tf_62556),
-        Case("tf-62557", "tensorflow", 62557, "confirmed", "gradient tracking", "GradientTape reciprocal jacobian unexpected NaN", "https://github.com/tensorflow/tensorflow/issues/62557", tf_62557),
-        Case("tf-62559", "tensorflow", 62559, "confirmed", "gradient tracking", "py_function log jacobian crash/UnknownError", "https://github.com/tensorflow/tensorflow/issues/62559", tf_62559, fatal_expected=True),
-        Case("tf-62563", "tensorflow", 62563, "confirmed", "execution mode", "top_k and tf.negative/unary minus inconsistency", "https://github.com/tensorflow/tensorflow/issues/62563", tf_62563),
-        Case("tf-117771", "tensorflow", 117771, "confirmed", "execution mode", "XLA silently executes invalid MatMul", "https://github.com/tensorflow/tensorflow/issues/117771", tf_117771),
-        Case("tf-117772", "tensorflow", 117772, "confirmed", "execution mode", "XLA executes unused invalid Slice", "https://github.com/tensorflow/tensorflow/issues/117772", tf_117772),
-        Case("tf-117774", "tensorflow", 117774, "confirmed", "distribution strategy", "NaN float32 to int32 CPU/GPU cast inconsistency", "https://github.com/tensorflow/tensorflow/issues/117774", tf_117774, needs_gpu=True),
-        Case("tf-118196", "tensorflow", 118196, "confirmed", "distribution strategy", "SparseFillEmptyRowsGrad GPU lacks OOB checks", "https://github.com/tensorflow/tensorflow/issues/118196", tf_118196, needs_gpu=True),
-        Case("tf-118194", "tensorflow", 118194, "confirmed", "distribution strategy", "float16 std CPU/GPU inconsistency", "https://github.com/tensorflow/tensorflow/issues/118194", tf_118194, needs_gpu=True),
-        Case("tf-118203", "tensorflow", 118203, "confirmed", "distribution strategy", "NotEqual incompatible_shape_error CPU/GPU exception inconsistency", "https://github.com/tensorflow/tensorflow/issues/118203", tf_118203, needs_gpu=True),
-        Case("tf-118202", "tensorflow", 118202, "confirmed", "distribution strategy", "int64 pow overflow CPU/GPU inconsistency", "https://github.com/tensorflow/tensorflow/issues/118202", tf_118202, needs_gpu=True),
-        Case("tf-118201", "tensorflow", 118201, "confirmed", "distribution strategy", "slogdet singular matrix CPU/GPU inconsistency", "https://github.com/tensorflow/tensorflow/issues/118201", tf_118201, needs_gpu=True),
-        Case("tf-118198", "tensorflow", 118198, "confirmed", "distribution strategy", "sparse.cross non-finite token CPU/GPU inconsistency", "https://github.com/tensorflow/tensorflow/issues/118198", tf_118198, needs_gpu=True),
-        Case("tf-118197", "tensorflow", 118197, "confirmed", "distribution strategy", "unsorted_segment_max NaN segment CPU/GPU inconsistency", "https://github.com/tensorflow/tensorflow/issues/118197", tf_118197, needs_gpu=True),
-        Case("tf-118192", "tensorflow", 118192, "confirmed", "distribution strategy", "BF16 cumsum CPU/GPU inconsistency", "https://github.com/tensorflow/tensorflow/issues/118192", tf_118192, needs_gpu=True),
-        Case("tf-118200", "tensorflow", 118200, "confirmed", "distribution strategy", "SparseSegmentSumGradV2 GPU SIGABRT with negative indices", "https://github.com/tensorflow/tensorflow/issues/118200", tf_118200, needs_gpu=True, fatal_expected=True),
-        Case("pt-181807", "pytorch", 181807, "fixed", "gradient tracking", "linspace integer dtype CPU/CUDA inconsistency", "https://github.com/pytorch/pytorch/issues/181807", pt_181807, needs_gpu=True),
-        Case("pt-180156", "pytorch", 180156, "fixed", "gradient tracking", "std overflow CPU/CUDA inconsistency", "https://github.com/pytorch/pytorch/issues/180156", pt_180156, needs_gpu=True),
-        Case("pt-114085", "pytorch", 114085, "fixed", "gradient tracking", "Tensor.scatter CPU/CUDA inconsistency", "https://github.com/pytorch/pytorch/issues/114085", pt_114085, needs_gpu=True),
-        Case("pt-180154", "pytorch", 180154, "fixed", "gradient tracking", "cumprod CPU/CUDA mismatch", "https://github.com/pytorch/pytorch/issues/180154", pt_180154, needs_gpu=True),
-        Case("pt-181805", "pytorch", 181805, "fixed", "gradient tracking", "fmax uint8 out CPU/CUDA overflow casting", "https://github.com/pytorch/pytorch/issues/181805", pt_181805, needs_gpu=True),
-        Case("pt-181804", "pytorch", 181804, "fixed", "gradient tracking", "copysign negative float16 NaN sign bit", "https://github.com/pytorch/pytorch/issues/181804", pt_181804, needs_gpu=True),
-        Case("pt-181801", "pytorch", 181801, "fixed", "execution mode", "ReLU signed-zero CPU/CUDA inconsistency", "https://github.com/pytorch/pytorch/issues/181801", pt_181801, needs_gpu=True),
-        Case("pt-181534", "pytorch", 181534, "fixed", "gradient tracking", "CTCLoss backward gradient mismatch", "https://github.com/pytorch/pytorch/issues/181534", pt_181534),
-        Case("pt-114569", "pytorch", 114569, "fixed", "gradient tracking", "clamp signed-zero CPU/CUDA inconsistency", "https://github.com/pytorch/pytorch/issues/114569", pt_114569, needs_gpu=True),
-        Case("pt-181806", "pytorch", 181806, "fixed", "gradient tracking", "signbit negative float16 NaN CPU/CUDA inconsistency", "https://github.com/pytorch/pytorch/issues/181806", pt_181806, needs_gpu=True),
-        Case("pt-114052", "pytorch", 114052, "fixed", "distribution strategy", "linalg.pinv CPU/CUDA inconsistency", "https://github.com/pytorch/pytorch/issues/114052", pt_114052, needs_gpu=True),
-        Case("pt-121208", "pytorch", 121208, "fixed", "execution mode", "ChannelShuffle missing CUDA backend", "https://github.com/pytorch/pytorch/issues/121208", pt_121208, needs_gpu=True),
-        Case("pt-114093", "pytorch", 114093, "confirmed", "execution mode", "LazyBatchNorm1d CPU/CUDA inconsistency", "https://github.com/pytorch/pytorch/issues/114093", pt_114093, needs_gpu=True),
-        Case("pt-114080", "pytorch", 114080, "confirmed", "execution mode", "matrix_exp Inf/NaN CPU/CUDA inconsistency", "https://github.com/pytorch/pytorch/issues/114080", pt_114080, needs_gpu=True),
-        Case("pt-114081", "pytorch", 114081, "confirmed", "gradient tracking", "lobpcg CPU/CUDA eigenvector inconsistency", "https://github.com/pytorch/pytorch/issues/114081", pt_114081, needs_gpu=True),
-        Case("pt-114087", "pytorch", 114087, "confirmed", "gradient tracking", "mm with out alias CPU/CUDA inconsistency", "https://github.com/pytorch/pytorch/issues/114087", pt_114087, needs_gpu=True),
-        Case("pt-179784", "pytorch", 179784, "confirmed", "gradient tracking", "xlogy(0,0) returns NaN", "https://github.com/pytorch/pytorch/issues/179784", pt_179784),
-        Case("pt-181533", "pytorch", 181533, "confirmed", "execution mode", "ReLU signed-zero preservation CPU/CUDA inconsistency", "https://github.com/pytorch/pytorch/issues/181533", pt_181533, needs_gpu=True),
+        Case('state_bug_001', 'tensorflow', 'fixed', 'execution mode', _case_001),
+        Case('state_bug_002', 'tensorflow', 'fixed', 'distribution strategy', _case_002, needs_gpu=True),
+        Case('state_bug_003', 'tensorflow', 'fixed', 'execution mode', _case_003),
+        Case('state_bug_004', 'tensorflow', 'fixed', 'gradient tracking', _case_004, fatal_expected=True),
+        Case('state_bug_005', 'tensorflow', 'confirmed', 'execution mode', _case_005),
+        Case('state_bug_006', 'tensorflow', 'confirmed', 'distribution strategy', _case_006, needs_gpu=True),
+        Case('state_bug_007', 'tensorflow', 'confirmed', 'gradient tracking', _case_007, needs_gpu=True),
+        Case('state_bug_008', 'tensorflow', 'confirmed', 'distribution strategy', _case_008, needs_gpu=True),
+        Case('state_bug_009', 'tensorflow', 'confirmed', 'execution mode', _case_009, needs_gpu=True),
+        Case('state_bug_010', 'tensorflow', 'confirmed', 'execution mode', _case_010, needs_gpu=True),
+        Case('state_bug_011', 'tensorflow', 'confirmed', 'execution mode', _case_011),
+        Case('state_bug_012', 'tensorflow', 'confirmed', 'distribution strategy', _case_012, needs_gpu=True),
+        Case('state_bug_013', 'tensorflow', 'confirmed', 'gradient tracking', _case_013),
+        Case('state_bug_014', 'tensorflow', 'confirmed', 'gradient tracking', _case_014),
+        Case('state_bug_015', 'tensorflow', 'confirmed', 'gradient tracking', _case_015),
+        Case('state_bug_016', 'tensorflow', 'confirmed', 'gradient tracking', _case_016, fatal_expected=True),
+        Case('state_bug_017', 'tensorflow', 'confirmed', 'execution mode', _case_017),
+        Case('state_bug_018', 'tensorflow', 'confirmed', 'execution mode', _case_018),
+        Case('state_bug_019', 'tensorflow', 'confirmed', 'execution mode', _case_019),
+        Case('state_bug_020', 'tensorflow', 'confirmed', 'distribution strategy', _case_020, needs_gpu=True),
+        Case('state_bug_021', 'tensorflow', 'confirmed', 'distribution strategy', _case_021, needs_gpu=True),
+        Case('state_bug_022', 'tensorflow', 'confirmed', 'distribution strategy', _case_022, needs_gpu=True),
+        Case('state_bug_023', 'tensorflow', 'confirmed', 'distribution strategy', _case_023, needs_gpu=True),
+        Case('state_bug_024', 'tensorflow', 'confirmed', 'distribution strategy', _case_024, needs_gpu=True),
+        Case('state_bug_025', 'tensorflow', 'confirmed', 'distribution strategy', _case_025, needs_gpu=True),
+        Case('state_bug_026', 'tensorflow', 'confirmed', 'distribution strategy', _case_026, needs_gpu=True),
+        Case('state_bug_027', 'tensorflow', 'confirmed', 'distribution strategy', _case_027, needs_gpu=True),
+        Case('state_bug_028', 'tensorflow', 'confirmed', 'distribution strategy', _case_028, needs_gpu=True),
+        Case('state_bug_029', 'tensorflow', 'confirmed', 'distribution strategy', _case_029, needs_gpu=True, fatal_expected=True),
+        Case('state_bug_030', 'pytorch', 'fixed', 'gradient tracking', _case_030, needs_gpu=True),
+        Case('state_bug_031', 'pytorch', 'fixed', 'gradient tracking', _case_031, needs_gpu=True),
+        Case('state_bug_032', 'pytorch', 'fixed', 'gradient tracking', _case_032, needs_gpu=True),
+        Case('state_bug_033', 'pytorch', 'fixed', 'gradient tracking', _case_033, needs_gpu=True),
+        Case('state_bug_034', 'pytorch', 'fixed', 'gradient tracking', _case_034, needs_gpu=True),
+        Case('state_bug_035', 'pytorch', 'fixed', 'gradient tracking', _case_035, needs_gpu=True),
+        Case('state_bug_036', 'pytorch', 'fixed', 'execution mode', _case_036, needs_gpu=True),
+        Case('state_bug_037', 'pytorch', 'fixed', 'gradient tracking', _case_037),
+        Case('state_bug_038', 'pytorch', 'fixed', 'gradient tracking', _case_038, needs_gpu=True),
+        Case('state_bug_039', 'pytorch', 'fixed', 'gradient tracking', _case_039, needs_gpu=True),
+        Case('state_bug_040', 'pytorch', 'fixed', 'distribution strategy', _case_040, needs_gpu=True),
+        Case('state_bug_041', 'pytorch', 'fixed', 'execution mode', _case_041, needs_gpu=True),
+        Case('state_bug_042', 'pytorch', 'confirmed', 'execution mode', _case_042, needs_gpu=True),
+        Case('state_bug_043', 'pytorch', 'confirmed', 'execution mode', _case_043, needs_gpu=True),
+        Case('state_bug_044', 'pytorch', 'confirmed', 'gradient tracking', _case_044, needs_gpu=True),
+        Case('state_bug_045', 'pytorch', 'confirmed', 'gradient tracking', _case_045, needs_gpu=True),
+        Case('state_bug_046', 'pytorch', 'confirmed', 'gradient tracking', _case_046),
+        Case('state_bug_047', 'pytorch', 'confirmed', 'execution mode', _case_047, needs_gpu=True),
+        Case('state_bug_048', 'tensorflow', 'confirmed', 'distribution strategy', _case_048, needs_gpu=True),
     ]
     return {case.key: case for case in cases}
+
 
 
 CASES = _register()
 
 
 def run_one(case: Case) -> int:
-    print(f"CASE {case.key} [{case.framework} #{case.issue}]")
+    print(f"CASE {case.key} [{case.framework}]")
     print(f"status={case.status} state_dimension={case.state_dimension}")
-    print(case.url)
     try:
         ok = case.func()
         return 0 if ok else 1
@@ -1233,15 +1251,15 @@ def list_cases() -> None:
         gpu = " gpu" if case.needs_gpu else ""
         fatal = " fatal" if case.fatal_expected else ""
         print(
-            f"{case.key:10s} {case.framework:10s} #{case.issue:<6d} "
-            f"{case.status:9s} {case.state_dimension:22s}{gpu}{fatal}  {case.title}"
+            f"{case.key:13s} {case.framework:10s} "
+            f"{case.status:9s} {case.state_dimension:22s}{gpu}{fatal}"
         )
 
 
 def main(argv: Optional[Iterable[str]] = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--list", action="store_true", help="list available repro cases")
-    parser.add_argument("--case", action="append", dest="cases", help="run a specific case key, e.g. tf-62553")
+    parser.add_argument("--case", action="append", dest="cases", help="run a specific case key, e.g. state_bug_001")
     parser.add_argument("--all", action="store_true", help="run all cases in isolated child processes")
     parser.add_argument("--child", action="store_true", help=argparse.SUPPRESS)
     parser.add_argument("--timeout", type=int, default=120, help="per-case timeout when running --all")

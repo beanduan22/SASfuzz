@@ -1,27 +1,27 @@
 # State-Aware Library Bug Reproducers
 
-This directory contains a single runner for PyTorch and TensorFlow state-related bug reproducers.
+This directory contains anonymized state-related PyTorch and TensorFlow bug reproducers. Each bug has a separate entry file named `state_bug_###.py`; original issue IDs and source URLs are intentionally omitted.
 
 ```bash
-python bugs/reproducers/state/state_library_bug_repros.py --list
-python bugs/reproducers/state/state_library_bug_repros.py --case tf-62553
-python bugs/reproducers/state/state_library_bug_repros.py --all
+python bugs/reproducers/state/state_bug_001.py
+python bugs/reproducers/state/_state_common.py --list
+python bugs/reproducers/state/_state_common.py --all
 ```
 
 ## Counts
 
-| Dimension | Bugs |
+| Dimension | Bug files |
 | --- | ---: |
 | Gradient tracking | 18 |
 | Execution mode | 14 |
-| Distribution strategy | 15 |
-| Total | 47 |
+| Distribution strategy | 16 |
+| Total | 48 |
 
 ## Status Counts
 
-| Status | Bugs |
+| Status | Bug files |
 | --- | ---: |
 | Fixed | 16 |
-| Confirmed | 31 |
+| Confirmed | 32 |
 
-The runner executes each case in an isolated child process when `--all` is used, so fatal reproducers are reported without stopping the whole batch.
+`_state_common.py` contains only shared execution and output-packing logic. The 48 public repro entry points are `state_bug_001.py` through `state_bug_048.py`.
