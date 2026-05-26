@@ -11,9 +11,8 @@ class Model(nn.Module):
 model = Model()
 x = torch.tensor([[0.0100, 0.0000, 0.0000, 0.0000, 0.1000], [0.0000, 0.0100, 0.0000, 0.1000, 0.0000], [0.0000, 0.0000, 0.0100, 0.0000, 0.0000], [0.0000, 0.1000, 0.0000, 0.0100, 0.0000], [0.1000, 0.0000, 0.0000, 0.0000, 0.0100]])
 with torch.no_grad():
-    vals_cpu, vecs_cpu = model(x)
-    vals_gpu, vecs_gpu = model(x.cuda())
+    cpu_vals, cpu_vecs = model(x)
+    gpu_vals, gpu_vecs = model(x.cuda())
 
-print('CPU eigenvalues:', vals_cpu)
-print('CUDA eigenvalues:', vals_gpu.cpu())
-print('Vector abs diff:', float((vecs_cpu.abs() - vecs_gpu.cpu().abs()).abs().max().item()))
+print('CPU:', cpu_vals, cpu_vecs.abs().flatten()[:8])
+print('GPU:', gpu_vals.cpu(), gpu_vecs.cpu().abs().flatten()[:8])

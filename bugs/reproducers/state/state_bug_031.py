@@ -10,12 +10,12 @@ class Model(nn.Module):
         return h
 
 model = Model()
-x = torch.randn(1000, dtype=torch.float32) * 1e19 + 1e20
-with torch.no_grad():
-    y_cpu = model(x)
-    y_gpu = model(x.cuda()).cpu()
-    expected = torch.std(x.double())
+x_cpu = (torch.randn(1000, dtype=torch.float32) * 1e19 + 1e20).requires_grad_(True)
+x_gpu = x_cpu.detach().cuda().requires_grad_(True)
+out_cpu = model(x_cpu)
+out_gpu = model(x_gpu)
+out_cpu.backward()
+out_gpu.backward()
 
-print('CPU:', y_cpu.item())
-print('CUDA:', y_gpu.item())
-print('Expected:', expected.item())
+print('CPU grad:', x_cpu.grad[:8])
+print('GPU grad:', x_gpu.grad.cpu()[:8])

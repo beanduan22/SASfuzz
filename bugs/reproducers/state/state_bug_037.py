@@ -26,6 +26,5 @@ try:
 except Exception as exc:
     check = type(exc).__name__ + ': ' + str(exc).splitlines()[0]
 
-print('Loss:', out.item())
-print('Grad:', x.grad)
-print('Gradcheck:', check)
+print('Gradient:', x.grad)
+print('Reference gradient:', check)

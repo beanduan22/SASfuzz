@@ -12,8 +12,8 @@ model = Model()
 x_cpu = torch.empty((), device='cpu')
 x_gpu = torch.empty((), device='cuda')
 with torch.no_grad():
-    y_cpu = model(x_cpu)
-    y_gpu = model(x_gpu).cpu()
+    cpu = model(x_cpu)
+    gpu = model(x_gpu).cpu()
 
-print('CPU:', y_cpu.tolist())
-print('CUDA:', y_gpu.tolist())
+print('CPU:', cpu.tolist())
+print('GPU:', gpu.tolist())

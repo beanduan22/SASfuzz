@@ -11,8 +11,8 @@ class Model(nn.Module):
 model = Model()
 x = torch.tensor([-0.0])
 with torch.no_grad():
-    y_cpu = model(x)
-    y_gpu = model(x.cuda()).cpu()
+    cpu = model(x)
+    gpu = model(x.cuda()).cpu()
 
-print('CPU:', y_cpu, torch.signbit(y_cpu))
-print('CUDA:', y_gpu, torch.signbit(y_gpu))
+print('CPU:', cpu, torch.signbit(cpu))
+print('GPU:', gpu, torch.signbit(gpu))

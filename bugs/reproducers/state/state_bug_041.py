@@ -17,12 +17,16 @@ class Model(nn.Module):
 model = Model()
 x = torch.rand(2, 3, 32, 32)
 model.train()
-y_train = model.cpu()(x)
+_ = model.cpu()(x)
 model.eval()
 try:
-    y_eval = model.cuda()(x.cuda())
+    cpu = model.cpu()(x)
 except Exception as exc:
-    y_eval = type(exc).__name__ + ': ' + str(exc).splitlines()[0]
+    cpu = type(exc).__name__ + ': ' + str(exc).splitlines()[0]
+try:
+    gpu = model.cuda()(x.cuda())
+except Exception as exc:
+    gpu = type(exc).__name__ + ': ' + str(exc).splitlines()[0]
 
-print('Train:', tuple(y_train.shape))
-print('Eval:', y_eval)
+print('CPU:', cpu if isinstance(cpu, str) else tuple(cpu.shape))
+print('GPU:', gpu if isinstance(gpu, str) else tuple(gpu.shape))

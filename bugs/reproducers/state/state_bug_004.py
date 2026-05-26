@@ -10,11 +10,21 @@ class Model(tf.keras.Model):
 model = Model()
 x = tf.constant(1.0)
 try:
-    with tf.GradientTape() as tape:
-        tape.watch(x)
-        out = model(x)
-    grad = tape.gradient(out, x)
-    print('Output:', out.numpy())
-    print('Gradient:', None if grad is None else grad.numpy())
+    with tf.device('/CPU:0'):
+        with tf.GradientTape() as tape:
+            tape.watch(x)
+            out = model(x)
+        cpu = tape.gradient(out, x)
 except Exception as exc:
-    print('Error:', type(exc).__name__, str(exc).splitlines()[0])
+    cpu = type(exc).__name__ + ': ' + str(exc).splitlines()[0]
+try:
+    with tf.device('/GPU:0'):
+        with tf.GradientTape() as tape:
+            tape.watch(x)
+            out = model(x)
+        gpu = tape.gradient(out, x)
+except Exception as exc:
+    gpu = type(exc).__name__ + ': ' + str(exc).splitlines()[0]
+
+print('CPU:', cpu)
+print('GPU:', gpu)

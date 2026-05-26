@@ -12,8 +12,8 @@ class Model(nn.Module):
 model = Model()
 x = torch.from_numpy(np.array([0xFE00, 0xFE00, 0xFE00], dtype=np.uint16).view(np.float16))
 with torch.no_grad():
-    y_cpu = model(x)
-    y_gpu = model(x.cuda()).cpu()
+    cpu = model(x)
+    gpu = model(x.cuda()).cpu()
 
-print('CPU:', y_cpu.tolist())
-print('CUDA:', y_gpu.tolist())
+print('CPU:', cpu.tolist())
+print('GPU:', gpu.tolist())

@@ -14,8 +14,7 @@ with tf.GradientTape() as tape:
     tape.watch(x)
     out = model(x)
 grad = tape.gradient(out, x)
-expected = np.array([[0.0, 0.2, 0.4], [0.0, 2.0, 4.0]], dtype=np.float32)
+reference_grad = np.array([[0.0, 0.2, 0.4], [0.0, 2.0, 4.0]], dtype=np.float32)
 
-print('Output:', out.numpy())
 print('Gradient:', grad.numpy())
-print('Expected:', expected)
+print('Reference gradient:', reference_grad)

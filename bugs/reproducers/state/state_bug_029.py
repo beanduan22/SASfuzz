@@ -7,11 +7,21 @@ class Model(tf.keras.Model):
         h = tf.raw_ops.SparseSegmentSumGradV2(grad=x, indices=tf.constant([-2], tf.int64), segment_ids=tf.constant([-2], tf.int64), dense_output_dim0=tf.constant(2, tf.int32))
         return h
 
-strategy = tf.distribute.MirroredStrategy()
-with strategy.scope():
-    model = Model()
 x = tf.constant([1.0, 2.0, 3.0], tf.float64)
-out = strategy.run(lambda x: model(x), args=(x,))
-state = strategy.experimental_local_results(out)
+strategy_cpu = tf.distribute.MirroredStrategy(devices=['/CPU:0'])
+with strategy_cpu.scope():
+    cpu_model = Model()
+try:
+    cpu = strategy_cpu.run(lambda x: cpu_model(x), args=(x,))
+except Exception as exc:
+    cpu = type(exc).__name__ + ': ' + str(exc).splitlines()[0]
+strategy_gpu = tf.distribute.MirroredStrategy(devices=['/GPU:0'])
+with strategy_gpu.scope():
+    gpu_model = Model()
+try:
+    gpu = strategy_gpu.run(lambda x: gpu_model(x), args=(x,))
+except Exception as exc:
+    gpu = type(exc).__name__ + ': ' + str(exc).splitlines()[0]
 
-print('State:', state)
+print('CPU:', cpu)
+print('GPU:', gpu)

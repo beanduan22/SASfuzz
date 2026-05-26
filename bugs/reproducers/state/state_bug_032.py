@@ -13,8 +13,8 @@ model = Model()
 x_cpu = (torch.tensor([1, 2, 3, 4, 5, 6, 7]), torch.tensor([0, 1, 1, 2]), torch.tensor([12, 14, 16, 18, 20]))
 x_gpu = tuple(v.cuda() for v in x_cpu)
 with torch.no_grad():
-    y_cpu = model(x_cpu)
-    y_gpu = model(x_gpu).cpu()
+    cpu = model(x_cpu)
+    gpu = model(x_gpu).cpu()
 
-print('CPU:', y_cpu.tolist())
-print('CUDA:', y_gpu.tolist())
+print('CPU:', cpu.tolist())
+print('GPU:', gpu.tolist())

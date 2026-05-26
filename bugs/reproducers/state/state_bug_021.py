@@ -7,14 +7,21 @@ class Model(tf.keras.Model):
         h = tf.raw_ops.SparseFillEmptyRowsGrad(reverse_index_map=tf.constant([20, 21], tf.int64), grad_values=x)
         return h
 
-strategy = tf.distribute.MirroredStrategy()
-with strategy.scope():
-    model = Model()
 x = tf.constant([3, 4, 5], tf.int64)
+strategy_cpu = tf.distribute.MirroredStrategy(devices=['/CPU:0'])
+with strategy_cpu.scope():
+    cpu_model = Model()
 try:
-    out = strategy.run(lambda x: model(x), args=(x,))
-    state = strategy.experimental_local_results(out)
+    cpu = strategy_cpu.run(lambda x: cpu_model(x), args=(x,))
 except Exception as exc:
-    state = type(exc).__name__ + ': ' + str(exc).splitlines()[0]
+    cpu = type(exc).__name__ + ': ' + str(exc).splitlines()[0]
+strategy_gpu = tf.distribute.MirroredStrategy(devices=['/GPU:0'])
+with strategy_gpu.scope():
+    gpu_model = Model()
+try:
+    gpu = strategy_gpu.run(lambda x: gpu_model(x), args=(x,))
+except Exception as exc:
+    gpu = type(exc).__name__ + ': ' + str(exc).splitlines()[0]
 
-print('State:', state)
+print('CPU:', cpu)
+print('GPU:', gpu)

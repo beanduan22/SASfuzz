@@ -5,16 +5,16 @@ import numpy as np
 
 class Model(tf.keras.Model):
     def call(self, x):
-        h = tf.linalg.logdet(x)
+        h = tf.math.abs(x)
         return h
 
 model = Model()
-x = tf.ones((8, 8), tf.float32)
-y_eager = model(x)
+x = tf.constant([complex(np.inf, np.nan), complex(np.nan, np.inf)], tf.complex64)
 graph_fn = tf.function(model.__call__)
-y_graph = graph_fn(x)
-expected = np.linalg.slogdet(np.ones((8, 8), dtype=np.float32))[1]
+with tf.device('/CPU:0'):
+    cpu = graph_fn(x).numpy()
+with tf.device('/GPU:0'):
+    gpu = graph_fn(x).numpy()
 
-print('Eager:', y_eager.numpy())
-print('Graph:', y_graph.numpy())
-print('Expected:', expected)
+print('CPU:', cpu)
+print('GPU:', gpu)

@@ -24,16 +24,17 @@ init_file = os.path.join(init_dir, 'init')
 if not dist.is_initialized():
     dist.init_process_group(backend='nccl', init_method=f'file://{init_file}', rank=0, world_size=1)
 
-device = torch.device('cuda:0')
 x = -torch.ones(2, 3, 8, 8) + 0.25 * torch.randn(2, 3, 8, 8)
-expected = Model()(x).detach()
+cpu = Model()(x).detach()
+device = torch.device('cuda:0')
 model = Model().to(device)
 ddp = DDP(model, device_ids=[0])
 x = x.to(device)
 x.requires_grad_(True)
 out = ddp(x)
 out.sum().backward()
-state = out.detach().cpu()
-
-print('State max diff:', float(torch.nan_to_num((expected - state).abs(), nan=0.0, posinf=1e30, neginf=1e30).max().item()))
+gpu = out.detach().cpu()
 dist.destroy_process_group()
+
+print('CPU:', cpu.flatten()[:8])
+print('GPU:', gpu.flatten()[:8])

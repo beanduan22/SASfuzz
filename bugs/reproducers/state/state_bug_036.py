@@ -1,6 +1,5 @@
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 
 assert torch.cuda.is_available(), 'CUDA is required'
 
@@ -16,9 +15,10 @@ class Model(nn.Module):
 model = Model()
 x = torch.tensor([-0.0])
 model.train()
-y_train = model(x)
+_ = model(x)
 model.eval()
-y_eval = model(x.cuda()).cpu()
+cpu = model(x)
+gpu = model(x.cuda()).cpu()
 
-print('Train:', y_train, torch.signbit(y_train))
-print('Eval:', y_eval, torch.signbit(y_eval))
+print('CPU:', cpu, torch.signbit(cpu))
+print('GPU:', gpu, torch.signbit(gpu))

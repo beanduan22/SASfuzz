@@ -14,7 +14,8 @@ try:
         tape.watch(x)
         out = model(x)
     grad = tape.jacobian(out, x)
-    print('Output:', out.numpy())
-    print('Jacobian:', grad.numpy())
 except Exception as exc:
-    print('Error:', type(exc).__name__, str(exc).splitlines()[0])
+    grad = type(exc).__name__ + ': ' + str(exc).splitlines()[0]
+
+print('Gradient:', grad if isinstance(grad, str) else grad.numpy())
+print('Reference gradient:', '[inf, 0.5, 0.33333334]')

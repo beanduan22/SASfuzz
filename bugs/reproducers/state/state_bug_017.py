@@ -4,19 +4,17 @@ import tensorflow as tf
 
 class Model(tf.keras.Model):
     def call(self, x):
-        h = tf.negative(tf.math.top_k(tf.negative(x)))
+        h = tf.negative(tf.math.top_k(tf.negative(x)).values)
         return h
 
 model = Model()
 x = tf.constant([0, -2, 1, -4, 3])
 y_eager = model(x)
 graph_fn = tf.function(model.__call__)
-y_graph = graph_fn(x)
-try:
-    expected = -tf.math.top_k(-x)
-except Exception as exc:
-    expected = type(exc).__name__ + ': ' + str(exc).splitlines()[0]
+with tf.device('/CPU:0'):
+    cpu = graph_fn(x).numpy()
+with tf.device('/GPU:0'):
+    gpu = graph_fn(x).numpy()
 
-print('Eager:', y_eager)
-print('Graph:', y_graph)
-print('Expected:', expected)
+print('CPU:', cpu)
+print('GPU:', gpu)

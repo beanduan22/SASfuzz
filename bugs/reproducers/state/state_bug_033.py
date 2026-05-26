@@ -1,6 +1,5 @@
 import torch
 import torch.nn as nn
-import numpy as np
 
 assert torch.cuda.is_available(), 'CUDA is required'
 torch.manual_seed(0)
@@ -11,11 +10,12 @@ class Model(nn.Module):
         return h
 
 model = Model()
-x = 1.0 + 0.0001 * torch.randn(1000000, dtype=torch.float32)
-with torch.no_grad():
-    y_cpu = model(x).numpy()
-    y_gpu = model(x.cuda()).cpu().numpy()
-expected = np.cumprod(x.numpy().astype(np.float64))
+x_cpu = (1.0 + 0.0001 * torch.randn(10000, dtype=torch.float32)).requires_grad_(True)
+x_gpu = x_cpu.detach().cuda().requires_grad_(True)
+out_cpu = model(x_cpu).sum()
+out_gpu = model(x_gpu).sum()
+out_cpu.backward()
+out_gpu.backward()
 
-print('CPU error:', float(np.max(np.abs(y_cpu - expected))))
-print('CUDA error:', float(np.max(np.abs(y_gpu - expected))))
+print('CPU grad:', x_cpu.grad[-8:])
+print('GPU grad:', x_gpu.grad.cpu()[-8:])

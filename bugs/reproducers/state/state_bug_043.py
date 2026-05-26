@@ -1,16 +1,19 @@
 import torch
 import torch.nn as nn
 
+assert torch.cuda.is_available(), 'CUDA is required'
+
 class Model(nn.Module):
     def forward(self, x):
-        h = x.view(x.size(0), -1)
-        return torch.matrix_exp(h)
+        h = torch.linspace(3.7, -3, 10, dtype=torch.int64, device=x.device)
+        return h
 
-model = Model()
-x = torch.tensor([[1.0, 1.0, -1.0], [1.0, -1.0, -1.0], [1.0, 10.0, 200.0]])
-y_eager = model(x)
-traced = torch.jit.trace(model, x)
-y_traced = traced(x)
+x_cpu = torch.empty((), device='cpu')
+x_gpu = torch.empty((), device='cuda')
+cpu_model = torch.jit.trace(Model(), x_cpu)
+gpu_model = torch.jit.trace(Model().cuda(), x_gpu)
+cpu = cpu_model(x_cpu)
+gpu = gpu_model(x_gpu).cpu()
 
-print('Eager:', y_eager)
-print('Traced:', y_traced)
+print('CPU:', cpu.tolist())
+print('GPU:', gpu.tolist())

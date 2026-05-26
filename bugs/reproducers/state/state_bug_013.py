@@ -16,8 +16,7 @@ with tf.GradientTape() as tape:
     tape.watch(x)
     out = model((x, y))
 grad = tape.jacobian(out, x)
-expected = np.array([[np.inf], [1.0], [0.5]], dtype=np.float32)
+reference_grad = np.array([[np.inf], [1.0], [0.5]], dtype=np.float32)
 
-print('Output:', out.numpy())
-print('Jacobian:', grad.numpy())
-print('Expected:', expected)
+print('Gradient:', grad.numpy())
+print('Reference gradient:', reference_grad)

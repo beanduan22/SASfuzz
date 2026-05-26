@@ -10,13 +10,13 @@ class Model(tf.keras.Model):
 
 model = Model()
 np.random.seed(0)
-x_np = np.random.randn(65536).astype(np.float16)
-x = tf.constant(x_np)
+x = tf.constant(np.random.randn(65536).astype(np.float16))
 y_eager = model(x)
 graph_fn = tf.function(model.__call__)
-y_graph = graph_fn(x)
-expected = np.mean(x_np.astype(np.float64))
+with tf.device('/CPU:0'):
+    cpu = graph_fn(x).numpy()
+with tf.device('/GPU:0'):
+    gpu = graph_fn(x).numpy()
 
-print('Eager:', y_eager.numpy())
-print('Graph:', y_graph.numpy())
-print('Expected:', expected)
+print('CPU:', cpu)
+print('GPU:', gpu)

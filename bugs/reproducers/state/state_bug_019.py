@@ -11,19 +11,19 @@ class Model(tf.keras.Model):
 
 model = Model()
 x = tf.constant(np.arange(12, dtype=np.float32).reshape(1, 2, 3, 2))
-try:
-    y_eager = model(x)
-except Exception as exc:
-    y_eager = type(exc).__name__ + ': ' + str(exc).splitlines()[0]
-
 @tf.function(jit_compile=True)
 def xla_fn(x):
     return model(x)
-
 try:
-    y_xla = xla_fn(x)
+    with tf.device('/CPU:0'):
+        cpu = xla_fn(x)
 except Exception as exc:
-    y_xla = type(exc).__name__ + ': ' + str(exc).splitlines()[0]
+    cpu = type(exc).__name__ + ': ' + str(exc).splitlines()[0]
+try:
+    with tf.device('/GPU:0'):
+        gpu = xla_fn(x)
+except Exception as exc:
+    gpu = type(exc).__name__ + ': ' + str(exc).splitlines()[0]
 
-print('Eager:', y_eager)
-print('XLA:', y_xla)
+print('CPU:', cpu if isinstance(cpu, str) else cpu.numpy())
+print('GPU:', gpu if isinstance(gpu, str) else gpu.numpy())

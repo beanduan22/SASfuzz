@@ -13,7 +13,10 @@ np.random.seed(0)
 x = tf.constant((np.random.randn(1000).astype(np.float32) * 1e4).astype(np.float16))
 y_eager = model(x)
 graph_fn = tf.function(model.__call__)
-y_graph = graph_fn(x)
+with tf.device('/CPU:0'):
+    cpu = graph_fn(x).numpy()
+with tf.device('/GPU:0'):
+    gpu = graph_fn(x).numpy()
 
-print('Eager:', y_eager.numpy())
-print('Graph:', y_graph.numpy())
+print('CPU:', cpu)
+print('GPU:', gpu)

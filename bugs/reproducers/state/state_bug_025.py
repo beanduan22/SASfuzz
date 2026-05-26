@@ -7,11 +7,15 @@ class Model(tf.keras.Model):
         h = tf.linalg.slogdet(x)
         return h
 
-strategy = tf.distribute.MirroredStrategy()
-with strategy.scope():
-    model = Model()
 x = tf.constant([[2.0, 4.0, 6.0], [4.0, 10.0, 12.0], [6.0, 12.0, 18.0]], tf.float32)
-out = strategy.run(lambda x: model(x), args=(x,))
-state = strategy.experimental_local_results(out)
+strategy_cpu = tf.distribute.MirroredStrategy(devices=['/CPU:0'])
+with strategy_cpu.scope():
+    cpu_model = Model()
+cpu = strategy_cpu.run(lambda x: cpu_model(x), args=(x,))
+strategy_gpu = tf.distribute.MirroredStrategy(devices=['/GPU:0'])
+with strategy_gpu.scope():
+    gpu_model = Model()
+gpu = strategy_gpu.run(lambda x: gpu_model(x), args=(x,))
 
-print('State:', state)
+print('CPU:', cpu)
+print('GPU:', gpu)
