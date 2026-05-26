@@ -1,11 +1,9 @@
 # State-Aware Library Bug Reproducers
 
-This directory contains anonymized state-related PyTorch and TensorFlow bug reproducers. Each bug has a separate entry file named `state_bug_###.py`; original issue IDs and source URLs are intentionally omitted.
+This directory contains 48 anonymized state-related PyTorch and TensorFlow bug reproducers. Each `state_bug_###.py` file is a complete standalone script and does not import any local helper file.
 
 ```bash
 python bugs/reproducers/state/state_bug_001.py
-python bugs/reproducers/state/_state_common.py --list
-python bugs/reproducers/state/_state_common.py --all
 ```
 
 ## Counts
@@ -24,4 +22,4 @@ python bugs/reproducers/state/_state_common.py --all
 | Fixed | 16 |
 | Confirmed | 32 |
 
-`_state_common.py` contains only shared execution and output-packing logic. The 48 public repro entry points are `state_bug_001.py` through `state_bug_048.py`.
+Original issue IDs and source URLs are intentionally omitted.
