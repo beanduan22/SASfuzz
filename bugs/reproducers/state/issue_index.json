@@ -1,6 +1,6 @@
 [
   {
-    "script": "state_bug_001.py",
+    "script": "bug_001.py",
     "key": "tf-115768",
     "framework": "tensorflow",
     "issue": 115768,
@@ -12,7 +12,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_002.py",
+    "script": "bug_002.py",
     "key": "tf-115734",
     "framework": "tensorflow",
     "issue": 115734,
@@ -24,7 +24,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_003.py",
+    "script": "bug_003.py",
     "key": "tf-116047",
     "framework": "tensorflow",
     "issue": 116047,
@@ -36,7 +36,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_004.py",
+    "script": "bug_004.py",
     "key": "tf-46910",
     "framework": "tensorflow",
     "issue": 46910,
@@ -48,7 +48,7 @@
     "fatal_expected": true
   },
   {
-    "script": "state_bug_005.py",
+    "script": "bug_005.py",
     "key": "tf-118374",
     "framework": "tensorflow",
     "issue": 118374,
@@ -60,7 +60,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_006.py",
+    "script": "bug_006.py",
     "key": "tf-117189",
     "framework": "tensorflow",
     "issue": 117189,
@@ -72,7 +72,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_007.py",
+    "script": "bug_007.py",
     "key": "tf-116148",
     "framework": "tensorflow",
     "issue": 116148,
@@ -84,7 +84,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_008.py",
+    "script": "bug_008.py",
     "key": "tf-115736",
     "framework": "tensorflow",
     "issue": 115736,
@@ -96,7 +96,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_009.py",
+    "script": "bug_009.py",
     "key": "tf-115735",
     "framework": "tensorflow",
     "issue": 115735,
@@ -108,7 +108,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_010.py",
+    "script": "bug_010.py",
     "key": "tf-115733",
     "framework": "tensorflow",
     "issue": 115733,
@@ -120,7 +120,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_011.py",
+    "script": "bug_011.py",
     "key": "tf-115732",
     "framework": "tensorflow",
     "issue": 115732,
@@ -132,7 +132,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_012.py",
+    "script": "bug_012.py",
     "key": "tf-115731",
     "framework": "tensorflow",
     "issue": 115731,
@@ -144,7 +144,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_013.py",
+    "script": "bug_013.py",
     "key": "tf-62553",
     "framework": "tensorflow",
     "issue": 62553,
@@ -156,7 +156,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_014.py",
+    "script": "bug_014.py",
     "key": "tf-62556",
     "framework": "tensorflow",
     "issue": 62556,
@@ -168,7 +168,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_015.py",
+    "script": "bug_015.py",
     "key": "tf-62557",
     "framework": "tensorflow",
     "issue": 62557,
@@ -180,7 +180,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_016.py",
+    "script": "bug_016.py",
     "key": "tf-62559",
     "framework": "tensorflow",
     "issue": 62559,
@@ -192,7 +192,7 @@
     "fatal_expected": true
   },
   {
-    "script": "state_bug_017.py",
+    "script": "bug_017.py",
     "key": "tf-62563",
     "framework": "tensorflow",
     "issue": 62563,
@@ -204,7 +204,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_018.py",
+    "script": "bug_018.py",
     "key": "tf-117771",
     "framework": "tensorflow",
     "issue": 117771,
@@ -216,7 +216,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_019.py",
+    "script": "bug_019.py",
     "key": "tf-117772",
     "framework": "tensorflow",
     "issue": 117772,
@@ -228,7 +228,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_020.py",
+    "script": "bug_020.py",
     "key": "tf-117774",
     "framework": "tensorflow",
     "issue": 117774,
@@ -240,7 +240,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_021.py",
+    "script": "bug_021.py",
     "key": "tf-118196",
     "framework": "tensorflow",
     "issue": 118196,
@@ -252,7 +252,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_022.py",
+    "script": "bug_022.py",
     "key": "tf-118194",
     "framework": "tensorflow",
     "issue": 118194,
@@ -264,7 +264,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_023.py",
+    "script": "bug_023.py",
     "key": "tf-118203",
     "framework": "tensorflow",
     "issue": 118203,
@@ -276,7 +276,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_024.py",
+    "script": "bug_024.py",
     "key": "tf-118202",
     "framework": "tensorflow",
     "issue": 118202,
@@ -288,7 +288,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_025.py",
+    "script": "bug_025.py",
     "key": "tf-118201",
     "framework": "tensorflow",
     "issue": 118201,
@@ -300,7 +300,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_026.py",
+    "script": "bug_026.py",
     "key": "tf-118198",
     "framework": "tensorflow",
     "issue": 118198,
@@ -312,7 +312,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_027.py",
+    "script": "bug_027.py",
     "key": "tf-118197",
     "framework": "tensorflow",
     "issue": 118197,
@@ -324,7 +324,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_028.py",
+    "script": "bug_028.py",
     "key": "tf-118192",
     "framework": "tensorflow",
     "issue": 118192,
@@ -336,7 +336,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_029.py",
+    "script": "bug_029.py",
     "key": "tf-118200",
     "framework": "tensorflow",
     "issue": 118200,
@@ -348,7 +348,7 @@
     "fatal_expected": true
   },
   {
-    "script": "state_bug_030.py",
+    "script": "bug_030.py",
     "key": "pt-181807",
     "framework": "pytorch",
     "issue": 181807,
@@ -360,7 +360,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_031.py",
+    "script": "bug_031.py",
     "key": "pt-180156",
     "framework": "pytorch",
     "issue": 180156,
@@ -372,7 +372,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_032.py",
+    "script": "bug_032.py",
     "key": "pt-114085",
     "framework": "pytorch",
     "issue": 114085,
@@ -384,7 +384,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_033.py",
+    "script": "bug_033.py",
     "key": "pt-180154",
     "framework": "pytorch",
     "issue": 180154,
@@ -396,7 +396,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_034.py",
+    "script": "bug_034.py",
     "key": "pt-181805",
     "framework": "pytorch",
     "issue": 181805,
@@ -408,7 +408,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_035.py",
+    "script": "bug_035.py",
     "key": "pt-181804",
     "framework": "pytorch",
     "issue": 181804,
@@ -420,7 +420,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_036.py",
+    "script": "bug_036.py",
     "key": "pt-181801",
     "framework": "pytorch",
     "issue": 181801,
@@ -432,7 +432,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_037.py",
+    "script": "bug_037.py",
     "key": "pt-181534",
     "framework": "pytorch",
     "issue": 181534,
@@ -444,7 +444,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_038.py",
+    "script": "bug_038.py",
     "key": "pt-114569",
     "framework": "pytorch",
     "issue": 114569,
@@ -456,7 +456,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_039.py",
+    "script": "bug_039.py",
     "key": "pt-181806",
     "framework": "pytorch",
     "issue": 181806,
@@ -468,7 +468,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_040.py",
+    "script": "bug_040.py",
     "key": "pt-114052",
     "framework": "pytorch",
     "issue": 114052,
@@ -480,7 +480,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_041.py",
+    "script": "bug_041.py",
     "key": "pt-121208",
     "framework": "pytorch",
     "issue": 121208,
@@ -492,7 +492,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_042.py",
+    "script": "bug_042.py",
     "key": "pt-114093",
     "framework": "pytorch",
     "issue": 114093,
@@ -504,7 +504,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_043.py",
+    "script": "bug_043.py",
     "key": "pt-114080",
     "framework": "pytorch",
     "issue": 114080,
@@ -516,7 +516,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_044.py",
+    "script": "bug_044.py",
     "key": "pt-114081",
     "framework": "pytorch",
     "issue": 114081,
@@ -528,7 +528,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_045.py",
+    "script": "bug_045.py",
     "key": "pt-114087",
     "framework": "pytorch",
     "issue": 114087,
@@ -540,7 +540,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_046.py",
+    "script": "bug_046.py",
     "key": "pt-179784",
     "framework": "pytorch",
     "issue": 179784,
@@ -552,7 +552,7 @@
     "fatal_expected": false
   },
   {
-    "script": "state_bug_047.py",
+    "script": "bug_047.py",
     "key": "pt-181533",
     "framework": "pytorch",
     "issue": 181533,
