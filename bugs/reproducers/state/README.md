@@ -1,9 +1,9 @@
 # State-Aware Library Bug Reproducers
 
-This directory contains the anonymized state-related PyTorch and TensorFlow bug
-reproducers counted in the paper RQ3 bug study. Each
-`state_bug_###.py` file is a complete standalone script and does not import any
-local helper file.
+This directory contains 47 issue-level PyTorch and TensorFlow state-related bug
+reproducers from the RQ3 bug study. Each `state_bug_###.py` file is a complete
+standalone script and does not import any local helper file. The mapping from
+script number to GitHub issue is recorded in `issue_index.json`.
 
 ```bash
 python bugs/reproducers/state/state_bug_001.py
@@ -11,9 +11,10 @@ python bugs/reproducers/state/state_bug_001.py
 
 ## Counts
 
-The artifact intentionally records only the executable reproducer, target
-framework, and runtime-state dimension. It omits external source metadata and
-maintainer outcome metadata.
+The artifact is counted at the issue/case level. Some cases intentionally share
+the same core API/input reproducer because separate GitHub issues reported the
+same underlying state-sensitive behavior under different status or state
+contexts.
 
 | Framework | Bug files |
 | --- | ---: |
