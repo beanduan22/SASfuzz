@@ -1,19 +1,5 @@
 # RQ1 — Empirical Study Pipeline
 
-Code that reproduces RQ1 of the paper: *Are state-related issues prevalent in
-correctness-oriented issue reports of modern DL libraries, and if so, which
-state dimensions do they concentrate on?*
-
-Pipeline:
-
-```
-collect.py  →  hydrate.py  →  verify_fix.py  →  classify.py  →  report.py
-   |               |               |                 |              |
-   ▼               ▼               ▼                 ▼              ▼
-raw_search    filtered_       fix_              classification    reports/
-filtered_     issues_full    verification                          RQ1_report.md
-issues
-```
 
 ## Quick start
 
