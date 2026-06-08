@@ -104,7 +104,7 @@ class OpenAIClient:
 
     def __init__(
         self,
-        model: str = "gpt-4o",
+        model: str = "gpt-5",
         temperature: float = 0.7,
         max_tokens: int = 4096,
     ) -> None:
