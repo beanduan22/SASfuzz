@@ -69,7 +69,7 @@ source metadata and maintainer outcome metadata.
 Run one reproducer directly:
 
 ```bash
-python bugs/reproducers/state/state_bug_001.py
+python bugs/reproducers/state/bug_001.py
 ```
 
 **PyTorch:**
