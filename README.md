@@ -89,7 +89,7 @@ To report from existing results without re-running:
 python scripts/evaluate.py --framework both --out results/eval --report-only
 ```
 
-### RQ4 — Ablation study and LLM sensitivity (Tables 5 & 6)
+### Ablation study and LLM sensitivity
 
 
 **Component ablation — PyTorch:**
