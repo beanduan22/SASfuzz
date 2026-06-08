@@ -43,9 +43,8 @@ Stops automatically after 10 consecutive models introduce no new APIs.
 
 ---
 
-## Reproducing paper results
 
-### RQ1 — Empirical study of state-related issues (Tables 1 & 2)
+### Empirical study of state-related issues
 
 RQ1 analyses 329 fix-verified correctness issues from PyTorch and TensorFlow to show that 62.6% are state-related and concentrate on three dimensions: gradient tracking, execution mode, and distribution strategy.
 
@@ -58,7 +57,7 @@ python -m rq1.classify
 python -m rq1.report
 ```
 
-### RQ2 & RQ3 — Coverage and bug detection (Tables 3 & 4)
+### Coverage and bug detection
 
 The state-aware bug reproducer artifact is in `bugs/reproducers/state`. The
 paper-counted artifact contains 47 standalone scripts: 18 PyTorch and 29
@@ -66,11 +65,6 @@ TensorFlow reproducers, distributed over gradient tracking (18), execution mode
 (14), and distribution strategy (15). These scripts intentionally omit external
 source metadata and maintainer outcome metadata.
 
-Run one reproducer directly:
-
-```bash
-python bugs/reproducers/state/bug_001.py
-```
 
 **PyTorch:**
 ```bash
