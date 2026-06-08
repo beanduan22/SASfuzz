@@ -146,7 +146,7 @@ dist.init_process_group(
 )
 device = "cpu"
 model = Model().to(device)
-ddp = DistributedDataParallel(model)
+ddp = DDP(model)
 x = "INPUT_SLOT"
 out = ddp(x)
 loss = out.sum()
