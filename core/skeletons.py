@@ -73,15 +73,14 @@ class Model(nn.Module):
     def __init__(self):
         super().__init__()
         self.sens = "MODE_LAYER_SLOT"
-        self.* = "LAYER_SLOT"
+        "LAYER_SLOT"
 
     def forward(self, x):
         h = "BODY_SLOT"
         return h
 
 model = Model()
-x = None
-"INPUT_SLOT"
+x = "INPUT_SLOT"
 model.train()
 y_train = model(x)
 model.eval()
@@ -100,7 +99,7 @@ import torch.nn as nn
 class Model(nn.Module):
     def __init__(self):
         super().__init__()
-        self.* = "LAYER_SLOT"
+        "LAYER_SLOT"
 
     def forward(self, x):
         h = "BODY_SLOT"
@@ -130,7 +129,7 @@ from torch.nn.parallel import DistributedDataParallel as DDP
 class Model(nn.Module):
     def __init__(self):
         super().__init__()
-        self.* = "LAYER_SLOT"
+        "LAYER_SLOT"
 
     def forward(self, x):
         h = "BODY_SLOT"
@@ -169,7 +168,7 @@ import torch.distributed as dist
 class Model(nn.Module):
     def __init__(self):
         super().__init__()
-        self.* = "LAYER_SLOT"
+        "LAYER_SLOT"
 
     def forward(self, x):
         h = "BODY_SLOT"
@@ -202,7 +201,7 @@ TENSORFLOW_SKELETONS: list[Skeleton] = [
 class Model(tf.keras.Model):
     def __init__(self):
         super().__init__()
-        self.* = "LAYER_SLOT"
+        "LAYER_SLOT"
 
     def call(self, x):
         h = "BODY_SLOT"
@@ -226,7 +225,7 @@ grad = tape.jacobian(out, x)
 class Model(tf.keras.Model):
     def __init__(self):
         super().__init__()
-        self.* = "LAYER_SLOT"
+        "LAYER_SLOT"
 
     def call(self, x):
         h = x
@@ -253,7 +252,7 @@ grad = tape.gradient(out, x)
 class Model(tf.keras.Model):
     def __init__(self):
         super().__init__()
-        self.* = "LAYER_SLOT"
+        "LAYER_SLOT"
 
     def call(self, x):
         h = "BODY_SLOT"
@@ -276,7 +275,7 @@ y_graph = graph_fn(x)
 class Model(tf.keras.Model):
     def __init__(self):
         super().__init__()
-        self.* = "LAYER_SLOT"
+        "LAYER_SLOT"
 
     def call(self, x):
         h = "BODY_SLOT"
@@ -303,7 +302,7 @@ y_xla = xla_fn(x)
 class Model(tf.keras.Model):
     def __init__(self):
         super().__init__()
-        self.* = "LAYER_SLOT"
+        "LAYER_SLOT"
 
     def call(self, x):
         h = "BODY_SLOT"
@@ -329,7 +328,7 @@ out = strategy.run(
 class Model(tf.keras.Model):
     def __init__(self):
         super().__init__()
-        self.* = "LAYER_SLOT"
+        "LAYER_SLOT"
 
     def call(self, x):
         h = "BODY_SLOT"
