@@ -1,86 +1,24 @@
-from __future__ import annotations
-
-import math
+# Issue: https://github.com/tensorflow/tensorflow/issues/115735
+# Status: confirmed
+# State: execution mode
 import os
-import traceback
-import warnings
-from typing import Callable
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+import tensorflow as tf
+import numpy as np
 
+class Model(tf.keras.Model):
+    def call(self, x):
+        h = tf.sort(x)
+        return h
 
-os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "3")
-os.environ.setdefault("TF_ENABLE_ONEDNN_OPTS", "0")
-warnings.filterwarnings("ignore")
+model = Model()
+x = tf.constant([np.nan, 3.0, 1.0, np.nan, 2.0, np.nan, 0.5], tf.float32)
+y_eager = model(x)
+graph_fn = tf.function(model.__call__)
+with tf.device('/CPU:0'):
+    cpu = graph_fn(x).numpy()
+with tf.device('/GPU:0'):
+    gpu = graph_fn(x).numpy()
 
-
-class SkipCase(Exception):
-    pass
-
-
-
-def _np():
-    try:
-        import numpy as np
-    except ImportError as exc:
-        raise SkipCase(f"missing numpy: {exc}") from exc
-    return np
-
-
-def _print_result(ok: bool, detail: str) -> bool:
-    print(detail)
-    print("BUG_REPRODUCED" if ok else "NOT_REPRODUCED")
-    return bool(ok)
-
-
-def _tf():
-    try:
-        import tensorflow as tf
-    except ImportError as exc:
-        raise SkipCase(f"missing tensorflow: {exc}") from exc
-    return tf
-
-
-def _tf_require_gpu(tf) -> None:
-    if not tf.config.list_physical_devices("GPU"):
-        raise SkipCase("TensorFlow GPU is not visible")
-    try:
-        tf.config.set_soft_device_placement(False)
-    except Exception:
-        pass
-
-
-def _case_009() -> bool:
-    np = _np()
-    tf = _tf()
-    _tf_require_gpu(tf)
-    x = tf.constant([float("nan"), 3.0, 1.0, float("nan"), 2.0, float("nan"), 0.5], tf.float32)
-
-    @tf.function
-    def sort_fn(v):
-        return tf.sort(v)
-
-    with tf.device("/CPU:0"):
-        cpu = sort_fn(x).numpy()
-    with tf.device("/GPU:0"):
-        gpu = sort_fn(x).numpy()
-    cpu_pos = np.where(np.isnan(cpu))[0].tolist()
-    gpu_pos = np.where(np.isnan(gpu))[0].tolist()
-    return _print_result(cpu_pos != gpu_pos, f"state=execution_mode(tf.function) cpu={cpu.tolist()} gpu={gpu.tolist()}")
-
-
-def main() -> int:
-    print("CASE state_bug_009 [tensorflow]")
-    print("status=confirmed state_dimension=execution mode")
-    try:
-        ok = _case_009()
-        return 0 if ok else 1
-    except SkipCase as exc:
-        print(f"SKIPPED: {exc}")
-        return 2
-    except Exception:
-        print("HARNESS_ERROR:")
-        traceback.print_exc()
-        return 3
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())
+print('CPU:', cpu)
+print('GPU:', gpu)

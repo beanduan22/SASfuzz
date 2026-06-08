@@ -1,80 +1,27 @@
-from __future__ import annotations
+# Issue: https://github.com/pytorch/pytorch/issues/181533
+# Status: confirmed
+# State: execution mode
+import torch
+import torch.nn as nn
 
-import math
-import os
-import traceback
-import warnings
-from typing import Callable
+assert torch.cuda.is_available(), 'CUDA is required'
 
+class Model(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.sens = nn.ReLU()
 
-os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "3")
-os.environ.setdefault("TF_ENABLE_ONEDNN_OPTS", "0")
-warnings.filterwarnings("ignore")
+    def forward(self, x):
+        h = self.sens(x)
+        return h
 
+model = Model()
+x = torch.tensor([-0.0])
+model.train()
+_ = model(x)
+model.eval()
+cpu = model(x)
+gpu = model(x.cuda()).cpu()
 
-class SkipCase(Exception):
-    pass
-
-
-
-def _print_result(ok: bool, detail: str) -> bool:
-    print(detail)
-    print("BUG_REPRODUCED" if ok else "NOT_REPRODUCED")
-    return bool(ok)
-
-
-def _torch():
-    try:
-        import torch
-    except ImportError as exc:
-        raise SkipCase(f"missing torch: {exc}") from exc
-    return torch
-
-
-def _torch_require_cuda(torch) -> None:
-    if not torch.cuda.is_available():
-        raise SkipCase("CUDA is not visible to PyTorch")
-
-
-def _case_036() -> bool:
-    torch = _torch()
-    _torch_require_cuda(torch)
-    import torch.nn as nn
-    import torch.nn.functional as F
-
-    class M(nn.Module):
-        def forward(self, x):
-            return F.relu(x)
-
-    model = M()
-    model.train()
-    model.eval()
-    x_cpu = torch.tensor([-0.0])
-    x_gpu = x_cpu.cuda()
-    cpu = model(x_cpu)
-    gpu = model(x_gpu).cpu()
-    ok = bool(torch.signbit(cpu).item()) != bool(torch.signbit(gpu).item())
-    return _print_result(ok, f"state=execution_mode(train/eval switch) cpu={cpu} sign={torch.signbit(cpu)} gpu={gpu} sign={torch.signbit(gpu)}")
-
-
-def _case_047() -> bool:
-    return _case_036()
-
-
-def main() -> int:
-    print("CASE state_bug_047 [pytorch]")
-    print("status=confirmed state_dimension=execution mode")
-    try:
-        ok = _case_047()
-        return 0 if ok else 1
-    except SkipCase as exc:
-        print(f"SKIPPED: {exc}")
-        return 2
-    except Exception:
-        print("HARNESS_ERROR:")
-        traceback.print_exc()
-        return 3
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())
+print('CPU:', cpu, torch.signbit(cpu))
+print('GPU:', gpu, torch.signbit(gpu))
