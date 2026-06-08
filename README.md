@@ -129,15 +129,6 @@ Ablation variants (`--ablation` flag):
 | `none` | Full SASFuzz |
 | `no_skeleton` | LLM generates free-form programs (no state skeleton) |
 | `no_scaffold` | Slot structure kept, state constructs moved to prompt only |
-| `no_selection` | w/o State Rel. — sets σ = 0 in Eq. 1 (paper Table 5) |
+| `no_selection` | w/o State. — sets σ = 0 in Eq. 1 (paper Table 5) |
 
 ---
-
-## Output structure
-
-```
-results/<run>/
-├── coverage.json       API coverage and run statistics
-├── models/             All synthesised programs (model_NNNN.py)
-└── bugs/               One JSON report + standalone reproducer per detected bug
-```
