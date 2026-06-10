@@ -65,7 +65,6 @@ TensorFlow reproducers, distributed over gradient tracking (18), execution mode
 (14), and distribution strategy (15). These scripts intentionally omit external
 source metadata and maintainer outcome metadata.
 
-
 **PyTorch:**
 ```bash
 python scripts/evaluate.py --framework pytorch --models 1000 --budget 86400 \
