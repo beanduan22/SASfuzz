@@ -10,8 +10,6 @@ import traceback
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Optional
-
-from ..backends.llm_client import LLMBackend
 from .skeletons import Skeleton
 from .prompts import build_repair_prompt, build_synthesis_prompt, build_free_form_prompt, build_no_scaffold_prompt
 
@@ -161,7 +159,7 @@ def _summarize_error(raw: str) -> str:
     return "\n".join(unique)[:1500]
 
 class ModelSynthesizer:
-    def __init__(self, client: LLMBackend, target_lib: str = "PyTorch", ablation_mode: str = "none") -> None:
+    def __init__(self, client, target_lib: str = "PyTorch", ablation_mode: str = "none") -> None:
         self._client = client
         self._model_counter = 0
         self._target_lib = target_lib

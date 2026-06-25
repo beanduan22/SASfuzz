@@ -3,24 +3,10 @@ from __future__ import annotations
 import json
 import logging
 import time
-from typing import Protocol, runtime_checkable
 
 import requests
 
 logger = logging.getLogger(__name__)
-
-@runtime_checkable
-class LLMBackend(Protocol):
-
-    @property
-    def current_model(self) -> str:
-        ...
-
-    def generate(self, prompt: str, advance: bool = True) -> str:
-        ...
-
-    def stats(self) -> dict:
-        ...
 
 OLLAMA_URL = "http://localhost:11434"
 
@@ -105,6 +91,7 @@ class OpenAIClient:
     def __init__(
         self,
         model: str = "gpt-5",
+        api_key: str = "yourkey",
         temperature: float = 0.7,
         max_tokens: int = 4096,
     ) -> None:
@@ -113,6 +100,7 @@ class OpenAIClient:
         except ImportError:
             raise ImportError("pip install openai") from None
         self._model = model
+        self._api_key = api_key
         self._temperature = temperature
         self._max_tokens = max_tokens
         self._call_count = 0
@@ -121,7 +109,7 @@ class OpenAIClient:
     def _get_client(self):
         if self._client is None:
             import openai
-            self._client = openai.OpenAI()
+            self._client = openai.OpenAI(api_key=self._api_key)
         return self._client
 
     @property
@@ -155,7 +143,7 @@ _BACKEND_MAP = {
     "qwen": (OllamaClient, _DEFAULT_OLLAMA_MODEL),
 }
 
-def create_client(backend: str = "gpt5", model: str | None = None) -> LLMBackend:
+def create_client(backend: str = "gpt5", model: str | None = None):
     if backend not in _BACKEND_MAP:
         raise ValueError(f"Unknown backend '{backend}'. Choose from: {list(_BACKEND_MAP)}")
     cls, default = _BACKEND_MAP[backend]
