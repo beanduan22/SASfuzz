@@ -88,40 +88,6 @@ To report from existing results without re-running:
 python scripts/evaluate.py --framework both --out results/eval --report-only
 ```
 
-### Ablation study and LLM sensitivity
 
-
-**Component ablation — PyTorch:**
-```bash
-python scripts/ablation.py --experiment ablation --framework pytorch \
-    --models 1000 --budget 86400 --out results/ablation
-```
-
-**Component ablation — TensorFlow:**
-```bash
-python scripts/ablation.py --experiment ablation --framework tensorflow \
-    --models 1000 --budget 86400 --out results/ablation
-```
-
-**LLM sensitivity — PyTorch:**
-```bash
-python scripts/ablation.py --experiment llm --framework pytorch \
-    --models 1000 --budget 86400 --out results/ablation
-```
-
-**LLM sensitivity — TensorFlow:**
-```bash
-python scripts/ablation.py --experiment llm --framework tensorflow \
-    --models 1000 --budget 86400 --out results/ablation
-```
-
-Ablation variants (`--ablation` flag):
-
-| Variant | Meaning |
-|---|---|
-| `none` | Full SASFuzz |
-| `no_skeleton` | LLM generates free-form programs (no state skeleton) |
-| `no_scaffold` | Slot structure kept, state constructs moved to prompt only |
-| `no_selection` | w/o State. — sets σ = 0 in Eq. 1 (paper Table 5) |
 
 ---
