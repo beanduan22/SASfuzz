@@ -32,7 +32,6 @@ state outputs (plus crash / NaN / gradient checks), so every comparison is made
 |---|---|---|
 | `gpt5` *(default)* | gpt-5 (or any chat/o-series model via `--llm-model`) | `OPENAI_API_KEY` |
 | `qwen` | Ollama model (default `qwen2.5-coder:32b`, override `--llm-model`) | — |
-| `template` | offline deterministic slot-filler | — |
 
 ```bash
 export OPENAI_API_KEY=your_key          # only for --llm-backend gpt5
@@ -44,11 +43,6 @@ end-to-end before spending tokens on an LLM backend.
 
 ## Run
 
-### Quick smoke test (offline, no key, ~1 min)
-
-```bash
-python run_pytorch.py --mode subset --llm-backend template --output-dir results/pytorch
-```
 
 ### PyTorch
 
@@ -78,27 +72,6 @@ python -m rq1.hydrate
 python -m rq1.verify_fix
 python -m rq1.classify
 python -m rq1.report
-```
-
-### Run Tool
-
-
-**PyTorch:**
-```bash
-python scripts/evaluate.py --framework pytorch --models 1000 --budget 86400 \
-    --out results/eval
-```
-
-**TensorFlow:**
-```bash
-python scripts/evaluate.py --framework tensorflow --models 1000 --budget 86400 \
-    --out results/eval
-```
-
-**Both frameworks:**
-```bash
-python scripts/evaluate.py --framework both --models 1000 --budget 86400 \
-    --out results/eval
 ```
 
 
