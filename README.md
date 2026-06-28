@@ -33,14 +33,6 @@ state outputs (plus crash / NaN / gradient checks), so every comparison is made
 | `gpt5` *(default)* | gpt-5 (or any chat/o-series model via `--llm-model`) | `OPENAI_API_KEY` |
 | `qwen` | Ollama model (default `qwen2.5-coder:32b`, override `--llm-model`) | — |
 
-```bash
-export OPENAI_API_KEY=your_key          # only for --llm-backend gpt5
-```
-
-The **`template`** backend needs no API key or network: it fills the skeleton
-slots with a small, shape-safe default body. Use it to verify the pipeline runs
-end-to-end before spending tokens on an LLM backend.
-
 ## Run
 
 
