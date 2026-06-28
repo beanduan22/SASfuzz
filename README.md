@@ -80,7 +80,7 @@ python -m rq1.classify
 python -m rq1.report
 ```
 
-### Coverage and bug detection
+### Run Tool
 
 
 **PyTorch:**
@@ -99,11 +99,6 @@ python scripts/evaluate.py --framework tensorflow --models 1000 --budget 86400 \
 ```bash
 python scripts/evaluate.py --framework both --models 1000 --budget 86400 \
     --out results/eval
-```
-
-To report from existing results without re-running:
-```bash
-python scripts/evaluate.py --framework both --out results/eval --report-only
 ```
 
 
