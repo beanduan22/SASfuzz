@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import time
 
 import requests
@@ -9,9 +10,8 @@ import requests
 logger = logging.getLogger(__name__)
 
 OLLAMA_URL = "http://localhost:11434"
+_DEFAULT_OLLAMA_MODEL = "qwen2.5-coder:32b"
 
-                                                                       
-_DEFAULT_OLLAMA_MODEL = "qwen3.6:27b"
 
 class OllamaClient:
 
@@ -42,7 +42,7 @@ class OllamaClient:
         if advance:
             self._idx += 1
 
-        logger.info("LLM call → %s", model)
+        logger.info("LLM call -> %s", model)
         self._call_counts[model] += 1
 
         payload = {
@@ -86,21 +86,27 @@ class OllamaClient:
     def stats(self) -> dict:
         return {"call_counts": dict(self._call_counts), "next_model": self.current_model}
 
+
 class OpenAIClient:
 
     def __init__(
         self,
-        model: str = "gpt-5",
-        api_key: str = "yourkey",
+        model: str = "gpt-4o",
+        api_key: str | None = None,
         temperature: float = 0.7,
         max_tokens: int = 4096,
     ) -> None:
         try:
-            import openai as _openai
+            import openai
         except ImportError:
             raise ImportError("pip install openai") from None
+        self._api_key = api_key or os.environ.get("OPENAI_API_KEY")
+        if not self._api_key:
+            raise RuntimeError(
+                "No OpenAI API key found. Set OPENAI_API_KEY or pass api_key=..., "
+                "or use --llm-backend template for an offline run."
+            )
         self._model = model
-        self._api_key = api_key
         self._temperature = temperature
         self._max_tokens = max_tokens
         self._call_count = 0
@@ -118,14 +124,24 @@ class OpenAIClient:
 
     def generate(self, prompt: str, advance: bool = True) -> str:
         self._call_count += 1
-        logger.info("LLM call → %s", self._model)
+        logger.info("LLM call -> %s", self._model)
         start = time.time()
-        resp = self._get_client().chat.completions.create(
-            model=self._model,
-            messages=[{"role": "user", "content": prompt}],
-            temperature=self._temperature,
-            max_tokens=self._max_tokens,
-        )
+        client = self._get_client()
+
+        try:
+            resp = client.chat.completions.create(
+                model=self._model,
+                messages=[{"role": "user", "content": prompt}],
+                max_completion_tokens=self._max_tokens,
+            )
+        except Exception:
+            resp = client.chat.completions.create(
+                model=self._model,
+                messages=[{"role": "user", "content": prompt}],
+                temperature=self._temperature,
+                max_tokens=self._max_tokens,
+            )
+
         elapsed = time.time() - start
         text = resp.choices[0].message.content or ""
         logger.info("LLM response in %.1fs (%d chars)", elapsed, len(text))
@@ -134,21 +150,41 @@ class OpenAIClient:
     def stats(self) -> dict:
         return {"call_counts": {self._model: self._call_count}, "next_model": self._model}
 
-                             
-                                                           
-                                                                         
-                                                                    
+
+class TemplateClient:
+
+    offline = True
+
+    def __init__(self, model: str = "template", **_: object) -> None:
+        self._model = model
+        self._call_count = 0
+
+    @property
+    def current_model(self) -> str:
+        return self._model
+
+    def fill_skeleton(self, skeleton, api_list: list[str]) -> str:
+        self._call_count += 1
+        from core.skeletons import fill_offline
+        return fill_offline(skeleton, api_list)
+
+    def generate(self, prompt: str, advance: bool = True) -> str:
+        self._call_count += 1
+        return ""
+
+    def stats(self) -> dict:
+        return {"call_counts": {self._model: self._call_count}, "next_model": self._model}
+
+
 _BACKEND_MAP = {
     "gpt5": (OpenAIClient, "gpt-5"),
     "qwen": (OllamaClient, _DEFAULT_OLLAMA_MODEL),
+    "template": (TemplateClient, "template"),
 }
+
 
 def create_client(backend: str = "gpt5", model: str | None = None):
     if backend not in _BACKEND_MAP:
         raise ValueError(f"Unknown backend '{backend}'. Choose from: {list(_BACKEND_MAP)}")
     cls, default = _BACKEND_MAP[backend]
-    if cls is OpenAIClient:
-        return OpenAIClient(model=model or default)
-    elif cls is OllamaClient:
-        return OllamaClient(model=model or default)
-    raise ValueError(f"Unexpected class for backend '{backend}'")
+    return cls(model=model or default)

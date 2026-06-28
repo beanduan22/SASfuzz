@@ -99,7 +99,7 @@ def main() -> None:
     ap.add_argument("--budget",       type=int, default=86400)
     ap.add_argument("--api-set-size", type=int, default=30)
     ap.add_argument("--llm-backend",  default="gpt5",
-                    choices=["gpt5", "qwen"])
+                    choices=["gpt5", "qwen", "template"])
     ap.add_argument("--out",          default=str(HERE / "results" / "eval"))
     ap.add_argument("--report-only",  action="store_true",
                     help="Skip fuzzing; only report from existing results")

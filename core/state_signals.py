@@ -65,17 +65,6 @@ _SIGMA_HEURISTIC: Dict[str, list[str]] = {
 
 @dataclass
 class StateSignals:
-    """
-    Holds σ_i(d) used in Eq. 1 of the paper:
-
-        s_i(d) = (1 + σ_i(d)) / (u_i + 1)
-
-    σ_i(d) is the documentation-derived state-relevance signal: it is 1 when
-    a dimension-specific keyword for d matches a tokenized documentation
-    field of API i, and 0 otherwise.
-
-    sigma: dimension → set of API names/prefixes with σ=1
-    """
     sigma: Dict[str, Set[str]] = field(default_factory=dict)
 
     @classmethod

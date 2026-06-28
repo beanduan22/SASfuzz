@@ -28,7 +28,7 @@ if __name__ == "__main__":
     parser.add_argument("--input-file", default=None)
     parser.add_argument("--output-file", required=True)
     parser.add_argument("--double-run", action="store_true",
-                        help="Run forward twice and include both outputs")
+                        help="Run the state harness twice and include both outputs")
     args = parser.parse_args()
 
     try:
@@ -43,67 +43,37 @@ if __name__ == "__main__":
     except Exception:
         pass
 
+    def _ordered(d):
+        names, vals = [], []
+        for k in sorted(d.keys()):
+            v = d[k]
+            if isinstance(v, torch.Tensor):
+                names.append(k)
+                vals.append(v.detach().cpu())
+        return names, vals
+
     try:
         if args.input_file:
             inputs = torch.load(args.input_file, weights_only=False)
         else:
             torch.manual_seed(42)
             inputs = make_inputs()
-            save_path = args.output_file + ".inputs.pt"
-            torch.save(inputs, save_path)
+            torch.save(inputs, args.output_file + ".inputs.pt")
 
         device = args.device
-        torch.manual_seed(42)
-        if torch.cuda.is_available():
-            torch.cuda.manual_seed_all(42)
+        if device.startswith("cuda") and not torch.cuda.is_available():
+            raise RuntimeError("CUDA requested but not available")
 
-        model = Model().to(device)
-        model.eval()
-
-        device_inputs = []
-        for x in inputs:
-            if isinstance(x, torch.Tensor):
-                device_inputs.append(x.to(device))
-            else:
-                device_inputs.append(x)
-
-        def to_cpu_list(out):
-            if isinstance(out, torch.Tensor):
-                return [out.detach().cpu()]
-            elif isinstance(out, (list, tuple)):
-                flat = []
-                for o in out:
-                    if isinstance(o, torch.Tensor):
-                        flat.append(o.detach().cpu())
-                return flat
-            else:
-                try:
-                    return [torch.tensor(out)]
-                except Exception:
-                    return []
-
-        with torch.set_grad_enabled(True):
-            output_a = model(*device_inputs)
-        outputs_a = to_cpu_list(output_a)
+        out_a = sas_run(device, inputs)
+        names, outputs_a = _ordered(out_a)
 
         outputs_b = None
         if args.double_run:
-            torch.manual_seed(42)
-            if torch.cuda.is_available():
-                torch.cuda.manual_seed_all(42)
-            model2 = Model().to(device)
-            model2.eval()
-            device_inputs2 = []
-            for x in inputs:
-                if isinstance(x, torch.Tensor):
-                    device_inputs2.append(x.to(device))
-                else:
-                    device_inputs2.append(x)
-            with torch.set_grad_enabled(True):
-                output_b = model2(*device_inputs2)
-            outputs_b = to_cpu_list(output_b)
+            out_b = sas_run(device, inputs)
+            _, outputs_b = _ordered(out_b)
 
-        result = {"status": "ok", "outputs": outputs_a, "outputs_repeat": outputs_b}
+        result = {"status": "ok", "outputs": outputs_a,
+                  "outputs_repeat": outputs_b, "names": names}
     except Exception as exc:
         result = {
             "status": "error",
@@ -216,14 +186,6 @@ _DTYPE_CAST_TARGETS = (
 )
 
 def apply_mutation(inputs: List[torch.Tensor], strategy: int) -> List[torch.Tensor]:
-    """Five tensor-input mutation strategies (paper Section 3.4):
-
-    1. add random noise
-    2. multiply by a random factor
-    3. random masking / zeroing
-    4. inject special values (NaN, Inf, or extreme magnitudes)
-    5. cast to a different dtype
-    """
     import random as _random
 
     mutated = []

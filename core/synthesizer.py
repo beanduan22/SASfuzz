@@ -96,16 +96,15 @@ ns = {}
 code = open(sys.argv[1]).read()
 try:
     exec(compile(code, "<generated>", "exec"), ns)
-    if "Model" not in ns:
-        raise RuntimeError("Generated code does not define a 'Model' class.")
-    if "make_inputs" not in ns:
-        raise RuntimeError("Generated code does not define 'make_inputs()'.")
+    for required in ("Model", "make_inputs", "sas_run"):
+        if required not in ns:
+            raise RuntimeError("Generated code does not define '%s'." % required)
     inputs = ns["make_inputs"]()
     if not isinstance(inputs, (list, tuple)):
-        raise RuntimeError(f"make_inputs() must return a list or tuple, got {type(inputs).__name__}")
-    model = ns["Model"]()
-    cpu_inputs = [x.cpu() if isinstance(x, torch.Tensor) else x for x in inputs]
-    _ = model(*cpu_inputs)
+        raise RuntimeError("make_inputs() must return a list/tuple, got %s" % type(inputs).__name__)
+    out = ns["sas_run"]("cpu", inputs)
+    if not isinstance(out, dict) or not out:
+        raise RuntimeError("sas_run() must return a non-empty dict of output tensors.")
     print("OK")
 except Exception:
     print(traceback.format_exc(limit=4))
@@ -169,6 +168,16 @@ class ModelSynthesizer:
         self._model_counter += 1
         model_id = self._model_counter
         llm_model = self._client.current_model
+
+        if getattr(self._client, "offline", False):
+            code = self._client.fill_skeleton(skeleton, api_list)
+            used_apis = _extract_used_apis(code, api_list)
+            final_err = _quick_exec_check(code) or _runtime_check(code)
+            return SynthesisResult(
+                code=code, used_apis=used_apis, model_id=model_id,
+                llm_model=llm_model, skeleton_id=skeleton.skeleton_id,
+                attempts=1, repaired=False, error=final_err,
+            )
 
         if self._ablation_mode == "no_skeleton":
             prompt = build_free_form_prompt(api_list, target_lib=self._target_lib)

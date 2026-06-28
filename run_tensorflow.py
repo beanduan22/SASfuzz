@@ -57,7 +57,14 @@ for _g in tf.config.list_physical_devices('GPU'):
 
 input_file = sys.argv[1]
 x_np = np.load(input_file)
-result = dict(cpu=None, gpu=None, gpu_repeat=None, crash=None, no_gpu=False)
+result = dict(cpu=None, gpu=None, gpu_repeat=None, crash=None, no_gpu=False,
+              cpu_dtype='float64')
+
+def _flatten_dict(d):
+    out = []
+    for k in sorted(d.keys()):
+        out.extend(np.asarray(d[k], dtype=np.float64).flatten().tolist())
+    return out
 
 try:
     gpus = tf.config.list_physical_devices('GPU')
@@ -66,35 +73,13 @@ try:
         print(json.dumps(result))
         sys.exit(0)
 
-    def _flatten(t):
-        return np.array(t, dtype=np.float64).flatten().tolist()
+    r_cpu = sas_run('/CPU:0', [x_np])
+    r_gpu = sas_run('/GPU:0', [x_np])
+    r_gpu2 = sas_run('/GPU:0', [x_np])
 
-    tf.random.set_seed(42)
-    with tf.device('/CPU:0'):
-        model_cpu = Model()
-        x_cpu = tf.constant(x_np)
-        _ = model_cpu(x_cpu, training=False)
-
-    tf.random.set_seed(42)
-    with tf.device('/GPU:0'):
-        model_gpu = Model()
-        x_gpu = tf.constant(x_np)
-        _ = model_gpu(x_gpu, training=False)
-
-    if len(model_cpu.variables) == len(model_gpu.variables):
-        for vc, vg in zip(model_cpu.variables, model_gpu.variables):
-            vg.assign(tf.cast(vc, vg.dtype))
-
-    with tf.device('/CPU:0'):
-        out_cpu = model_cpu(x_cpu, training=False)
-    with tf.device('/GPU:0'):
-        out_gpu_a = model_gpu(x_gpu, training=False)
-        out_gpu_b = model_gpu(x_gpu, training=False)
-
-    result['cpu']        = _flatten(out_cpu)
-    result['gpu']        = _flatten(out_gpu_a)
-    result['gpu_repeat'] = _flatten(out_gpu_b)
-    result['cpu_dtype']  = str(out_cpu.dtype.name)
+    result['cpu']        = _flatten_dict(r_cpu)
+    result['gpu']        = _flatten_dict(r_gpu)
+    result['gpu_repeat'] = _flatten_dict(r_gpu2)
 
 except Exception:
     result['crash'] = traceback.format_exc()[-800:]
@@ -114,11 +99,9 @@ tf.random.set_seed(42)
 
 x_np = np.load(sys.argv[1])
 try:
-    with tf.device('/CPU:0'):
-        m = Model()
-        out = m(tf.constant(x_np), training=False)
-    if out is None:
-        print('FAIL:no output')
+    out = sas_run('/CPU:0', [x_np])
+    if not isinstance(out, dict) or not out:
+        print('FAIL:sas_run did not return a non-empty dict')
     else:
         print('OK')
 except Exception:
@@ -175,12 +158,6 @@ def run_tf_gradcheck(
     mid: int,
     timeout: int = _TF_GRADCHECK_TIMEOUT,
 ) -> str | None:
-    """Run tf.test.compute_gradient on a synthesized TF model.
-
-    Returns None if the check passes or is skipped (e.g., the forward pass
-    is non-differentiable in the captured frame); returns a short error
-    string when the analytical and numerical Jacobians disagree.
-    """
     script_path = ws_dir / f"tfgc_{mid:04d}_{os.getpid()}.py"
     inp_path = ws_dir / f"tfgc_inp_{mid:04d}_{os.getpid()}.npy"
     try:
@@ -273,6 +250,15 @@ def synthesize_tf_model(
     validator_timeout: int = 40,
     ablation: str = "none",
 ) -> tuple[str | None, list[str], int]:
+    if getattr(llm, "offline", False):
+        from core.skeletons import fill_offline
+        src = fill_offline(skeleton, apis)
+        err = _cpu_validate(src, x_val, ws_dir, mid, validator_timeout)
+        if err is None:
+            return src, _extract_used_apis(src, apis), 1
+        log.warning("m%04d: offline fill failed validation: %s", mid, (err or "")[:120])
+        return None, [], 1
+
     if ablation == "no_skeleton":
         prompt = build_free_form_prompt(apis, target_lib="TensorFlow 2.x")
     elif ablation == "no_scaffold":
@@ -566,8 +552,9 @@ def main() -> None:
     ap.add_argument("--seed", type=int, default=2026,
                     help="RNG seed for reproducibility")
     ap.add_argument("--llm-backend", default="gpt5",
-                    choices=["gpt5","qwen"],
-                    help="LLM backend (paper: gpt5 default, qwen=Qwen3.6-27B for RQ4)")
+                    choices=["gpt5","qwen","template"],
+                    help="LLM backend: gpt5 (default), qwen (Ollama), or "
+                         "template (offline, no API key)")
     ap.add_argument("--llm-model", default=None,
                     help="Override specific model name within the chosen backend")
     ap.add_argument("--ablation", default="none",

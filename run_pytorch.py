@@ -35,6 +35,7 @@ _MUTATION_NAMES = {1: "add_noise", 2: "multiply", 3: "mask",
                    4: "special_values", 5: "dtype_cast"}
 
 NEAR_MISS_REL_ERR = 1e-2
+_SEED = 2026
 
 def run(
     api_file: Path,
@@ -49,6 +50,8 @@ def run(
     output_dir.mkdir(parents=True, exist_ok=True)
     models_dir = output_dir / "models"
     models_dir.mkdir(exist_ok=True)
+
+    random.seed(_SEED)
 
     logger.info("Loading API list from %s", api_file)
     groups = load_and_classify(api_file)
@@ -76,7 +79,7 @@ def run(
             "Starting SASFuzz | models=until_termination api_set=%d budget=%ds",
             api_set_size, fuzzing_budget_s,
         )
-    logger.info("LLM models: %s", client._models)
+    logger.info("LLM backend: %s", client.current_model)
 
     total_bugs     = 0
     total_clean    = 0
@@ -398,8 +401,9 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--api-file", type=Path, default=DEFAULT_API_FILE)
     p.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT)
     p.add_argument("--llm-backend", default="gpt5",
-                   choices=["gpt5","qwen"],
-                   help="LLM backend (paper: gpt5 default, qwen=Qwen3.6-27B for RQ4)")
+                   choices=["gpt5","qwen","template"],
+                   help="LLM backend: gpt5 (default), qwen (Ollama), or "
+                        "template (offline, no API key)")
     p.add_argument("--llm-model", default=None,
                    help="Override specific model name within the chosen backend")
     p.add_argument("--ablation",  default="none",

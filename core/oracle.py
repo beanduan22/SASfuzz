@@ -256,11 +256,6 @@ def run_gradcheck(
     workspace_dir: str | Path,
     timeout: int = _GRADCHECK_TIMEOUT,
 ) -> Optional[str]:
-    """
-    Run torch.autograd.gradcheck on a synthesized model (PT-G1 skeleton).
-    Returns None if the check passes or is skipped; returns an error string
-    if a Jacobian mismatch or crash is detected.
-    """
     workspace = Path(workspace_dir)
     workspace.mkdir(parents=True, exist_ok=True)
 
@@ -558,11 +553,10 @@ class DifferentialOracle:
     @staticmethod
     def _build_reproducer(report: OracleReport, base: str, model_code: str) -> str:
         bug_type = report.bug_type.value
-        lines: list[str] = []
-
-        lines += [
+        inputs_file = f"{base}.inputs.pt"
+        lines: list[str] = [
             '"""',
-            f'SASFuzz bug reproducer — {bug_type.upper()}',
+            f'SASFuzz bug reproducer - {bug_type.upper()}',
             f'Model : {report.model_id}',
             f'Mutation: {report.mutation_name}',
             f'Detail  : {report.detail[:120]}',
@@ -596,58 +590,32 @@ class DifferentialOracle:
             cleaned_code = cleaned_code.replace(dup + ";", "")
         lines += [cleaned_code, ""]
 
-        inputs_file = f"{base}.inputs.pt"
         lines += [
             "_here = Path(__file__).parent",
             f"inputs = torch.load(_here / {inputs_file!r}, weights_only=False)",
             "",
-            "torch.manual_seed(42)",
-            "torch.cuda.manual_seed_all(42)",
-            "cpu_model = Model().cpu().eval()",
-            "gpu_model = Model().cuda().eval()",
-            "gpu_model.load_state_dict(cpu_model.state_dict())",
+            "cpu_out = sas_run('cpu', inputs)",
         ]
-
         if bug_type == "crash":
-            crashing = "cpu" if report.cpu_status in ("crash", "error", "timeout") else "cuda"
-            ok = "cuda" if crashing == "cpu" else "cpu"
-            ok_model = "cpu_model" if ok == "cpu" else "gpu_model"
-            bad_model = "cpu_model" if crashing == "cpu" else "gpu_model"
             lines += [
-                "",
-                f"ok_inputs = [x.to('{ok}') if isinstance(x, torch.Tensor) else x for x in inputs]",
-                "with torch.set_grad_enabled(True):",
-                f"    ok_out = {ok_model}(*ok_inputs)",
-                f"print(f'{ok.upper()} output ok: {{type(ok_out).__name__}}')",
-                "",
-                f"bad_inputs = [x.to('{crashing}') if isinstance(x, torch.Tensor) else x for x in inputs]",
-                "with torch.set_grad_enabled(True):",
-                f"    bad_out = {bad_model}(*bad_inputs)",
-                f"print(f'{crashing.upper()} output: {{bad_out}}')",
+                "print('CPU state outputs:', {k: tuple(v.shape) for k, v in cpu_out.items()})",
+                "gpu_out = sas_run('cuda', inputs)",
+                "print('GPU state outputs:', {k: tuple(v.shape) for k, v in gpu_out.items()})",
             ]
         else:
             lines += [
-                "",
-                "cpu_inputs = [x.cpu() if isinstance(x, torch.Tensor) else x for x in inputs]",
-                "gpu_inputs = [x.cuda() if isinstance(x, torch.Tensor) else x for x in inputs]",
-                "with torch.set_grad_enabled(True):",
-                "    cpu_out = cpu_model(*cpu_inputs)",
-                "    gpu_out = gpu_model(*gpu_inputs)",
-                "cpu_outs = [cpu_out] if isinstance(cpu_out, torch.Tensor) else list(cpu_out)",
-                "gpu_outs = [gpu_out] if isinstance(gpu_out, torch.Tensor) else list(gpu_out)",
-                "",
-                "TOL = {torch.float64:(1e-2,1e-2), torch.float32:(1e-2,1e-2),",
-                "       torch.bfloat16:(1e-2,1e-2), torch.float16:(1e-2,1e-2)}",
-                "for i,(c,g) in enumerate(zip(cpu_outs, gpu_outs)):",
-                "    if isinstance(c, torch.Tensor) and isinstance(g, torch.Tensor):",
-                "        rtol, atol = TOL.get(c.dtype, (1e-2, 1e-2))",
-                "        c_f, g_f = c.float(), g.float().cpu()",
-                "        finite = torch.isfinite(c_f) & torch.isfinite(g_f)",
-                "        if finite.any():",
-                "            rel = ((c_f[finite]-g_f[finite]).abs() / (atol + rtol * c_f[finite].abs())).max().item()",
-                "            print(f'output[{i}] dtype={c.dtype} rel_err={rel:.3e} shape={list(c.shape)}')",
-                "        else:",
-                "            print(f'output[{i}]: all non-finite')",
+                "gpu_out = sas_run('cuda', inputs)",
+                "TOL = (1e-2, 1e-2)",
+                "for k in sorted(cpu_out):",
+                "    c = cpu_out[k].float().cpu()",
+                "    g = gpu_out[k].float().cpu()",
+                "    finite = torch.isfinite(c) & torch.isfinite(g)",
+                "    if finite.any():",
+                "        rtol, atol = TOL",
+                "        rel = ((c[finite]-g[finite]).abs() / (atol + rtol * c[finite].abs())).max().item()",
+                "        print(f'{k}: rel_err={rel:.3e} shape={list(c.shape)}')",
+                "    else:",
+                "        print(f'{k}: all non-finite')",
             ]
 
         return "\n".join(lines) + "\n"

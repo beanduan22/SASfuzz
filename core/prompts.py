@@ -7,10 +7,17 @@ Inputs:
   - Candidate API pool: {API_POOL}
 
 Requirements:
-  1) Preserve the skeleton. Do not modify the model scaffold, the state-installing constructs, or the driver logic.
-  2) Fill the body slot. Compose APIs drawn from {API_POOL} into a dependency chain within the model body, using each API at most once.
-  3) Fill the input slot. Provide a randomly initialized tensor matching the body's expected input shape and dtype.
-  4) The resulting model must be syntactically valid and runnable as a standalone file.
+  1) Preserve the skeleton. Keep the `Model`/`make_inputs` scaffold AND the
+     frozen `sas_run` state harness EXACTLY as given. Fill ONLY the three slots
+     marked with `<<...>>`: LAYER_SLOT, BODY_SLOT, INPUT_SLOT.
+  2) Fill BODY_SLOT. Compose APIs drawn from {API_POOL} into a dependency chain
+     that transforms `h`, using each API at most once. Declare any layers you
+     need in LAYER_SLOT.
+  3) Fill INPUT_SLOT inside make_inputs so it returns one randomly initialised
+     tensor `x` whose shape/dtype match the body. Do NOT call .backward(),
+     tracing, distribution, or device transfers yourself — `sas_run` does that.
+  4) Do not insert stochastic ops (dropout / rand / bernoulli) inside the model.
+  5) The result must be a syntactically valid, runnable standalone file.
 
 Output:
   - Return ONLY the complete model code.
