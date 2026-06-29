@@ -10,22 +10,6 @@ pip install -r requirements.txt        # torch>=2.4, tensorflow>=2.15, numpy, re
 
 A CUDA-capable GPU is required: the oracle is a CPU-vs-GPU differential test.
 
-## How it works
-
-Each of the 12 **state skeletons** (6 PyTorch + 6 TensorFlow) is a complete,
-runnable program built from two parts:
-
-* a **scaffold** with three typed slots the synthesizer fills — `LAYER_SLOT`,
-  `BODY_SLOT`, `INPUT_SLOT` (the `Model` body and `make_inputs`);
-* a **frozen `sas_run(device, inputs)` harness** that installs the target
-  runtime state (autograd / `no_grad`, `train`/`eval`, `torch.jit.trace`,
-  `DistributedDataParallel`, collectives; `GradientTape`, `tf.function`,
-  `MirroredStrategy`, …) and returns the *state-dependent* outputs.
-
-The executor runs `sas_run` on CPU and GPU and the oracle compares those
-state outputs (plus crash / NaN / gradient checks), so every comparison is made
-**under the installed runtime state** — never a bare forward pass.
-
 ## LLM backends
 
 | `--llm-backend` | Model | Key |
