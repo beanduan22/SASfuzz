@@ -1,4 +1,4 @@
-# RQ1 — Empirical Study Pipeline
+# Empirical Study Pipeline
 
 
 ## Quick start
