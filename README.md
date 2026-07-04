@@ -39,7 +39,7 @@ Stops automatically after 10 consecutive models introduce no new APIs.
 
 ### Empirical study of state-related issues
 
-RQ1 analyses 329 fix-verified correctness issues from PyTorch and TensorFlow to show that 62.6% are state-related and concentrate on three dimensions: gradient tracking, execution mode, and distribution strategy.
+Empirical study analyses 329 fix-verified correctness issues from PyTorch and TensorFlow to show that 62.6% are state-related and concentrate on three dimensions: gradient tracking, execution mode, and distribution strategy.
 
 ```bash
 cd RQ1
