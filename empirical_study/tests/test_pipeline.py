@@ -1,4 +1,4 @@
-"""Smoke tests for the RQ1 pipeline (no network)."""
+"""Smoke tests for the empirical study pipeline (no network)."""
 from __future__ import annotations
 
 import json
@@ -10,10 +10,10 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from rq1 import hydrate as hydrate_mod              
-from rq1.classify import heuristic_label, _text              
-from rq1.collect import _keyword_match, _split_url              
-from rq1.verify_fix import verdict_of, CLOSE_REF_RE              
+from empirical_study import hydrate as hydrate_mod              
+from empirical_study.classify import heuristic_label, _text              
+from empirical_study.collect import _keyword_match, _split_url              
+from empirical_study.verify_fix import verdict_of, CLOSE_REF_RE              
 
 
 def _rubric() -> dict:

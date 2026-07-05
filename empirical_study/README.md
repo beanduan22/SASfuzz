@@ -4,25 +4,25 @@
 ## Quick start
 
 ```bash
-cd RQ1
+cd empirical_study
 
 # Stage 1 — by default replays the v2 search snapshot at
 #           ../results/github_issue_counts_v2.json (1122 filtered issues).
-PYTHONPATH=src python3 -m rq1.collect
+PYTHONPATH=src python3 -m empirical_study.collect
 
 # Stage 2 — fetch full title/body/labels for the 1122 issues.
 #           Requires GITHUB_TOKEN. Skippable if a hydrate cache already exists.
-GITHUB_TOKEN=ghp_... PYTHONPATH=src python3 -m rq1.hydrate
+GITHUB_TOKEN=ghp_... PYTHONPATH=src python3 -m empirical_study.hydrate
 
 # Stage 3 — determine fix-verified vs unverified via the GitHub timeline API.
-GITHUB_TOKEN=ghp_... PYTHONPATH=src python3 -m rq1.verify_fix --deep
+GITHUB_TOKEN=ghp_... PYTHONPATH=src python3 -m empirical_study.verify_fix --deep
 
 # Stage 4 — classify fix-verified issues into A/B/C/D/E.
 # The checked-in summary is the paper's two-author adjudicated result.
-PYTHONPATH=src python3 -m rq1.classify --backend heuristic
+PYTHONPATH=src python3 -m empirical_study.classify --backend heuristic
 
-# Stage 5 — render reports/RQ1_report.md with the paper Tables 1 & 2.
-PYTHONPATH=src python3 -m rq1.report
+# Stage 5 — render reports/empirical_study_report.md with the paper Tables 1 & 2.
+PYTHONPATH=src python3 -m empirical_study.report
 ```
 
 `make confirm` runs the offline portion (collect + report) and prints the
@@ -36,7 +36,7 @@ report.
 | hydrate      | `data/filtered_issues.json` | `data/filtered_issues_full.json`, `data/issue_cache/<repo>/<n>.json` |
 | verify_fix   | `data/filtered_issues_full.json` | `data/fix_verification.json`, `data/timeline_cache/<repo>/<n>.json` |
 | classify     | `data/fix_verification.json` (+ rubric) | `data/classification.json`, `data/classification_summary.json` |
-| report       | all of the above | `reports/RQ1_report.md`, `reports/RQ1_numbers.json` |
+| report       | all of the above | `reports/empirical_study_report.md`, `reports/empirical_study_numbers.json` |
 
 ## What the pipeline confirms
 

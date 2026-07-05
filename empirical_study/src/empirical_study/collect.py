@@ -7,7 +7,7 @@ Two operating modes:
 - Replay (--snapshot points to a prior dump from results/github_issue_counts_v2.json):
   reuses the already-filtered URL set so the count is reproducible without API calls.
 
-Outputs (in RQ1/data):
+Outputs (in empirical_study/data):
     raw_search.json        — per-query counts plus all unique hits (lightweight)
     filtered_issues.json   — list of {url, repo, number, title?, body?, labels?}
     collect_summary.json   — top-level counts table
@@ -18,7 +18,7 @@ import argparse
 import json
 from pathlib import Path
 
-from rq1.github_api import QuerySpec, search_all
+from empirical_study.github_api import QuerySpec, search_all
 
 
 HERE = Path(__file__).resolve().parents[2]
@@ -149,7 +149,7 @@ def _default_snapshot() -> Path | None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="RQ1 stage 1: collect filtered issues.")
+    parser = argparse.ArgumentParser(description="Empirical study stage 1: collect filtered issues.")
     parser.add_argument("--start", default="2021-01-01")
     parser.add_argument("--end", default="2026-01-01")
     parser.add_argument("--queries", type=Path, default=CONFIGS / "queries.json")

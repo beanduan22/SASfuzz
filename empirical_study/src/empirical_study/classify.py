@@ -120,7 +120,7 @@ def run(backend: str, limit: int | None) -> dict:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="RQ1 stage 4: classify into A/B/C/D/E.")
+    parser = argparse.ArgumentParser(description="Empirical study stage 4: classify into A/B/C/D/E.")
     parser.add_argument("--backend", choices=("heuristic",), default="heuristic")
     parser.add_argument("--limit", type=int, default=None)
     args = parser.parse_args()

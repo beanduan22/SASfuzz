@@ -1,4 +1,4 @@
-# RQ1 Empirical Study Numbers
+# Empirical Study Numbers
 
 This report is pinned to the paper audit dataset. The live GitHub collection scripts remain available, but this artifact reports the exact numbers used in the manuscript.
 

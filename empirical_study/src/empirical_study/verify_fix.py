@@ -30,7 +30,7 @@ import re
 from pathlib import Path
 from typing import Iterable
 
-from rq1.github_api import QuerySpec, fetch_issue_events, get_json, search_all, GITHUB_API
+from empirical_study.github_api import QuerySpec, fetch_issue_events, get_json, search_all, GITHUB_API
 
 
 HERE = Path(__file__).resolve().parents[2]
@@ -244,7 +244,7 @@ def run_fast(start: str, end: str, queries_path: Path, keywords: list[str]) -> d
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="RQ1 stage 3: verify fix linkage.")
+    parser = argparse.ArgumentParser(description="Empirical study stage 3: verify fix linkage.")
     parser.add_argument("--mode", choices=("timeline", "fast"), default="timeline",
                         help="timeline (per-issue, accurate) or fast (10 search calls, lower bound).")
     parser.add_argument("--deep", action="store_true", help="Also follow body 'Fixes #N' references.")

@@ -16,7 +16,7 @@ import os
 import time
 from pathlib import Path
 
-from rq1.github_api import fetch_issue_full
+from empirical_study.github_api import fetch_issue_full
 
 
 def _per_call_sleep() -> float:
@@ -125,7 +125,7 @@ def run(limit: int | None, only_fix_verified: bool = False) -> dict:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="RQ1 stage 2: hydrate issue bodies.")
+    parser = argparse.ArgumentParser(description="Empirical study stage 2: hydrate issue bodies.")
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--only-fix-verified", action="store_true",
                         help="Restrict to URLs marked fix_verified by stage 3.")

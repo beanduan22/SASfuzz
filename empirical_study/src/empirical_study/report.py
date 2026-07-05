@@ -69,7 +69,7 @@ def _pct(value: float) -> str:
 
 def render_markdown() -> str:
     lines: list[str] = []
-    lines.append("# RQ1 Empirical Study Numbers\n")
+    lines.append("# Empirical Study Numbers\n")
     lines.append(
         "This report is pinned to the paper audit dataset. "
         "The live GitHub collection scripts remain available, but this artifact reports the exact "
@@ -118,13 +118,13 @@ def render_markdown() -> str:
 
 def run() -> dict:
     REPORTS.mkdir(parents=True, exist_ok=True)
-    (REPORTS / "RQ1_report.md").write_text(render_markdown())
-    (REPORTS / "RQ1_numbers.json").write_text(json.dumps(PAPER_NUMBERS, indent=2))
+    (REPORTS / "empirical_study_report.md").write_text(render_markdown())
+    (REPORTS / "empirical_study_numbers.json").write_text(json.dumps(PAPER_NUMBERS, indent=2))
     return PAPER_NUMBERS
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="RQ1 stage 5: render paper RQ1 tables.")
+    parser = argparse.ArgumentParser(description="Empirical study stage 5: render paper empirical study tables.")
     parser.parse_args()
     print(json.dumps(run(), indent=2))
 
